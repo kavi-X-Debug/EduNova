@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, Checkbox, ProgressBar, RadioGroup } from '@/components/ui';
+import { Button, Checkbox, ErrorState, LoadingState, ProgressBar, RadioGroup } from '@/components/ui';
+import { useAsync } from '@/lib';
 import { announce } from '@/lib/a11y';
+import { studentService } from '@/services';
 import { useSessionStore } from '@/store';
 import type { Locale } from '@/types';
-import { destinationFor } from './destination';
-import { readOnboarding, writeOnboarding } from './onboardingStorage';
+import { RedirectByRole } from './RedirectByRole';
 import { usePageFocus } from './usePageFocus';
 
 const LOCALES: Locale[] = ['en', 'si', 'ta'];
@@ -14,22 +15,48 @@ const GRADES = [6, 7, 8, 9, 10, 11];
 const SUBJECTS = ['maths', 'science', 'sinhala', 'english', 'ict'];
 const TOTAL = 3;
 
+/** Gate: sends non-students and already-onboarded students on; shows the wizard otherwise. */
 export default function OnboardingPage() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const user = useSessionStore((s) => s.user);
+  const userId = user?.id ?? '';
+  const isStudent = user?.role === 'student';
+  const profile = useAsync(() => (isStudent ? studentService.getProfile(userId) : Promise.resolve(undefined)), [userId, isStudent]);
+
+  if (!user) return <Navigate to="/login" replace />;
+  if (!isStudent) return <RedirectByRole role={user.role} userId={user.id} />;
+  if (profile.error) return <ErrorState description={t('errors.generic')} onRetry={profile.reload} retryLabel={t('common.action.retry')} />;
+  if (profile.loading) return <LoadingState label={t('a11y.loading')} lines={4} />;
+  if (profile.data) return <Navigate to="/student" replace />;
+  return <Wizard userId={user.id} initialGrade={user.grade} />;
+}
+
+function Wizard({ userId, initialGrade }: { userId: string; initialGrade?: number }) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const locale = useSessionStore((s) => s.locale);
   const setLocale = useSessionStore((s) => s.setLocale);
   const ref = usePageFocus<HTMLDivElement>();
   const [step, setStep] = useState(1);
-  const [grade, setGrade] = useState(user?.grade ? String(user.grade) : '');
+  const [grade, setGrade] = useState(initialGrade ? String(initialGrade) : '');
   const [subjects, setSubjects] = useState<string[]>([]);
   const [error, setError] = useState<string>();
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(false);
 
-  if (!user) return <Navigate to="/login" replace />;
-  if (user.role !== 'student' || readOnboarding(user.id)) {
-    return <Navigate to={destinationFor(user.role, user.id)} replace />;
-  }
+  const save = async () => {
+    setSaving(true);
+    setSaveError(false);
+    try {
+      await studentService.saveProfile(userId, { grade: Number(grade), subjects, locale });
+      navigate('/student/diagnostic', { replace: true });
+    } catch {
+      setSaveError(true);
+      announce(t('auth.onboarding.saveError', { defaultValue: 'We could not save your choices. Please try again.' }), 'assertive');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const chooseLocale = (l: Locale) => {
     setLocale(l);
@@ -44,8 +71,7 @@ export default function OnboardingPage() {
       setStep(step + 1);
       return;
     }
-    writeOnboarding(user.id, { grade: Number(grade), subjects, locale });
-    navigate('/student/diagnostic', { replace: true });
+    void save();
   };
 
   const stepLabel = t('auth.onboarding.step', { current: step, total: TOTAL });
@@ -115,8 +141,15 @@ export default function OnboardingPage() {
           ) : (
             <span />
           )}
-          <Button type="submit">{step === TOTAL ? t('auth.onboarding.finish') : t('common.action.next')}</Button>
+          <Button type="submit" loading={saving} loadingLabel={t('ui.common.loading')}>
+            {step === TOTAL ? (saveError ? t('common.action.retry') : t('auth.onboarding.finish')) : t('common.action.next')}
+          </Button>
         </div>
+        {saveError && (
+          <p role="alert" className="text-sm font-semibold text-danger-700">
+            {t('auth.onboarding.saveError', { defaultValue: 'We could not save your choices. Please try again.' })}
+          </p>
+        )}
         <p className="text-xs text-ink-soft">{t('auth.onboarding.privacy')}</p>
       </form>
     </div>

@@ -1,11 +1,12 @@
 import { useRef, useState, type FormEvent } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Select } from '@/components/ui';
 import { announce } from '@/lib/a11y';
 import { useSessionStore } from '@/store';
 import type { Role } from '@/types';
 import { destinationFor } from './destination';
+import { RedirectByRole } from './RedirectByRole';
 import { usePageFocus } from './usePageFocus';
 
 const ROLES: Role[] = ['student', 'teacher', 'admin'];
@@ -24,7 +25,7 @@ export default function LoginPage() {
   const [formError, setFormError] = useState<string>();
   const [busy, setBusy] = useState(false);
 
-  if (user) return <Navigate to={destinationFor(user.role, user.id)} replace />;
+  if (user && !busy) return <RedirectByRole role={user.role} userId={user.id} />;
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -40,7 +41,7 @@ export default function LoginPage() {
     setBusy(true);
     try {
       const u = await signIn(email, role);
-      navigate(destinationFor(u.role, u.id), { replace: true });
+      navigate(await destinationFor(u.role, u.id), { replace: true });
     } catch {
       const msg = t('auth.login.error');
       setFormError(msg);
