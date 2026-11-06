@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useMemo, useState } from 'react';
 import { Search, Users } from 'lucide-react';
 import { Badge, Button, Card, EmptyState, Input, PageHeader, Select, Table, TBody, Td, Th, THead, Tr } from '@/components/ui';
@@ -5,12 +6,12 @@ import { useAsync } from '@/lib';
 import { adminService } from '@/services';
 import type { Role, User } from '@/types';
 import { AsyncView } from './AsyncView';
-import { ROLES, useAdminT } from './shared';
+import { ROLES } from './shared';
 
 const roleTone = { student: 'brand', teacher: 'success', admin: 'warning' } as const;
 
 function UsersList({ users }: { users: User[] }) {
-  const t = useAdminT();
+  const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [role, setRole] = useState<'' | Role>('');
 
@@ -99,7 +100,7 @@ function UsersList({ users }: { users: User[] }) {
 }
 
 export default function UsersPage() {
-  const t = useAdminT();
+  const { t } = useTranslation();
   const state = useAsync(() => adminService.listUsers(), []);
   return (
     <>
