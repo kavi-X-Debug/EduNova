@@ -73,7 +73,7 @@ No hex/rgb values anywhere else. Values below are **placeholders pending Figma**
 | radius | sm 6px, md 10px, lg 16px, xl 24px |
 | shadow | `card`, `raised`, `focus` (2px white gap + 2px `brand-600` ring) |
 | font | Inter, Noto Sans Sinhala, Noto Sans Tamil, system-ui (loaded from Google Fonts in `index.html`) |
-| breakpoints | `sm` 390px, `md` 834px, `lg` 1440px (these replace Tailwind's defaults) |
+| breakpoints | `sm` 390px, `md` 834px, `lg` 1440px (these replace Tailwind's defaults; there is no `xl`) |
 
 ## Project layout and ownership
 
