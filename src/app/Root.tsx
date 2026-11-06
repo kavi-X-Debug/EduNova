@@ -16,7 +16,9 @@ function RouteFocus() {
   // Keep the latest `t` without re-running the effect when only the language changes
   // (a language switch must not steal focus from the switcher or re-announce the page).
   const tRef = useRef(t);
-  tRef.current = t;
+  useEffect(() => {
+    tRef.current = t;
+  }, [t]);
   useEffect(() => {
     // Wait a frame so lazy pages have rendered their heading.
     const id = window.setTimeout(() => {
