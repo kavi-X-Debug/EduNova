@@ -2,16 +2,13 @@ import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { Card, EmptyState, ErrorState, LoadingState, PageHeader, ReadinessBand } from '@/components/ui';
 import { focusRing, touchTarget } from '@/components/ui/cn';
-import { useLocale } from '@/i18n';
+import { useLocale, type TKey } from '@/i18n';
 import { formatDate, useAsync } from '@/lib';
 import { studentService } from '@/services';
 import { useSessionStore } from '@/store';
-import { examNameKey } from './examName';
-import { useLt } from './useLt';
 
 export default function ExamsPage() {
   const { t, locale } = useLocale();
-  const lt = useLt();
   const userId = useSessionStore((s) => s.user?.id) ?? '';
   const { data, loading, error, reload } = useAsync(() => studentService.listExamReports(userId), [userId]);
 
@@ -48,8 +45,8 @@ export default function ExamsPage() {
       <p className="mb-4 max-w-prose text-sm text-ink-soft">{t('student.exams.readiness.note')}</p>
       <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {data.map((report) => {
-          const { key, fallback } = examNameKey(report.examId);
-          const name = lt(key, fallback);
+          
+          const name = t(`student.exams.name.${report.examId}` as TKey);
           return (
             <li key={report.id}>
               <Card as="article" className="flex h-full flex-col gap-4">

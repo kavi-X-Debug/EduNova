@@ -14,12 +14,11 @@ import {
   cn,
   type BadgeTone,
 } from '@/components/ui';
-import { useT } from '@/i18n';
+import { useT, type TKey } from '@/i18n';
 import { useAsync } from '@/lib';
 import { studentService } from '@/services';
 import { useSessionStore } from '@/store';
 import type { Concept, LearningPathStep, Mastery } from '@/types';
-import { useLt } from './useLt';
 
 type Status = LearningPathStep['status'];
 type Kind = LearningPathStep['kind'];
@@ -53,7 +52,6 @@ interface PathData {
 
 export default function PathPage() {
   const t = useT();
-  const lt = useLt();
   const user = useSessionStore((s) => s.user);
   const userId = user?.id ?? '';
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -72,7 +70,7 @@ export default function PathPage() {
 
   const conceptTitle = (id: string): string => {
     const c = conceptById.get(id);
-    return c ? lt(c.titleKey, c.titleKey) : id;
+    return c ? t(c.titleKey as TKey) : id;
   };
 
   const header = <PageHeader title={t('student.path.title')} description={t('student.path.subtitle')} />;
@@ -117,13 +115,13 @@ export default function PathPage() {
       {header}
 
       <div className="mb-6 grid gap-4 md:grid-cols-[1fr_minmax(0,18rem)] md:items-center">
-        <Card title={lt('student.path.progress.title', 'Your progress')}>
+        <Card title={t('student.path.progress.title')}>
           <p className="mb-3 text-sm text-ink-soft">
-            {lt('student.path.progress.summary', '{{done}} of {{total}} steps done', { done: doneCount, total: steps.length })}
+            {t('student.path.progress.summary', { done: doneCount, total: steps.length })}
           </p>
           <ProgressBar
             value={(doneCount / steps.length) * 100}
-            label={lt('student.path.progress.title', 'Your progress')}
+            label={t('student.path.progress.title')}
           />
           {current && (
             <p className="mt-4 text-sm text-ink">
@@ -134,7 +132,7 @@ export default function PathPage() {
         </Card>
         <AnimatedIllustration
           name="learning-path"
-          alt={lt('student.path.illustration.alt', 'A winding path with steps lighting up one by one')}
+          alt={t('student.path.illustration.alt')}
           className="mx-auto w-full max-w-xs"
         />
       </div>
@@ -142,7 +140,7 @@ export default function PathPage() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <section aria-labelledby="path-steps-heading">
           <h2 id="path-steps-heading" className="mb-3 text-lg font-semibold text-ink">
-            {lt('student.path.steps.title', 'Your steps')}
+            {t('student.path.steps.title')}
           </h2>
           <ol className="flex flex-col gap-3">
             {steps.map((step, index) => {
@@ -208,22 +206,22 @@ export default function PathPage() {
 
             {selectedMastery && (
               <div className="mt-4">
-                <h3 className="mb-2 text-sm font-semibold text-ink">{lt('student.path.detail.readiness', 'Where you are now')}</h3>
+                <h3 className="mb-2 text-sm font-semibold text-ink">{t('student.path.detail.readiness')}</h3>
                 <ReadinessBand band={selectedMastery.band} />
               </div>
             )}
 
             <div className="mt-4">
-              <h3 className="mb-2 text-sm font-semibold text-ink">{lt('student.path.detail.prereq', 'This builds on')}</h3>
+              <h3 className="mb-2 text-sm font-semibold text-ink">{t('student.path.detail.prereq')}</h3>
               {prereqs.length === 0 ? (
-                <p className="text-sm text-ink-soft">{lt('student.path.detail.noPrereq', 'No earlier topics are needed first.')}</p>
+                <p className="text-sm text-ink-soft">{t('student.path.detail.noPrereq')}</p>
               ) : (
                 <ul className="flex flex-col gap-2">
                   {prereqs.map((p) => {
                     const m = masteryById.get(p.id);
                     return (
                       <li key={p.id} className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-line p-2 text-sm">
-                        <span className="text-ink">{lt(p.titleKey, p.titleKey)}</span>
+                        <span className="text-ink">{t(p.titleKey as TKey)}</span>
                         {m && <ReadinessBand band={m.band} compact />}
                       </li>
                     );

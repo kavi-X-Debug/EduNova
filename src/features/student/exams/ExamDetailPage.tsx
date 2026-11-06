@@ -1,14 +1,12 @@
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { Banner, Card, EmptyState, ErrorState, LoadingState, PageHeader, ReadinessBand, Table, TBody, Td, Th, THead, Tr } from '@/components/ui';
+import { Banner, Card, EmptyState, ErrorState, LoadingState, PageHeader, ReadinessBand } from '@/components/ui';
 import { focusRing, touchTarget } from '@/components/ui/cn';
-import { useLocale } from '@/i18n';
+import { useLocale, type TKey } from '@/i18n';
 import { BAND_ORDER, bandRank, formatDate, useAsync } from '@/lib';
 import { studentService } from '@/services';
 import { useSessionStore } from '@/store';
 import type { Concept, ExamReport } from '@/types';
-import { examNameKey } from './examName';
-import { useLt } from './useLt';
 
 interface DetailData {
   reports: ExamReport[];
@@ -17,7 +15,6 @@ interface DetailData {
 
 export default function ExamDetailPage() {
   const { t, locale } = useLocale();
-  const lt = useLt();
   const { id } = useParams<{ id: string }>();
   const userId = useSessionStore((s) => s.user?.id) ?? '';
   const { data, loading, error, reload } = useAsync<DetailData>(async () => {
@@ -31,7 +28,7 @@ export default function ExamDetailPage() {
       className={`mb-2 inline-flex items-center gap-1 rounded-md px-2 text-sm font-semibold text-brand-700 hover:bg-brand-50 ${touchTarget} ${focusRing}`}
     >
       <ArrowLeft aria-hidden className="h-4 w-4" />
-      {lt('student.exams.back', 'All exams')}
+      {t('student.exams.back')}
     </Link>
   );
 
@@ -60,7 +57,7 @@ export default function ExamDetailPage() {
       <div>
         {backLink}
         <PageHeader title={t('student.exams.report.title')} />
-        <EmptyState title={lt('student.exams.notFound', 'We could not find that report.')} />
+        <EmptyState title={t('student.exams.notFound')} />
       </div>
     );
   }
@@ -68,10 +65,10 @@ export default function ExamDetailPage() {
   const conceptById = new Map(data.concepts.map((c) => [c.id, c]));
   const conceptTitle = (cid: string): string => {
     const c = conceptById.get(cid);
-    return c ? lt(c.titleKey, c.titleKey) : cid;
+    return c ? t(c.titleKey as TKey) : cid;
   };
-  const { key, fallback } = examNameKey(report.examId);
-  const name = lt(key, fallback);
+  
+  const name = t(`student.exams.name.${report.examId}` as TKey);
 
   // Weakest topics first so the student sees where to focus.
   const breakdown = [...report.conceptBreakdown].sort((a, b) => bandRank(a.band) - bandRank(b.band));
@@ -92,7 +89,7 @@ export default function ExamDetailPage() {
               {t(`student.exams.band.${report.band}.desc`)}
             </p>
             <Banner tone="info" className="mt-4">
-              <p className="font-semibold text-ink">{lt('student.exams.readiness.bandNotMark', 'This is a band, not a mark.')}</p>
+              <p className="font-semibold text-ink">{t('student.exams.readiness.bandNotMark')}</p>
               <p>{t('student.exams.readiness.note')}</p>
             </Banner>
           </Card>
@@ -103,7 +100,7 @@ export default function ExamDetailPage() {
             ) : (
               <ul className="flex list-disc flex-col gap-2 ps-5 text-base text-ink">
                 {report.nextSteps.map((s) => (
-                  <li key={s}>{lt(s, s)}</li>
+                  <li key={s}>{t(s as TKey)}</li>
                 ))}
               </ul>
             )}
@@ -115,33 +112,21 @@ export default function ExamDetailPage() {
             <p className="text-sm text-ink-soft">{t('common.status.empty')}</p>
           ) : (
             <figure className="m-0 flex flex-col gap-3">
-              <figcaption className="text-sm text-ink-soft">
-                {lt('student.exams.chart.summary', 'Readiness bands across {{count}} topics. {{summary}}', {
+              <figcaption className="min-w-0 break-words text-sm text-ink-soft">
+                {t('student.exams.chart.summary', {
                   count: breakdown.length,
                   summary,
                 })}
               </figcaption>
-              {/* The band graphic in each row is the chart; the table is its text alternative. */}
-              <Table caption={lt('student.exams.chart.caption', 'Readiness band for each topic')} captionHidden>
-                <THead>
-                  <Tr>
-                    <Th>{lt('student.exams.chart.topic', 'Topic')}</Th>
-                    <Th>{t('student.exams.readiness.title')}</Th>
-                  </Tr>
-                </THead>
-                <TBody>
-                  {breakdown.map((m) => (
-                    <Tr key={m.conceptId}>
-                      <Th scope="row" className="font-medium text-ink">
-                        {conceptTitle(m.conceptId)}
-                      </Th>
-                      <Td>
-                        <ReadinessBand band={m.band} />
-                      </Td>
-                    </Tr>
-                  ))}
-                </TBody>
-              </Table>
+              {/* Each row's band graphic is the chart; its label text is the text alternative. */}
+              <ul aria-label={t('student.exams.chart.caption')} className="flex flex-col divide-y divide-line rounded-lg border border-line">
+                {breakdown.map((m) => (
+                  <li key={m.conceptId} className="flex min-w-0 flex-col gap-2 p-3 sm:flex-row sm:items-center sm:justify-between">
+                    <span className="min-w-0 break-words font-medium text-ink">{conceptTitle(m.conceptId)}</span>
+                    <ReadinessBand band={m.band} />
+                  </li>
+                ))}
+              </ul>
             </figure>
           )}
         </Card>
