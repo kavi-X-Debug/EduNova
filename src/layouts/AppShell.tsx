@@ -1,7 +1,10 @@
-import type { ComponentType, ReactNode } from 'react';
+import { useState, type ComponentType, type ReactNode } from 'react';
+import { MoreHorizontal } from 'lucide-react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/components/ui/cn';
+import { Modal } from '@/components/ui/Modal';
+import { SkipLink } from './SkipLink';
 
 export interface NavItem {
   /** Route path, e.g. /student/path */
@@ -29,14 +32,13 @@ const linkBase =
 export function AppShell({ navItems, brandKey = 'app.name', headerSlot, sidebarFooter }: LayoutProps) {
   const { t } = useTranslation();
   const navLabel = t('layout.mainNavigation');
+  const [moreOpen, setMoreOpen] = useState(false);
+  const needsMore = navItems.length > 5;
+  const primary = needsMore ? navItems.slice(0, 4) : navItems;
+  const overflow = needsMore ? navItems.slice(4) : [];
   return (
     <div className="min-h-screen bg-surface-muted text-ink">
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-surface focus:px-4 focus:py-3 focus:font-semibold focus:text-brand-700 focus:shadow-raised focus:outline-none focus-visible:shadow-focus"
-      >
-        {t('layout.skipToContent')}
-      </a>
+      <SkipLink />
 
       <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-line bg-surface md:flex">
         <div className="px-5 py-5 text-lg font-bold text-brand-700">{t(brandKey)}</div>
@@ -67,7 +69,7 @@ export function AppShell({ navItems, brandKey = 'app.name', headerSlot, sidebarF
 
       <nav aria-label={navLabel} className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface md:hidden">
         <ul className="flex justify-around">
-          {navItems.slice(0, 5).map(({ to, labelKey, icon: Icon, end }) => (
+          {primary.map(({ to, labelKey, icon: Icon, end }) => (
             <li key={to} className="flex-1">
               <NavLink
                 to={to}
@@ -81,8 +83,36 @@ export function AppShell({ navItems, brandKey = 'app.name', headerSlot, sidebarF
               </NavLink>
             </li>
           ))}
+          {needsMore && (
+            <li className="flex-1">
+              <button
+                type="button"
+                aria-expanded={moreOpen}
+                aria-haspopup="dialog"
+                onClick={() => setMoreOpen(true)}
+                className="flex min-h-[56px] w-full flex-col items-center justify-center gap-0.5 px-1 text-xs font-semibold text-ink-soft outline-none focus-visible:shadow-focus"
+              >
+                <MoreHorizontal aria-hidden className="h-5 w-5" />
+                <span>{t('nav.menu.open')}</span>
+              </button>
+            </li>
+          )}
         </ul>
       </nav>
+      {needsMore && (
+        <Modal open={moreOpen} onClose={() => setMoreOpen(false)} title={navLabel} closeLabel={t('nav.menu.close')}>
+          <ul className="flex flex-col gap-1">
+            {overflow.map(({ to, labelKey, icon: Icon, end }) => (
+              <li key={to}>
+                <NavLink to={to} end={end} onClick={() => setMoreOpen(false)} className={({ isActive }) => cn(linkBase, isActive ? 'bg-brand-50 text-brand-700' : 'text-ink-soft hover:bg-surface-sunken hover:text-ink')}>
+                  {Icon && <Icon aria-hidden className="h-5 w-5" />}
+                  {t(labelKey)}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </Modal>
+      )}
     </div>
   );
 }

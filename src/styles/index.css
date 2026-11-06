@@ -10,8 +10,20 @@
     @apply bg-surface-muted font-sans text-ink antialiased;
   }
   /* Keyboard focus uses the shadow-focus token everywhere. */
+  /* Opaque two-layer ring (white gap + brand-600); transparent outline keeps it visible in forced-colors. */
   :focus-visible {
-    @apply outline-none shadow-focus;
+    @apply shadow-focus;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+  /* Indic scripts need generous line-height; text-sm/leading-* utilities must not undercut it. */
+  :lang(si),
+  :lang(ta),
+  :lang(si) *,
+  :lang(ta) * {
+    line-height: 1.6 !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
   }
   /* Respect reduced motion globally. */
   @media (prefers-reduced-motion: reduce) {
