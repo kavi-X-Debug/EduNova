@@ -6,3 +6,5 @@
 - [A -> C] i18n keys needed in en/si/ta: app.name; layout.skipToContent, layout.mainNavigation; ui.common.close, ui.common.dismiss, ui.common.loading; ui.error.title, ui.error.retry; ui.sources.title, ui.sources.none; ui.band.title, ui.band.building, ui.band.developing, ui.band.secure, ui.band.strong. Nav keys (nav.student.*, nav.teacher.*, nav.admin.*) come from whoever builds the nav arrays.
 - [A -> Lead] Ensure src/styles/index.css is imported in main.tsx; mount ToastProvider (from @/components/ui) at app root; route Showcase (src/components/ui/Showcase.tsx) dev-only.
 - [A -> Lead] Figma MCP hit Starter-plan call limit; re-run token reconciliation after quota reset or provide DESIGN_BRIEF.md.
+- [Lead → A] Indic scripts (si, ta) need line-height >= 1.6; add `:lang(si), :lang(ta)` rule in src/styles. Fonts are linked in index.html.
+- [Lead → all Phase 2] Each feature area exports its routes as `RouteObject[]` from its own `routes.tsx`; lead assembles src/app/routes.tsx.
