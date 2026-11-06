@@ -42,7 +42,7 @@ export function ReviewSession({ items, onExit }: ReviewSessionProps) {
     const nextDays = nextIntervalDays(item.intervalDays, recall);
     setResults((r) => [...r, { item, recall, nextDays }]);
     setLastNext(nextDays);
-    announce(t('student.revision.nextCount', { defaultValue: 'Next review in {{count}} days', count: nextDays }));
+    announce(t('student.revision.nextCount', { count: nextDays }));
     setRevealed(false);
     setIndex((i) => i + 1);
   };
@@ -55,10 +55,10 @@ export function ReviewSession({ items, onExit }: ReviewSessionProps) {
           {t('student.revision.done')}
         </h2>
         {lastNext !== null && (
-          <p className="text-sm text-ink-soft">{t('student.revision.nextCount', { defaultValue: 'Next review in {{count}} days', count: lastNext })}</p>
+          <p className="text-sm text-ink-soft">{t('student.revision.nextCount', { count: lastNext })}</p>
         )}
         <Button size="lg" onClick={() => onExit(results)} className="w-full sm:w-auto">
-          {t('student.revision.backToList', { defaultValue: 'Back to revision' })}
+          {t('student.revision.backToList')}
         </Button>
       </Card>
     );
@@ -71,19 +71,16 @@ export function ReviewSession({ items, onExit }: ReviewSessionProps) {
     <Card as="section" aria-labelledby="review-heading" className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
         <p className="text-sm font-medium text-ink-soft">
-          {t('student.revision.session.progress', { defaultValue: 'Topic {{current}} of {{total}}', current: index + 1, total: items.length })}
+          {t('student.revision.session.progress', { current: index + 1, total: items.length })}
         </p>
-        <ProgressBar value={percent} label={t('student.revision.session.progressLabel', { defaultValue: 'Review progress' })} />
+        <ProgressBar value={percent} label={t('student.revision.session.progressLabel')} />
       </div>
 
       <h2 id="review-heading" ref={headingRef} tabIndex={-1} className="text-2xl font-bold text-ink outline-none">
         {concept}
       </h2>
       <p className="text-base text-ink-soft">
-        {t('student.revision.session.prompt', {
-          defaultValue: 'Take a moment. What do you remember about {{concept}}? Try to explain it in your own words.',
-          concept,
-        })}
+        {t('student.revision.session.prompt', { concept })}
       </p>
 
       {!revealed ? (
@@ -93,7 +90,7 @@ export function ReviewSession({ items, onExit }: ReviewSessionProps) {
       ) : (
         <div className="flex flex-col gap-4">
           <p className="rounded-md border border-line bg-surface-muted p-3 text-sm text-ink-soft">
-            {t('student.revision.session.check', { defaultValue: 'Check your notes, or ask the tutor to confirm the key ideas.' })}{' '}
+            {t('student.revision.session.check')}{' '}
             <Link to="/student/tutor" className="inline-flex min-h-[44px] items-center gap-1 font-semibold text-brand-700 underline outline-none focus-visible:shadow-focus">
               {t('nav.student.tutor')}
               <ArrowRight aria-hidden className="h-4 w-4" />
@@ -113,7 +110,7 @@ export function ReviewSession({ items, onExit }: ReviewSessionProps) {
       )}
 
       <Button variant="ghost" onClick={() => onExit(results)} className="self-start">
-        {t('student.revision.session.end', { defaultValue: 'Finish for now' })}
+        {t('student.revision.session.end')}
       </Button>
     </Card>
   );

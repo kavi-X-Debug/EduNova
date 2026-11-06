@@ -23,18 +23,18 @@ function ItemRow({ item, now, locale, nextDays }: ItemRowProps) {
   const offset = dayOffset(item.dueAt, now);
   const concept = t(`concept.${item.conceptId}`, { defaultValue: item.conceptId });
   let status: string;
-  if (nextDays !== undefined) status = t('student.revision.nextCount', { defaultValue: 'Next review in {{count}} days', count: nextDays });
+  if (nextDays !== undefined) status = t('student.revision.nextCount', { count: nextDays });
   else if (offset > 0) status = t('student.revision.due', { when: formatRelative(item.dueAt, locale, now) });
-  else if (offset === 0) status = t('student.revision.readyToday', { defaultValue: 'Ready today' });
-  else status = t('student.revision.readySince', { defaultValue: 'Ready since {{when}}', when: formatRelative(item.dueAt, locale, now) });
+  else if (offset === 0) status = t('student.revision.readyToday');
+  else status = t('student.revision.readySince', { when: formatRelative(item.dueAt, locale, now) });
 
   return (
-    <li className="flex flex-col gap-1 rounded-md border border-line bg-surface p-3 sm:flex-row sm:items-center sm:justify-between">
+    <li className="flex flex-col gap-1 rounded-md border border-line bg-surface p-3 md:flex-row md:items-center md:justify-between">
       <span className="font-medium text-ink">{concept}</span>
       <span className="flex flex-wrap items-center gap-2 text-sm text-ink-soft">
         <Clock aria-hidden className="h-4 w-4" />
         {status}
-        <Badge>{t('student.revision.interval', { defaultValue: 'Every {{count}} days', count: item.intervalDays })}</Badge>
+        <Badge>{t('student.revision.interval', { count: item.intervalDays })}</Badge>
       </span>
     </li>
   );
@@ -91,17 +91,14 @@ export default function RevisionPage() {
         <div className="flex flex-col gap-6">
           <Card className="grid gap-4 md:grid-cols-[1fr_auto] md:items-center">
             <div className="flex flex-col gap-2">
-              <h2 className="text-lg font-semibold text-ink">{t('student.revision.decay.title', { defaultValue: 'Why spaced review works' })}</h2>
+              <h2 className="text-lg font-semibold text-ink">{t('student.revision.decay.title')}</h2>
               <p className="text-sm text-ink-soft">
-                {t('student.revision.decay.text', {
-                  defaultValue:
-                    'Memories fade a little over time. A short review just before you forget brings them back stronger, so the gaps between reviews can grow.',
-                })}
+                {t('student.revision.decay.text')}
               </p>
             </div>
             <AnimatedIllustration
               name="revision-decay"
-              alt={t('student.revision.decay.alt', { defaultValue: 'A forgetting curve falls over time, then rebounds higher after each spaced review.' })}
+              alt={t('student.revision.decay.alt')}
               className="w-full max-w-sm"
             />
           </Card>
@@ -128,7 +125,7 @@ export default function RevisionPage() {
               <Banner tone="success">{t('student.revision.done')}</Banner>
             )}
             {doneThisSession.length > 0 && (
-              <ul className="flex flex-col gap-2" aria-label={t('student.revision.reviewedList', { defaultValue: 'Reviewed today' })}>
+              <ul className="flex flex-col gap-2" aria-label={t('student.revision.reviewedList')}>
                 {doneThisSession.map((i) => (
                   <ItemRow key={i.id} item={i} now={now} locale={locale} nextDays={reviewed[i.id]} />
                 ))}
@@ -139,7 +136,7 @@ export default function RevisionPage() {
           {upcoming.length > 0 && (
             <section aria-labelledby="upcoming-heading" className="flex flex-col gap-3">
               <h2 id="upcoming-heading" className="text-xl font-semibold text-ink">
-                {t('student.revision.upcoming', { defaultValue: 'Coming up' })}
+                {t('student.revision.upcoming')}
               </h2>
               <ul className="flex flex-col gap-2">
                 {upcoming.map((i) => (

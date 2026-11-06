@@ -20,7 +20,7 @@ export function QuestCard({ quest, pendingIds, onComplete }: QuestCardProps) {
   return (
     <Card as="article" aria-labelledby={headingId} className="flex flex-col gap-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
-        <h3 id={headingId} className="text-lg font-semibold text-ink">
+        <h3 id={headingId} tabIndex={-1} className="text-lg font-semibold text-ink outline-none focus-visible:shadow-focus">
           {title}
         </h3>
         <div className="flex flex-wrap gap-2">
@@ -36,7 +36,7 @@ export function QuestCard({ quest, pendingIds, onComplete }: QuestCardProps) {
       <ProgressBar
         value={percent}
         tone={complete ? 'success' : 'brand'}
-        label={t('student.quests.progress.label', { defaultValue: 'Progress for {{title}}', title })}
+        label={t('student.quests.progress.label', { title })}
         showValue
       />
 
@@ -67,10 +67,10 @@ export function QuestCard({ quest, pendingIds, onComplete }: QuestCardProps) {
                   loading={pending}
                   loadingLabel={t('a11y.loading')}
                   onClick={() => onComplete(quest, m.id)}
-                  aria-label={t('student.quests.mission.markDoneLabel', { defaultValue: 'Mark as done: {{title}}', title: missionTitle })}
+                  aria-label={t('student.quests.mission.markDoneLabel', { title: missionTitle })}
                   className="w-full sm:w-auto"
                 >
-                  {t('student.quests.mission.markDone', { defaultValue: 'Mark done' })}
+                  {t('student.quests.mission.markDone')}
                 </Button>
               )}
             </li>
