@@ -16,6 +16,11 @@ interface Celebration {
   xp: number;
 }
 
+/** The pressed button disappears once its mission is done, so hand focus to a stable heading (user-initiated, so not focus theft). */
+function moveFocusTo(id: string) {
+  window.setTimeout(() => document.getElementById(id)?.focus(), 60);
+}
+
 export default function QuestsPage() {
   const { t } = useTranslation();
   const userId = useSessionStore((s) => s.user?.id) ?? 'guest';
@@ -48,16 +53,18 @@ export default function QuestsPage() {
       await studentService.completeMission(userId, missionId);
       if (finishesQuest) {
         const title = t(quest.titleKey);
-        const summary = t('student.quests.celebration.summary', { defaultValue: '{{title}}: {{xp}} XP earned.', title, xp: quest.xp });
+        const summary = t('student.quests.celebration.summary', { title, xp: quest.xp });
         setCelebration({ questId: quest.id, title, xp: quest.xp });
         announce(`${t('student.quests.complete')} ${summary}`);
+        moveFocusTo('quest-celebration');
       } else {
-        announce(t('student.quests.mission.savedAnnounce', { defaultValue: 'Mission marked as done.' }));
+        announce(t('student.quests.mission.savedAnnounce'));
+        moveFocusTo(`quest-${quest.id}`);
       }
       reload();
     } catch {
       setSaveFailed(true);
-      announce(t('student.quests.mission.error', { defaultValue: 'We could not save that. Please try again.' }), 'assertive');
+      announce(t('student.quests.mission.error'), 'assertive');
     } finally {
       setPendingIds((s) => {
         const next = new Set(s);
@@ -91,15 +98,15 @@ export default function QuestsPage() {
               {pref.showAnimation && (
                 <AnimatedIllustration
                   name="mastery-celebration"
-                  alt={t('student.quests.celebration.alt', { defaultValue: 'A badge pops open with confetti to celebrate finishing a quest.' })}
+                  alt={t('student.quests.celebration.alt')}
                   className="w-40 md:w-56"
                 />
               )}
-              <h2 id="quest-celebration" className="text-xl font-bold text-ink">
+              <h2 id="quest-celebration" tabIndex={-1} className="text-xl font-bold text-ink outline-none focus-visible:shadow-focus">
                 {t('student.quests.complete')}
               </h2>
               <p className="text-sm text-ink-soft">
-                {t('student.quests.celebration.summary', { defaultValue: '{{title}}: {{xp}} XP earned.', title: celebration.title, xp: celebration.xp })}
+                {t('student.quests.celebration.summary', { title: celebration.title, xp: celebration.xp })}
               </p>
               <Button variant="secondary" onClick={() => setCelebration(null)}>
                 {t('a11y.close')}
@@ -107,28 +114,28 @@ export default function QuestsPage() {
             </Card>
           )}
 
-          {saveFailed && <Banner tone="danger">{t('student.quests.mission.error', { defaultValue: 'We could not save that. Please try again.' })}</Banner>}
+          {saveFailed && <Banner tone="danger">{t('student.quests.mission.error')}</Banner>}
 
-          <section aria-label={t('student.quests.map.title', { defaultValue: 'Your quest trail' })} className="grid gap-4 md:grid-cols-[1fr_auto] md:items-center">
+          <section aria-label={t('student.quests.map.title')} className="grid gap-4 md:grid-cols-[1fr_auto] md:items-center">
             <Card className="flex items-center justify-center">
               <AnimatedIllustration
                 name="quest-map"
-                alt={t('student.quests.map.alt', { defaultValue: 'A trail map: a learner walks along the quest path toward a goal flag.' })}
+                alt={t('student.quests.map.alt')}
                 className="w-full max-w-md"
               />
             </Card>
             <div className="grid grid-cols-2 gap-3 md:grid-cols-1">
               <Stat
-                label={t('student.quests.summary.label', { defaultValue: 'Quests complete' })}
-                value={t('student.quests.summary.value', { defaultValue: '{{done}} of {{total}}', done: completed.length, total: quests.length })}
+                label={t('student.quests.summary.label')}
+                value={t('student.quests.summary.value', { done: completed.length, total: quests.length })}
               />
-              <Stat label={t('student.quests.summary.xp', { defaultValue: 'XP earned' })} value={t('student.quests.xp', { xp: totalXp })} />
+              <Stat label={t('student.quests.summary.xp')} value={t('student.quests.xp', { xp: totalXp })} />
             </div>
           </section>
 
           <section aria-labelledby="quest-list-heading" className="flex flex-col gap-4">
             <h2 id="quest-list-heading" className="text-xl font-semibold text-ink">
-              {t('student.quests.list.title', { defaultValue: 'Your quests' })}
+              {t('student.quests.list.title')}
             </h2>
             {quests.map((q) => (
               <QuestCard key={q.id} quest={q} pendingIds={pendingIds} onComplete={handleComplete} />
@@ -139,11 +146,11 @@ export default function QuestsPage() {
             <Checkbox
               checked={pref.enabled}
               onChange={(e) => pref.setEnabled(e.target.checked)}
-              label={t('student.quests.celebrate.toggle', { defaultValue: 'Show celebration animations' })}
+              label={t('student.quests.celebrate.toggle')}
               hint={
                 pref.reduced
-                  ? t('student.quests.celebrate.reducedHint', { defaultValue: 'Animations are off because your device asks for reduced motion.' })
-                  : t('student.quests.celebrate.hint', { defaultValue: 'Turn this off to keep things calm. Your progress is not affected.' })
+                  ? t('student.quests.celebrate.reducedHint')
+                  : t('student.quests.celebrate.hint')
               }
             />
           </Card>
