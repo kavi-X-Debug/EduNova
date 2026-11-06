@@ -1,4 +1,4 @@
-import { createBrowserRouter, Outlet, type RouteObject } from 'react-router-dom';
+import { createBrowserRouter, type RouteObject } from 'react-router-dom';
 import { BarChart3, ClipboardList, LayoutDashboard, MessagesSquare, Route as RouteIcon, ScrollText, Swords, Users, RefreshCw, Stethoscope, Library } from 'lucide-react';
 import { AdminLayout, AuthLayout, StudentLayout, TeacherLayout, type NavItem } from '@/layouts';
 import { authRoutes } from '@/features/student/onboarding/routes';
@@ -11,10 +11,9 @@ import { questsRoutes } from '@/features/student/quests/routes';
 import { revisionRoutes } from '@/features/student/revision/routes';
 import { teacherRoutes } from '@/features/teacher/routes';
 import { adminRoutes } from '@/features/admin/routes';
-import { useT } from '@/i18n';
-import { LoadingState } from '@/components/ui';
 import { HeaderSlot } from './HeaderSlot';
-import { RedirectHome, RequireRole, RouteFocus } from './guards';
+import { RedirectHome, RequireRole } from './guards';
+import { AppLoading, Root } from './Root';
 
 const studentNav: NavItem[] = [
   { to: '/student', labelKey: 'nav.student.dashboard', icon: LayoutDashboard, end: true },
@@ -34,18 +33,6 @@ const adminNav: NavItem[] = [
   { to: '/admin/curriculum', labelKey: 'nav.admin.curriculum', icon: Library },
   { to: '/admin/audit', labelKey: 'nav.admin.audit', icon: ScrollText },
 ];
-
-function AppLoading() {
-  const t = useT();
-  return <LoadingState label={t('ui.common.loading')} />;
-}
-
-const Root = () => (
-  <>
-    <RouteFocus />
-    <Outlet />
-  </>
-);
 
 export const routes: RouteObject[] = [
   {
