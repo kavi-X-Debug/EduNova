@@ -21,8 +21,9 @@ export const useSessionStore = create<SessionState>()(
       locale: 'en',
       signIn: async (email, role) => {
         const user = await authService.signIn(email, role);
-        set({ user, role: user.role, locale: user.locale });
-        useUiStore.getState().setLocale(user.locale);
+        const ui = useUiStore.getState();
+        ui.applyProfileLocale(user.locale); // no-op if the person already chose a language
+        set({ user, role: user.role, locale: useUiStore.getState().locale });
         return user;
       },
       signOut: async () => {

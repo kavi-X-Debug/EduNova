@@ -1,9 +1,11 @@
 import type { AdminService } from '@/services/admin';
 import type { AuthService } from '@/services/auth';
-import type { StudentService } from '@/services/student';
+import type { StudentProfile, StudentService } from '@/services/student';
 import type { TeacherService } from '@/services/teacher';
 import type { ExamReport, LearningPathStep, Mastery, Quest, RevisionItem, User } from '@/types';
 import { makeMastery } from '@/lib/mastery';
+import { INTERVALS } from './learning';
+import { DAY } from './rng';
 import { clone, orEmpty, simulate } from './config';
 import { CONCEPTS } from './concepts';
 import { CURRICULUM, QUESTIONS, TUTOR_FALLBACK, TUTOR_TOPICS, isCorrect } from './content';
@@ -18,6 +20,8 @@ const pathStore = new Map<string, LearningPathStep[]>();
 const questStore = new Map<string, Quest[]>();
 const examStore = new Map<string, ExamReport[]>();
 const revisionStore = new Map<string, RevisionItem[]>();
+const PROFILE_KEY = 'edunova.mock.profile.';
+const profileStore = new Map<string, StudentProfile>();
 const curriculum = clone(CURRICULUM);
 const audit = buildAuditEvents();
 
@@ -126,6 +130,42 @@ export const mockStudentService: StudentService = {
 
   getRevisionQueue: (userId) =>
     simulate(() => clone(orEmpty(memo(revisionStore, userId, () => buildRevisionQueue(userId, masteryOf(userId)))))),
+
+  recordReview: (userId, revisionItemId, quality) =>
+    simulate(() => {
+      const queue = memo(revisionStore, userId, () => buildRevisionQueue(userId, masteryOf(userId)));
+      const item = queue.find((r) => r.id === revisionItemId);
+      if (!item) throw new Error(`Revision item not found: ${revisionItemId}`);
+      const pos = INTERVALS.indexOf(item.intervalDays);
+      const idx = quality >= 3 ? Math.min(INTERVALS.length - 1, Math.max(0, pos) + 1) : 0; // recalled: next interval; forgot: restart
+      item.intervalDays = INTERVALS[idx];
+      item.dueAt = new Date(Date.now() + item.intervalDays * DAY).toISOString();
+      queue.sort((a, b) => a.dueAt.localeCompare(b.dueAt));
+      return clone(item);
+    }),
+
+  getProfile: (userId) =>
+    simulate(() => {
+      const mem = profileStore.get(userId);
+      if (mem) return clone(mem);
+      try {
+        const raw = window.localStorage.getItem(PROFILE_KEY + userId);
+        return raw ? (JSON.parse(raw) as StudentProfile) : null;
+      } catch {
+        return null;
+      }
+    }),
+
+  saveProfile: (userId, profile) =>
+    simulate(() => {
+      profileStore.set(userId, clone(profile));
+      try {
+        window.localStorage.setItem(PROFILE_KEY + userId, JSON.stringify(profile));
+      } catch {
+        /* storage unavailable */
+      }
+      return clone(profile);
+    }),
 };
 
 export const mockTeacherService: TeacherService = {
@@ -134,6 +174,19 @@ export const mockTeacherService: TeacherService = {
       const teacher = TEACHERS.find((t) => t.id === teacherId);
       const ids = teacher?.classIds ?? CLASS_DEFS.map((c) => c.id); // unknown teacher: demo access to all
       return clone(orEmpty(CLASS_DEFS.filter((c) => ids.includes(c.id)).map((c) => buildClassSummary(c, masteryOf))));
+    }),
+  getStudent: (studentId) =>
+    simulate(() => {
+      const u = findUser(studentId);
+      const row = u?.classIds && buildStudentRows(u.classIds[0], masteryOf).find((r) => r.id === studentId);
+      if (!row) throw new Error(`Student not found: ${studentId}`);
+      return clone(row);
+    }),
+  getClass: (classId) =>
+    simulate(() => {
+      const def = CLASS_DEFS.find((c) => c.id === classId);
+      if (!def) throw new Error(`Class not found: ${classId}`);
+      return clone(buildClassSummary(def, masteryOf));
     }),
   listStudents: (classId) => simulate(() => clone(orEmpty(buildStudentRows(classId, masteryOf)))),
 };
