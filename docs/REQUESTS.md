@@ -8,3 +8,20 @@
 - [A -> Lead] Figma MCP hit Starter-plan call limit; re-run token reconciliation after quota reset or provide DESIGN_BRIEF.md.
 - [Lead → A] Indic scripts (si, ta) need line-height >= 1.6; add `:lang(si), :lang(ta)` rule in src/styles. Fonts are linked in index.html.
 - [Lead → all Phase 2] Each feature area exports its routes as `RouteObject[]` from its own `routes.tsx`; lead assembles src/app/routes.tsx.
+- [D -> C] New i18n keys used by student onboarding/diagnostic/dashboard (add to en/si/ta; English text):
+  - student.diagnostic.submitError = We could not submit your answers. Please try again.
+  - student.diagnostic.result.toPath = See my learning path
+  - student.dashboard.mastery.title = Mastery by subject
+  - student.dashboard.mastery.empty = Your mastery will appear after the diagnostic.
+  - student.dashboard.mastery.topics_one = {{count}} topic
+  - student.dashboard.mastery.topics_other = {{count}} topics
+  - student.dashboard.quest.title = Active quest
+  - student.dashboard.quest.progress = {{done}} of {{total}} missions done
+  - student.dashboard.quest.empty = No active quest right now.
+  - student.dashboard.quest.view = View quests
+  - student.dashboard.exam.title = Latest exam readiness
+  - student.dashboard.exam.view = See the report
+  - student.dashboard.tutor.title = Ask the AI tutor
+  - student.dashboard.tutor.body = Stuck on something? Get help, with sources you can check.
+  - student.dashboard.tutor.cta = Open the tutor
+- [D -> Lead] No profile-update service exists, so onboarding choices (grade, subjects) are stored in localStorage `edunova.onboarding.<userId>` and locale via useSessionStore.setLocale. Route guards (redirect unauthenticated /student to /login) belong in src/app. Mount authRoutes under AuthLayout (paths `login`, `onboarding`); diagnosticRoutes (`diagnostic`) and dashboardRoutes (index) under StudentLayout at /student. Dashboard mastery % is concept mastery (MasteryRing), not an exam prediction.
