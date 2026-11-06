@@ -1,4 +1,5 @@
-import type { Concept, ExamReport, LearningPathStep, Mastery, Mission, Question, QuizAttempt, Quest, RevisionItem, TutorMessage } from '@/types';
+import type { Locale, Concept, ExamReport, LearningPathStep, Mastery, Mission, Question, QuizAttempt, Quest, RevisionItem, TutorMessage } from '@/types';
+export interface StudentProfile { grade: number; subjects: string[]; locale: Locale }
 export interface StudentService {
   listConcepts(subject?: string): Promise<Concept[]>;
   getMastery(userId: string): Promise<Mastery[]>;
@@ -10,4 +11,8 @@ export interface StudentService {
   listQuests(userId: string): Promise<Quest[]>;
   completeMission(userId: string, missionId: string): Promise<Mission>;
   getRevisionQueue(userId: string): Promise<RevisionItem[]>;
+  /** quality 0-5 (>=3 = recalled). Reschedules by spaced interval; returns the updated item. */
+  recordReview(userId: string, revisionItemId: string, quality: number): Promise<RevisionItem>;
+  getProfile(userId: string): Promise<StudentProfile | null>;
+  saveProfile(userId: string, profile: StudentProfile): Promise<StudentProfile>;
 }

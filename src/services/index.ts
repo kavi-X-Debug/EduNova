@@ -7,7 +7,7 @@ import type { TeacherService } from './teacher';
 import { mockAdminService, mockAuthService, mockStudentService, mockTeacherService } from '@/mocks/mockServices';
 
 export type { AuthService } from './auth';
-export type { StudentService } from './student';
+export type { StudentService, StudentProfile } from './student';
 export type { TeacherService } from './teacher';
 export type { AdminService } from './admin';
 

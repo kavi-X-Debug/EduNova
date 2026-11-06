@@ -10,8 +10,15 @@ const EMPTY_KEY = 'edunova.mock.empty';
 function flag(urlParam: string, storageKey: string): boolean {
   try {
     if (typeof window === 'undefined') return false;
+    // URL value is made sticky for the session (client-side nav drops the query); ?x=0 clears it.
     const q = new URLSearchParams(window.location.search).get(urlParam);
-    if (q !== null) return q === '1' || q === 'true';
+    if (q !== null) {
+      const on = q === '1' || q === 'true';
+      window.sessionStorage.setItem(storageKey, on ? '1' : '0');
+      return on;
+    }
+    const s = window.sessionStorage.getItem(storageKey);
+    if (s !== null) return s === '1';
     return window.localStorage.getItem(storageKey) === '1';
   } catch {
     return false;
@@ -20,6 +27,7 @@ function flag(urlParam: string, storageKey: string): boolean {
 
 function setFlag(storageKey: string, on: boolean): void {
   try {
+    window.sessionStorage.removeItem(storageKey);
     if (on) window.localStorage.setItem(storageKey, '1');
     else window.localStorage.removeItem(storageKey);
   } catch {
