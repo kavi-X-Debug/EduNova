@@ -1,1 +1,1 @@
-{"root":["./src/main.tsx","./src/vite-env.d.ts","./src/services/admin.ts","./src/services/auth.ts","./src/services/index.ts","./src/services/student.ts","./src/services/teacher.ts","./src/types/index.ts","./vite.config.ts","./tailwind.config.ts"],"version":"6.0.3"}
+{"root":["./src/main.tsx","./src/vite-env.d.ts","./src/i18n/index.ts","./src/lib/a11y/index.ts","./src/services/admin.ts","./src/services/auth.ts","./src/services/index.ts","./src/services/student.ts","./src/services/teacher.ts","./src/types/index.ts","./vite.config.ts","./tailwind.config.ts"],"version":"6.0.3"}

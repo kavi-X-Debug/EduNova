@@ -1,3 +1,5 @@
 # Progress
 
 - Phase 0 (lead): scaffold, contract, types, service interfaces.
+- Agent C (i18n & a11y, branch agent/i18n-a11y): `src/i18n` (initI18n, bindLocaleStore, useLocale, useT, TKey, tk), locales en/si/ta (380 keys, flat `feature.section.key`, incl. mockEn keys and Agent A's ui./layout. keys), `src/lib/a11y` (useFocusTrap, useAnnounce/announce, useRovingTabindex, usePrefersReducedMotion, useFocusReturn/captureFocus, visuallyHidden), `docs/A11Y.md`, `scripts/check-i18n.mjs` + npm script `i18n:check` (lead: new package.json script line). Lead: in main.tsx call `initI18n()` then `bindLocaleStore(useUiStore)`.
+  Human translation review wanted (si/ta): wellbeing prompts (teacher.wellbeing.*, wellbeing.prompt.*; gentle tone, si uses ඔහු/ඇය-free phrasing partly), readiness band labels (ta "அடித்தளம் அமைக்கிறது"/"வளர்ந்து வருகிறது", si "ගොඩනගමින්"/"දියුණු වෙමින්"), ICT/science terms in diagnostic options (ta இலத்திரன்/நியூட்ரன்/நுண்குமிழ், si රික්තකය/හරිතලව), "AI උපදේශකයා"/"AI பயிற்றுநர்", nav.student.diagnostic (si ඇගයීම, ta அறிநிலை மதிப்பீடு), subject.ict, concept.s11-gen, si/ta plural forms (_one/_other only).
