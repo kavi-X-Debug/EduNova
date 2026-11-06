@@ -525,5 +525,6 @@
   "admin.audit.target.session": "වත්මන් සැසිය",
   "admin.audit.target.unknown": "නොදන්නා අයිතමය",
   "student.dashboard.nextStep.alt": "ඔබේ ඊළඟ පියවර සලකුණු කර ඇති ඔබේ ඉගෙනුම් මාර්ගයේ රූප සටහන",
-  "auth.onboarding.saveError": "ඔබේ තේරීම් සුරැකීමට නොහැකි විය. කරුණාකර නැවත උත්සාහ කරන්න."
+  "auth.onboarding.saveError": "ඔබේ තේරීම් සුරැකීමට නොහැකි විය. කරුණාකර නැවත උත්සාහ කරන්න.",
+  "teacher.class.forbidden": "මෙම පන්තිය ඔබේ පන්තියක් නොවේ, නැතහොත් එය නොපවතී."
 }
