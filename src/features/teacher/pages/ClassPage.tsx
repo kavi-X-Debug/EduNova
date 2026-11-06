@@ -13,7 +13,7 @@ import { useSessionStore } from '@/store';
 import type { ReadinessBand as Band, StudentRow } from '@/types';
 import { bandChartData, bandSummary } from '../bands';
 import { WellbeingPrompt } from '../components/WellbeingPrompt';
-import { useTT } from '../strings';
+import { useTranslation } from 'react-i18next';
 
 type SortKey = 'name' | 'band' | 'lastActive';
 type SortDir = 'asc' | 'desc';
@@ -22,7 +22,7 @@ const focusCls = 'focus-visible:shadow-focus focus-visible:outline-none';
 
 export default function ClassPage() {
   const { id = '' } = useParams();
-  const t = useTT();
+  const { t } = useTranslation();
   const { locale } = useLocale();
   const teacherId = useSessionStore((s) => s.user?.id ?? '');
   const { data, loading, error, reload } = useAsync(

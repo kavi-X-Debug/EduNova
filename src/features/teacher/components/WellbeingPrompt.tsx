@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Banner, Button } from '@/components/ui';
-import { useTT } from '../strings';
+import { useTranslation } from 'react-i18next';
 
 export interface WellbeingPromptProps {
   studentId: string;
@@ -13,7 +13,7 @@ export interface WellbeingPromptProps {
 
 /** Private, non-diagnostic prompt for the teacher only. Never rendered on student-facing pages. */
 export function WellbeingPrompt({ studentId, studentName, promptKey, onDismiss, linkToStudent }: WellbeingPromptProps) {
-  const t = useTT();
+  const { t } = useTranslation();
   const heading = t('teacher.wellbeing.about', { name: studentName });
   return (
     <Banner
@@ -21,7 +21,7 @@ export function WellbeingPrompt({ studentId, studentName, promptKey, onDismiss, 
       title={
         <span className="flex flex-wrap items-center gap-2">
           {linkToStudent ? (
-            <Link to={`/teacher/students/${studentId}`} className="rounded-sm underline focus-visible:shadow-focus focus-visible:outline-none">
+            <Link to={`/teacher/students/${studentId}`} className="inline-flex min-h-11 items-center rounded-sm py-2 underline focus-visible:shadow-focus focus-visible:outline-none">
               {heading}
             </Link>
           ) : (
