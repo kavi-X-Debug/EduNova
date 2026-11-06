@@ -525,5 +525,6 @@
   "admin.audit.target.session": "Current session",
   "admin.audit.target.unknown": "Unknown item",
   "student.dashboard.nextStep.alt": "Illustration of your learning path with your next step marked",
-  "auth.onboarding.saveError": "We could not save your choices. Please try again."
+  "auth.onboarding.saveError": "We could not save your choices. Please try again.",
+  "teacher.class.forbidden": "This class is not one of yours, or it does not exist."
 }
