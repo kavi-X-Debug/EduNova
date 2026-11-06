@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowDown, ArrowUp, ArrowUpDown, ChevronLeft, Users } from 'lucide-react';
 import {
@@ -27,8 +27,11 @@ export default function ClassPage() {
   const teacherId = useSessionStore((s) => s.user?.id ?? '');
   const { data, loading, error, reload } = useAsync(
     async () => {
-      const [students, classes] = await Promise.all([teacherService.listStudents(id), teacherService.listClasses(teacherId)]);
-      return { students, summary: classes.find((c) => c.id === id) };
+      // Ownership first: students and wellbeing prompts are never fetched for a class that is not the teacher's.
+      const mine = await teacherService.listClasses(teacherId);
+      if (!mine.some((c) => c.id === id)) return { forbidden: true, students: [] as StudentRow[], summary: undefined };
+      const [summary, students] = await Promise.all([teacherService.getClass(id), teacherService.listStudents(id)]);
+      return { forbidden: false, students, summary };
     },
     [id, teacherId],
   );
@@ -57,8 +60,15 @@ export default function ClassPage() {
   }, [data, query, bandFilter, sortKey, sortDir, locale]);
 
   const total = data?.students.length ?? 0;
+  const firstAnnounce = useRef(true);
   useEffect(() => {
-    if (total > 0) announce(t('teacher.class.shown', { count: rows.length }));
+    if (firstAnnounce.current) {
+      firstAnnounce.current = false;
+      return;
+    }
+    if (total === 0) return;
+    const timer = setTimeout(() => announce(t('teacher.class.shown', { count: rows.length })), 500);
+    return () => clearTimeout(timer);
   }, [rows.length, total, t]);
 
   const prompts = useMemo(
@@ -104,7 +114,14 @@ export default function ClassPage() {
       {loading && <LoadingState label={t('ui.common.loading')} lines={5} />}
       {error && <ErrorState description={t('teacher.class.error')} onRetry={reload} />}
 
-      {!loading && !error && data && (
+      {!loading && !error && data?.forbidden && (
+        <EmptyState
+          icon={<Users className="h-8 w-8" />}
+          title={t('teacher.class.forbidden')}
+          action={<Link to="/teacher" className={`inline-flex min-h-11 items-center rounded-md px-3 font-semibold text-brand-700 underline ${focusCls}`}>{t('teacher.class.back')}</Link>}
+        />
+      )}
+      {!loading && !error && data && !data.forbidden && (
         <div className="flex flex-col gap-6">
           {data.summary && (
             <div className="grid gap-4 lg:grid-cols-2">
