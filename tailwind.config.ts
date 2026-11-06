@@ -21,7 +21,7 @@ export default {
       boxShadow: {
         card: '0 1px 2px rgba(15,23,42,0.06), 0 1px 3px rgba(15,23,42,0.08)',
         raised: '0 4px 12px rgba(15,23,42,0.10)',
-        focus: '0 0 0 3px rgba(79,70,229,0.35)',
+        focus: '0 0 0 2px #FFFFFF, 0 0 0 4px #4338CA',
       },
       fontFamily: {
         sans: ['Inter', 'Noto Sans Sinhala', 'Noto Sans Tamil', 'system-ui', 'sans-serif'],

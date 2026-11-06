@@ -45,7 +45,7 @@ function Inner() {
         <Badge>Neutral</Badge><Badge tone="brand">Brand</Badge><Badge tone="success">Success</Badge><Badge tone="warning">Warning</Badge><Badge tone="danger">Danger</Badge>
         <ReadinessBand band="building" /><ReadinessBand band="developing" /><ReadinessBand band="secure" /><ReadinessBand band="strong" />
         <div className="w-64"><ProgressBar value={62} label="Progress" showValue /></div>
-        <MasteryRing value={0.72} label="Mastery" />
+        <MasteryRing value={0.72} label="Mastery: Secure" size={72}><span className="text-center text-[10px]">Secure</span></MasteryRing>
         <Avatar name="Asha Perera" /><Avatar name="Nimal K" size="lg" />
       </Section>
       <Section title="Forms">
