@@ -67,7 +67,7 @@ export function AppShell({ navItems, brandKey = 'app.name', headerSlot, sidebarF
         </main>
       </div>
 
-      <nav aria-label={navLabel} className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface md:hidden">
+      <nav aria-label={t('a11y.landmark.navigationMobile')} className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface md:hidden">
         <ul className="flex justify-around">
           {primary.map(({ to, labelKey, icon: Icon, end }) => (
             <li key={to} className="flex-1">

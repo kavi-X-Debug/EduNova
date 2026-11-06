@@ -19,8 +19,8 @@
   /* Indic scripts need generous line-height; text-sm/leading-* utilities must not undercut it. */
   :lang(si),
   :lang(ta),
-  :lang(si) *,
-  :lang(ta) * {
+  :lang(si) :not(:lang(en)),
+  :lang(ta) :not(:lang(en)) {
     line-height: 1.6 !important;
     letter-spacing: normal !important;
     text-transform: none !important;

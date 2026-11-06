@@ -1,4 +1,4 @@
-import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from 'react';
 import { cn } from './cn';
 
 export interface RadioProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'id'> {
@@ -32,13 +32,14 @@ export interface RadioGroupProps {
 }
 
 export function RadioGroup({ name, legend, options, value, onChange, error, className }: RadioGroupProps) {
+  const errId = useId();
   return (
-    <fieldset className={cn('flex flex-col', className)}>
+    <fieldset className={cn('flex flex-col', className)} aria-describedby={error ? errId : undefined} aria-invalid={error ? true : undefined}>
       <legend className="mb-1 text-sm font-semibold text-ink">{legend}</legend>
       {options.map((o) => (
         <Radio key={o.value} name={name} value={o.value} label={o.label} disabled={o.disabled} checked={value === o.value} onChange={() => onChange(o.value)} />
       ))}
-      {error && <p role="alert" className="text-xs font-semibold text-danger-700">{error}</p>}
+      {error && <p id={errId} role="alert" className="text-xs font-semibold text-danger-700">{error}</p>}
     </fieldset>
   );
 }
