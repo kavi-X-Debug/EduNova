@@ -1,13 +1,14 @@
+import { useTranslation } from 'react-i18next';
 import { useMemo, useState } from 'react';
 import { ScrollText } from 'lucide-react';
 import { Card, EmptyState, PageHeader, Select, Table, TBody, Td, Th, THead, Tr } from '@/components/ui';
 import { formatDateTime, useAsync } from '@/lib';
 import { AsyncView } from './AsyncView';
 import { loadAudit, toRows, type AuditBundle } from './auditData';
-import { AUDIT_GROUPS, auditGroup, useAdminLocale, useAdminT } from './shared';
+import { AUDIT_GROUPS, auditGroup, useAdminLocale } from './shared';
 
 function AuditLog({ bundle }: { bundle: AuditBundle }) {
-  const t = useAdminT();
+  const { t } = useTranslation();
   const locale = useAdminLocale();
   const [group, setGroup] = useState('');
   const rows = useMemo(() => toRows(bundle, t), [bundle, t]);
@@ -79,7 +80,7 @@ function AuditLog({ bundle }: { bundle: AuditBundle }) {
 }
 
 export default function AuditPage() {
-  const t = useAdminT();
+  const { t } = useTranslation();
   const state = useAsync(loadAudit, []);
   return (
     <>

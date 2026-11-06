@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useRef, useState } from 'react';
 import { BookOpen } from 'lucide-react';
 import { Button, Card, EmptyState, Modal, PageHeader, Select, Table, TBody, Td, Th, THead, Tr, useToast } from '@/components/ui';
@@ -6,10 +7,10 @@ import { adminService } from '@/services';
 import type { CurriculumDoc } from '@/types';
 import { AsyncView } from './AsyncView';
 import { StatusBadge } from './StatusBadge';
-import { STATUSES, useAdminLocale, useAdminT, type Status } from './shared';
+import { STATUSES, useAdminLocale, type Status } from './shared';
 
 function CurriculumManager({ initial }: { initial: CurriculumDoc[] }) {
-  const t = useAdminT();
+  const { t } = useTranslation();
   const locale = useAdminLocale();
   const toast = useToast();
   const [docs, setDocs] = useState(initial);
@@ -150,7 +151,7 @@ function CurriculumManager({ initial }: { initial: CurriculumDoc[] }) {
 }
 
 export default function CurriculumPage() {
-  const t = useAdminT();
+  const { t } = useTranslation();
   const state = useAsync(() => adminService.listCurriculum(), []);
   return (
     <>
