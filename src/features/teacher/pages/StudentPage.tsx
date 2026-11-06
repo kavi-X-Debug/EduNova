@@ -19,15 +19,18 @@ export default function StudentPage() {
   const { locale } = useLocale();
   const teacherId = useSessionStore((s) => s.user?.id ?? '');
 
-  // No getStudent service exists: find the row through the teacher's own classes (see docs/REQUESTS.md).
+  // Ownership: the student must belong to one of this teacher's classes before anything else is fetched.
   const { data, loading, error, reload } = useAsync(
     async () => {
-      const classes = await teacherService.listClasses(teacherId);
-      const lists = await Promise.all(classes.map((c) => teacherService.listStudents(c.id)));
-      const student = lists.flat().find((s) => s.id === id);
-      if (!student) return { student: undefined, className: undefined, mastery: [], concepts: [] };
+      const none = { student: undefined, className: undefined, mastery: [], concepts: [] };
+      const [classes, student] = await Promise.all([
+        teacherService.listClasses(teacherId),
+        teacherService.getStudent(id).catch(() => undefined),
+      ]);
+      const mine = student ? classes.find((c) => c.id === student.classId) : undefined;
+      if (!student || !mine) return none;
       const [mastery, concepts] = await Promise.all([studentService.getMastery(id), studentService.listConcepts()]);
-      return { student, className: classes.find((c) => c.id === student.classId)?.name, mastery, concepts };
+      return { student, className: mine.name, mastery, concepts };
     },
     [id, teacherId],
   );
