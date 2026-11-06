@@ -2,30 +2,33 @@ import { useEffect, useRef, useState } from 'react';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Button, Card, ProgressBar } from '@/components/ui';
+import { Banner, Button, Card, ProgressBar } from '@/components/ui';
+import { useLocale } from '@/i18n';
+import { formatDate } from '@/lib';
 import { announce } from '@/lib/a11y';
+import { studentService } from '@/services';
+import { useSessionStore } from '@/store';
 import type { RevisionItem } from '@/types';
-import { nextIntervalDays, RECALLS, type Recall } from './scheduling';
-
-export interface ReviewResult {
-  item: RevisionItem;
-  recall: Recall;
-  nextDays: number;
-}
+import { RECALLS, RECALL_QUALITY, type Recall } from './scheduling';
 
 export interface ReviewSessionProps {
   items: RevisionItem[];
-  onExit: (results: ReviewResult[]) => void;
+  /** Called when the learner leaves the session; the page refetches the queue. */
+  onExit: () => void;
 }
 
 /** One concept at a time: think, check, rate. Keyboard: Tab to a button, Enter or Space to choose. */
 export function ReviewSession({ items, onExit }: ReviewSessionProps) {
   const { t } = useTranslation();
+  const { locale } = useLocale();
+  const userId = useSessionStore((s) => s.user?.id) ?? 'guest';
   const [index, setIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
-  const [results, setResults] = useState<ReviewResult[]>([]);
-  const [lastNext, setLastNext] = useState<number | null>(null);
+  const [saved, setSaved] = useState<RevisionItem[]>([]);
+  const [saving, setSaving] = useState<Recall | null>(null);
+  const [failedRecall, setFailedRecall] = useState<Recall | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const errorRef = useRef<HTMLDivElement>(null);
   const finished = index >= items.length;
   const item = items[index];
 
@@ -35,16 +38,30 @@ export function ReviewSession({ items, onExit }: ReviewSessionProps) {
   }, [index]);
 
   useEffect(() => {
+    if (failedRecall) errorRef.current?.focus();
+  }, [failedRecall]);
+
+  useEffect(() => {
     if (finished) announce(t('student.revision.done'));
   }, [finished, t]);
 
-  const rate = (recall: Recall) => {
-    const nextDays = nextIntervalDays(item.intervalDays, recall);
-    setResults((r) => [...r, { item, recall, nextDays }]);
-    setLastNext(nextDays);
-    announce(t('student.revision.nextCount', { count: nextDays }));
-    setRevealed(false);
-    setIndex((i) => i + 1);
+  const rate = async (recall: Recall) => {
+    setSaving(recall);
+    setFailedRecall(null);
+    try {
+      const updated = await studentService.recordReview(userId, item.id, RECALL_QUALITY[recall]);
+      setSaved((r) => [...r, updated]);
+      announce(
+        `${t('student.revision.nextCount', { count: updated.intervalDays })}. ${t('student.revision.due', { when: formatDate(updated.dueAt, locale) })}`,
+      );
+      setRevealed(false);
+      setIndex((i) => i + 1);
+    } catch {
+      setFailedRecall(recall);
+      announce(t('student.quests.mission.error'), 'assertive');
+    } finally {
+      setSaving(null);
+    }
   };
 
   if (finished) {
@@ -54,10 +71,15 @@ export function ReviewSession({ items, onExit }: ReviewSessionProps) {
         <h2 id="review-done" ref={headingRef} tabIndex={-1} className="text-xl font-bold text-ink outline-none">
           {t('student.revision.done')}
         </h2>
-        {lastNext !== null && (
-          <p className="text-sm text-ink-soft">{t('student.revision.nextCount', { count: lastNext })}</p>
-        )}
-        <Button size="lg" onClick={() => onExit(results)} className="w-full sm:w-auto">
+        <ul className="w-full text-left text-sm text-ink-soft">
+          {saved.map((s) => (
+            <li key={s.id} className="flex flex-wrap justify-between gap-2 border-b border-line py-2">
+              <span className="font-medium text-ink">{t(`concept.${s.conceptId}`, { defaultValue: s.conceptId })}</span>
+              <span>{t('student.revision.due', { when: formatDate(s.dueAt, locale) })}</span>
+            </li>
+          ))}
+        </ul>
+        <Button size="lg" onClick={onExit} className="w-full sm:w-auto">
           {t('student.revision.backToList')}
         </Button>
       </Card>
@@ -96,11 +118,25 @@ export function ReviewSession({ items, onExit }: ReviewSessionProps) {
               <ArrowRight aria-hidden className="h-4 w-4" />
             </Link>
           </p>
+          {failedRecall && (
+            <div ref={errorRef} tabIndex={-1} className="outline-none">
+              <Banner
+                tone="danger"
+                actions={
+                  <Button variant="secondary" onClick={() => void rate(failedRecall)}>
+                    {t('ui.error.retry')}
+                  </Button>
+                }
+              >
+                {t('student.quests.mission.error')}
+              </Banner>
+            </div>
+          )}
           <fieldset className="flex flex-col gap-3">
             <legend className="mb-1 text-base font-semibold text-ink">{t('student.revision.recall.question')}</legend>
             <div className="grid grid-cols-2 gap-3">
               {RECALLS.map((r) => (
-                <Button key={r} variant={r === 'good' ? 'primary' : 'secondary'} onClick={() => rate(r)}>
+                <Button key={r} variant={r === 'good' ? 'primary' : 'secondary'} disabled={saving !== null} loading={saving === r} loadingLabel={t('a11y.loading')} onClick={() => void rate(r)}>
                   {t(`student.revision.recall.${r}`)}
                 </Button>
               ))}
@@ -109,7 +145,7 @@ export function ReviewSession({ items, onExit }: ReviewSessionProps) {
         </div>
       )}
 
-      <Button variant="ghost" onClick={() => onExit(results)} className="self-start">
+      <Button variant="ghost" onClick={onExit} className="self-start">
         {t('student.revision.session.end')}
       </Button>
     </Card>

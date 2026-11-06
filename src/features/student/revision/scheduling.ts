@@ -4,19 +4,8 @@ export type Recall = 'again' | 'hard' | 'good' | 'easy';
 
 export const RECALLS: readonly Recall[] = ['again', 'hard', 'good', 'easy'];
 
-/** Spaced-repetition: how far to push the next review, from how well it was recalled. */
-export function nextIntervalDays(current: number, recall: Recall): number {
-  switch (recall) {
-    case 'again':
-      return 1;
-    case 'hard':
-      return Math.max(1, Math.ceil(current * 1.2));
-    case 'good':
-      return Math.max(2, Math.round(current * 2));
-    case 'easy':
-      return Math.max(3, Math.round(current * 3));
-  }
-}
+/** Quality (0-5) sent to recordReview; the service decides the next interval (>= 3 advances, lower resets). */
+export const RECALL_QUALITY: Record<Recall, number> = { again: 1, hard: 3, good: 4, easy: 5 };
 
 function startOfDay(ms: number): number {
   const d = new Date(ms);

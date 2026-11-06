@@ -8,7 +8,7 @@ import { useLocale } from '@/i18n';
 import { studentService } from '@/services';
 import { useSessionStore } from '@/store';
 import type { Locale, RevisionItem } from '@/types';
-import { ReviewSession, type ReviewResult } from './ReviewSession';
+import { ReviewSession } from './ReviewSession';
 import { dayOffset, splitQueue } from './scheduling';
 
 interface ItemRowProps {
@@ -45,9 +45,8 @@ export default function RevisionPage() {
   const { locale } = useLocale();
   const userId = useSessionStore((s) => s.user?.id) ?? 'guest';
   const { data, loading, error, reload } = useAsync(() => studentService.getRevisionQueue(userId), [userId]);
-  const [now] = useState(() => Date.now());
+  const [now, setNow] = useState(() => Date.now());
   const [session, setSession] = useState<RevisionItem[] | null>(null);
-  const [reviewed, setReviewed] = useState<Record<string, number>>({});
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -64,16 +63,13 @@ export default function RevisionPage() {
   }, [hasData, t]);
 
   const { ready, upcoming } = useMemo(() => splitQueue(data ?? [], now), [data, now]);
-  const pending = ready.filter((i) => reviewed[i.id] === undefined);
-  const doneThisSession = ready.filter((i) => reviewed[i.id] !== undefined);
+  const pending = ready;
 
-  const exitSession = (results: ReviewResult[]) => {
-    setReviewed((prev) => {
-      const next = { ...prev };
-      for (const r of results) next[r.item.id] = r.nextDays;
-      return next;
-    });
+  // Results are already saved by the service; refetch so the queue survives reload and re-sorts.
+  const exitSession = () => {
     setSession(null);
+    setNow(Date.now());
+    reload();
   };
 
   return (
@@ -123,13 +119,6 @@ export default function RevisionPage() {
               </>
             ) : (
               <Banner tone="success">{t('student.revision.done')}</Banner>
-            )}
-            {doneThisSession.length > 0 && (
-              <ul className="flex flex-col gap-2" aria-label={t('student.revision.reviewedList')}>
-                {doneThisSession.map((i) => (
-                  <ItemRow key={i.id} item={i} now={now} locale={locale} nextDays={reviewed[i.id]} />
-                ))}
-              </ul>
             )}
           </section>
 
