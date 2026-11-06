@@ -478,7 +478,6 @@
   "teacher.student.col.concept": "Topic",
   "teacher.student.col.updated": "Updated",
   "admin.overview.roles.title": "People by role",
-  "admin.overview.roles.summary": "{{students}} students, {{teachers}} teachers and {{admins}} administrators.",
   "admin.overview.curriculum.title": "Curriculum status",
   "admin.overview.curriculum.summary": "{{draft}} in draft, {{review}} in review and {{published}} published.",
   "admin.overview.curriculum.docs": "Documents",
@@ -523,5 +522,7 @@
   "admin.audit.action.class.create": "Created a class",
   "admin.audit.action.export.classReport": "Exported a class report",
   "admin.audit.action.settings.localeDefault": "Changed the default language",
-  "admin.audit.target.session": "Current session"
+  "admin.audit.target.session": "Current session",
+  "admin.audit.target.unknown": "Unknown item",
+  "student.dashboard.nextStep.alt": "Illustration of your learning path with your next step marked"
 }
