@@ -108,7 +108,7 @@ export default function DashboardPage() {
           {(steps) =>
             next && (
               <div className="flex flex-col gap-4 md:flex-row md:items-center">
-                <AnimatedIllustration name="learning-path" alt={t('student.dashboard.nextStep.alt', { defaultValue: 'Illustration of your learning path with your next step marked' })} className="aspect-[4/3] h-auto w-full max-w-xs shrink-0 md:w-48" />
+                <AnimatedIllustration name="learning-path" alt={t('student.dashboard.nextStep.alt')} className="aspect-[4/3] h-auto w-full max-w-xs shrink-0 md:w-48" />
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge tone="brand">{t(`student.path.step.${next.kind}`)}</Badge>

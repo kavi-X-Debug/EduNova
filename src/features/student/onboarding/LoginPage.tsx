@@ -33,7 +33,7 @@ export default function LoginPage() {
     if (!/^\S+@\S+\.\S+$/.test(email.trim())) {
       const msg = t(email.trim() ? 'errors.field.email' : 'errors.field.required');
       setEmailError(msg);
-      announce(`${t('auth.login.email')}: ${msg}`, 'assertive');
+      announce(msg, 'assertive');
       emailRef.current?.focus();
       return;
     }

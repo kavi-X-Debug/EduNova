@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button, Card, EmptyState, ErrorState, Input, LoadingState, PageHeader, ProgressBar, ReadinessBand, RadioGroup } from '@/components/ui';
@@ -33,6 +33,7 @@ export default function DiagnosticPage() {
   const ref = usePageFocus<HTMLDivElement>();
   const qs = useAsync(() => studentService.getDiagnosticQuestions(userId), [userId]);
 
+  const savedRef = useRef<QuizAttempt | null>(null);
   const [started, setStarted] = useState(false);
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -43,6 +44,14 @@ export default function DiagnosticPage() {
   const questions = qs.data ?? [];
   const total = questions.length;
   const q = questions[index];
+
+  // The focused Start / Finish button unmounts on these transitions: move focus on purpose.
+  useEffect(() => {
+    if (started) ref.current?.querySelector<HTMLElement>('form input')?.focus();
+  }, [started, ref]);
+  useEffect(() => {
+    if (results) ref.current?.querySelector<HTMLElement>('h1')?.focus();
+  }, [results, ref]);
 
   const begin = () => {
     setStarted(true);
@@ -62,7 +71,8 @@ export default function DiagnosticPage() {
         startedAt: new Date().toISOString(),
         answers: questions.map((x) => ({ questionId: x.id, response: answers[x.id] ?? '' })),
       };
-      const saved = await studentService.submitQuiz(attempt);
+      if (!savedRef.current) savedRef.current = await studentService.submitQuiz(attempt);
+      const saved = savedRef.current;
       const mastery = await studentService.getMastery(userId);
       setResults(buildResults(questions, saved, mastery));
       announce(t('student.diagnostic.result.title'));
