@@ -478,7 +478,6 @@
   "teacher.student.col.concept": "මාතෘකාව",
   "teacher.student.col.updated": "යාවත්කාලීන කළේ",
   "admin.overview.roles.title": "භූමිකාව අනුව පුද්ගලයින්",
-  "admin.overview.roles.summary": "සිසුන් {{students}}, ගුරුවරුන් {{teachers}} සහ පරිපාලකයින් {{admins}}.",
   "admin.overview.curriculum.title": "විෂය නිර්දේශ තත්ත්වය",
   "admin.overview.curriculum.summary": "කෙටුම්පත් {{draft}}, සමාලෝචනයේ {{review}} සහ ප්‍රකාශිත {{published}}.",
   "admin.overview.curriculum.docs": "ලේඛන",
@@ -523,5 +522,7 @@
   "admin.audit.action.class.create": "පන්තියක් සාදා ඇත",
   "admin.audit.action.export.classReport": "පන්ති වාර්තාවක් අපනයනය කළා",
   "admin.audit.action.settings.localeDefault": "පෙරනිමි භාෂාව වෙනස් කළා",
-  "admin.audit.target.session": "වත්මන් සැසිය"
+  "admin.audit.target.session": "වත්මන් සැසිය",
+  "admin.audit.target.unknown": "නොදන්නා අයිතමය",
+  "student.dashboard.nextStep.alt": "ඔබේ ඊළඟ පියවර සලකුණු කර ඇති ඔබේ ඉගෙනුම් මාර්ගයේ රූප සටහන"
 }
