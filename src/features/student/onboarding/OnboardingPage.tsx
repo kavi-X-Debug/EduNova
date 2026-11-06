@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button, Checkbox, ErrorState, LoadingState, ProgressBar, RadioGroup } from '@/components/ui';
 import { useAsync } from '@/lib';
+import { useLocale } from '@/i18n';
 import { announce } from '@/lib/a11y';
 import { studentService } from '@/services';
 import { useSessionStore } from '@/store';
@@ -34,9 +35,9 @@ export default function OnboardingPage() {
 function Wizard({ userId, initialGrade }: { userId: string; initialGrade?: number }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const locale = useSessionStore((s) => s.locale);
-  const setLocale = useSessionStore((s) => s.setLocale);
+  const { locale, setLocale } = useLocale();
   const ref = usePageFocus<HTMLDivElement>();
+  const formRef = useRef<HTMLFormElement>(null);
   const [step, setStep] = useState(1);
   const [grade, setGrade] = useState(initialGrade ? String(initialGrade) : '');
   const [subjects, setSubjects] = useState<string[]>([]);
@@ -52,7 +53,7 @@ function Wizard({ userId, initialGrade }: { userId: string; initialGrade?: numbe
       navigate('/student/diagnostic', { replace: true });
     } catch {
       setSaveError(true);
-      announce(t('auth.onboarding.saveError', { defaultValue: 'We could not save your choices. Please try again.' }), 'assertive');
+      announce(t('auth.onboarding.saveError'), 'assertive');
     } finally {
       setSaving(false);
     }
@@ -64,8 +65,13 @@ function Wizard({ userId, initialGrade }: { userId: string; initialGrade?: numbe
   };
 
   const next = () => {
-    if (step === 2 && !grade) return setError(t('errors.field.required'));
-    if (step === 3 && subjects.length === 0) return setError(t('errors.field.required'));
+    if ((step === 2 && !grade) || (step === 3 && subjects.length === 0)) {
+      const msg = t('errors.field.required');
+      setError(msg);
+      announce(msg, 'assertive');
+      formRef.current?.querySelector<HTMLElement>('input')?.focus();
+      return;
+    }
     setError(undefined);
     if (step < TOTAL) {
       setStep(step + 1);
@@ -83,6 +89,7 @@ function Wizard({ userId, initialGrade }: { userId: string; initialGrade?: numbe
       <ProgressBar className="mt-2" value={(step / TOTAL) * 100} label={stepLabel} />
 
       <form
+        ref={formRef}
         className="mt-6 flex flex-col gap-4"
         noValidate
         onSubmit={(e) => {
@@ -147,7 +154,7 @@ function Wizard({ userId, initialGrade }: { userId: string; initialGrade?: numbe
         </div>
         {saveError && (
           <p role="alert" className="text-sm font-semibold text-danger-700">
-            {t('auth.onboarding.saveError', { defaultValue: 'We could not save your choices. Please try again.' })}
+            {t('auth.onboarding.saveError')}
           </p>
         )}
         <p className="text-xs text-ink-soft">{t('auth.onboarding.privacy')}</p>
