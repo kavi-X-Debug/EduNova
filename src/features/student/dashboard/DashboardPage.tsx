@@ -19,6 +19,7 @@ import { averageLevel, bandFromLevel, useAsync, type AsyncState } from '@/lib';
 import { studentService } from '@/services';
 import { useSessionStore } from '@/store';
 import { usePageFocus } from '../onboarding/usePageFocus';
+import { countReadyNow } from './revisionDue';
 
 const linkBtn = (primary: boolean) =>
   cn(
@@ -86,7 +87,7 @@ export default function DashboardPage() {
   const firstName = (user?.name ?? '').split(' ')[0];
   const next = path.data?.find((s) => s.status === 'in_progress') ?? path.data?.find((s) => s.status === 'next');
   const done = path.data?.filter((s) => s.status === 'done').length ?? 0;
-  const dueCount = revision.data?.filter((r) => new Date(r.dueAt).getTime() <= now).length ?? 0;
+  const dueCount = countReadyNow(revision.data ?? [], now);
   const activeQuest = quests.data?.find((q) => q.status === 'open');
   const latestExam = exams.data && [...exams.data].sort((a, b) => b.date.localeCompare(a.date))[0];
 
@@ -107,7 +108,7 @@ export default function DashboardPage() {
           {(steps) =>
             next && (
               <div className="flex flex-col gap-4 md:flex-row md:items-center">
-                <AnimatedIllustration name="learning-path" alt="" className="w-full max-w-xs shrink-0 md:w-48" />
+                <AnimatedIllustration name="learning-path" alt={t('student.dashboard.nextStep.alt', { defaultValue: 'Illustration of your learning path with your next step marked' })} className="aspect-[4/3] h-auto w-full max-w-xs shrink-0 md:w-48" />
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge tone="brand">{t(`student.path.step.${next.kind}`)}</Badge>
@@ -138,9 +139,11 @@ export default function DashboardPage() {
                 <RefreshCw aria-hidden className="h-5 w-5 text-brand-600" />
                 {dueCount > 0 ? t('student.dashboard.revisionDue.count', { count: dueCount }) : t('student.revision.empty')}
               </p>
-              <Link to="/student/revision" className={linkBtn(dueCount > 0)}>
-                {t('student.revision.start')}
-              </Link>
+              {dueCount > 0 && (
+                <Link to="/student/revision" className={linkBtn(true)}>
+                  {t('student.revision.start')}
+                </Link>
+              )}
             </div>
           )}
         </Block>
@@ -155,14 +158,20 @@ export default function DashboardPage() {
           className="md:col-span-2 xl:col-span-2"
         >
           {() => (
-            <ul className="grid gap-4 sm:grid-cols-2">
+            <ul className="grid grid-cols-1 gap-4 lg:grid-cols-2">
               {bySubject.map((s) => (
-                <li key={s.subject} className="flex items-center gap-4 rounded-lg border border-line p-3">
-                  <MasteryRing value={s.level} label={t(`subject.${s.subject}`)} />
-                  <div>
+                <li key={s.subject} className="flex min-w-0 items-start gap-4 rounded-lg border border-line p-3">
+                  {/* Decorative arc only; the band below carries the meaning (no numbers). */}
+                  <div aria-hidden className="shrink-0">
+                    <MasteryRing value={s.level} label={t(`subject.${s.subject}`)}>
+                      <span />
+                    </MasteryRing>
+                  </div>
+                  <div className="min-w-0 break-words">
                     <p className="font-semibold text-ink">{t(`subject.${s.subject}`)}</p>
                     <p className="text-xs text-ink-soft">{t('student.dashboard.mastery.topics', { count: s.count })}</p>
-                    <ReadinessBand band={s.band} compact className="mt-1" />
+                    <ReadinessBand band={s.band} className="mt-1 max-w-full [&_span]:break-words" />
+                    <p className="mt-1 text-xs text-ink-soft">{t(`student.exams.band.${s.band}.desc`)}</p>
                   </div>
                 </li>
               ))}

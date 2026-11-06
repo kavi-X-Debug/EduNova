@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useRef, useState, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Select } from '@/components/ui';
@@ -16,6 +16,7 @@ export default function LoginPage() {
   const user = useSessionStore((s) => s.user);
   const signIn = useSessionStore((s) => s.signIn);
   const ref = usePageFocus<HTMLDivElement>();
+  const emailRef = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<Role>('student');
@@ -29,7 +30,10 @@ export default function LoginPage() {
     e.preventDefault();
     setFormError(undefined);
     if (!/^\S+@\S+\.\S+$/.test(email.trim())) {
-      setEmailError(t(email.trim() ? 'errors.field.email' : 'errors.field.required'));
+      const msg = t(email.trim() ? 'errors.field.email' : 'errors.field.required');
+      setEmailError(msg);
+      announce(`${t('auth.login.email')}: ${msg}`, 'assertive');
+      emailRef.current?.focus();
       return;
     }
     setEmailError(undefined);
@@ -66,6 +70,7 @@ export default function LoginPage() {
         <Input
           label={t('auth.login.email')}
           type="email"
+          ref={emailRef}
           autoComplete="email"
           required
           value={email}
