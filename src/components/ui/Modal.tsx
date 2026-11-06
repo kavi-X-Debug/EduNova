@@ -1,10 +1,9 @@
-import { useEffect, useId, useRef, type KeyboardEvent, type ReactNode } from 'react';
+import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useFocusTrap } from '@/lib/a11y';
 import { IconButton } from './IconButton';
-
-const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 
 export interface ModalProps {
   open: boolean;
@@ -23,43 +22,21 @@ export function Modal({ open, onClose, title, description, children, footer, clo
   const descId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
 
+  // Declared before the trap so inert is lifted before focus is restored.
   useEffect(() => {
     if (!open) return;
-    const returnTo = document.activeElement as HTMLElement | null;
-    const first = panelRef.current?.querySelector<HTMLElement>(FOCUSABLE);
-    (first ?? panelRef.current)?.focus();
+    const root = document.getElementById('root');
+    root?.setAttribute('inert', '');
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {
+      root?.removeAttribute('inert');
       document.body.style.overflow = prev;
-      returnTo?.focus?.();
     };
   }, [open]);
+  useFocusTrap(panelRef, open, { onEscape: onClose });
 
   if (!open) return null;
-
-  const onKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      e.stopPropagation();
-      onClose();
-      return;
-    }
-    if (e.key !== 'Tab' || !panelRef.current) return;
-    const nodes = Array.from(panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE));
-    if (nodes.length === 0) {
-      e.preventDefault();
-      return;
-    }
-    const firstEl = nodes[0];
-    const lastEl = nodes[nodes.length - 1];
-    if (e.shiftKey && document.activeElement === firstEl) {
-      e.preventDefault();
-      lastEl.focus();
-    } else if (!e.shiftKey && document.activeElement === lastEl) {
-      e.preventDefault();
-      firstEl.focus();
-    }
-  };
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/50 p-0 md:items-center md:p-6" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
@@ -70,7 +47,6 @@ export function Modal({ open, onClose, title, description, children, footer, clo
         aria-labelledby={titleId}
         aria-describedby={description ? descId : undefined}
         tabIndex={-1}
-        onKeyDown={onKeyDown}
         className="max-h-[90vh] w-full overflow-y-auto rounded-t-lg bg-surface p-6 shadow-raised outline-none md:max-w-lg md:rounded-lg"
       >
         <div className="mb-4 flex items-start justify-between gap-3">

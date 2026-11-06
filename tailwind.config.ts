@@ -6,6 +6,8 @@ import type { Config } from 'tailwindcss';
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
+    // Contract breakpoints REPLACE Tailwind's defaults (no xl/2xl).
+    screens: { sm: '390px', md: '834px', lg: '1440px' },
     extend: {
       colors: {
         brand: { 50: '#EEF2FF', 100: '#E0E7FF', 500: '#4F46E5', 600: '#4338CA', 700: '#3730A3' },
@@ -26,7 +28,6 @@ export default {
       fontFamily: {
         sans: ['Inter', 'Noto Sans Sinhala', 'Noto Sans Tamil', 'system-ui', 'sans-serif'],
       },
-      screens: { sm: '390px', md: '834px', lg: '1440px' },
     },
   },
   plugins: [],

@@ -1,9 +1,13 @@
-import type { ReactElement, ReactNode } from 'react';
-import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { lazy, Suspense, type ReactNode } from 'react';
+import { Skeleton } from './Skeleton';
+
+// Recharts is only downloaded when a chart is actually rendered.
+const ChartImpl = lazy(() => import('./ChartsImpl'));
 
 /**
- * Recharts wrappers. Colours come from Tailwind token classes (stroke-/fill-*), never literals.
- * Charts are opaque to AT; pass `summary` (translated) as the accessible text alternative.
+ * Chart wrappers. Colours come from Tailwind token classes (stroke-/fill-*), never literals.
+ * Charts are opaque to AT; `summary` (translated) is the accessible text alternative and is
+ * always rendered (as the img label and as a screen-reader caption), also while loading.
  */
 export interface ChartProps<T extends object> {
   data: T[];
@@ -16,47 +20,24 @@ export interface ChartProps<T extends object> {
   footer?: ReactNode;
 }
 
-const stroke = { brand: 'stroke-brand-500', success: 'stroke-success-500', accent: 'stroke-accent-500' } as const;
-const fill = { brand: 'fill-brand-500', success: 'fill-success-500', accent: 'fill-accent-500' } as const;
-const axisCls = 'fill-ink-soft text-xs';
-
-function Frame({ summary, height, children, footer }: { summary: string; height: number; children: ReactElement; footer?: ReactNode }) {
+function Frame<T extends object>({ kind, data, xKey, yKey, summary, height = 240, tone = 'brand', footer }: ChartProps<T> & { kind: 'line' | 'bar' }) {
   return (
     <figure className="m-0">
       <div role="img" aria-label={summary} style={{ height }}>
-        <ResponsiveContainer width="100%" height="100%">
-          {children}
-        </ResponsiveContainer>
+        <Suspense fallback={<Skeleton className="h-full w-full" />}>
+          <ChartImpl kind={kind} data={data} xKey={xKey} yKey={yKey} tone={tone} />
+        </Suspense>
       </div>
+      <figcaption className="sr-only">{summary}</figcaption>
       {footer}
     </figure>
   );
 }
 
-export function LineChartWrapper<T extends object>({ data, xKey, yKey, summary, height = 240, tone = 'brand', footer }: ChartProps<T>) {
-  return (
-    <Frame summary={summary} height={height} footer={footer}>
-      <LineChart data={data}>
-        <CartesianGrid className="stroke-line" strokeDasharray="3 3" />
-        <XAxis dataKey={xKey as never} className={axisCls} tickLine={false} />
-        <YAxis className={axisCls} tickLine={false} axisLine={false} />
-        <Tooltip />
-        <Line type="monotone" dataKey={yKey as never} strokeWidth={2} dot={false} className={stroke[tone]} />
-      </LineChart>
-    </Frame>
-  );
+export function LineChartWrapper<T extends object>(props: ChartProps<T>) {
+  return <Frame {...props} kind="line" />;
 }
 
-export function BarChartWrapper<T extends object>({ data, xKey, yKey, summary, height = 240, tone = 'brand', footer }: ChartProps<T>) {
-  return (
-    <Frame summary={summary} height={height} footer={footer}>
-      <BarChart data={data}>
-        <CartesianGrid className="stroke-line" strokeDasharray="3 3" vertical={false} />
-        <XAxis dataKey={xKey as never} className={axisCls} tickLine={false} />
-        <YAxis className={axisCls} tickLine={false} axisLine={false} allowDecimals={false} />
-        <Tooltip />
-        <Bar dataKey={yKey as never} radius={[6, 6, 0, 0]} className={fill[tone]} />
-      </BarChart>
-    </Frame>
-  );
+export function BarChartWrapper<T extends object>(props: ChartProps<T>) {
+  return <Frame {...props} kind="bar" />;
 }

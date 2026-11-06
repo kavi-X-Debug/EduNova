@@ -17,6 +17,18 @@ export interface SourceListProps {
   className?: string;
 }
 
+/** Allow only http(s) and relative/hash URLs; anything else (javascript:, data:) is dropped. */
+function safeHref(href?: string): string | undefined {
+  if (!href) return undefined;
+  if (/^(\/|#|\.)/.test(href)) return href;
+  try {
+    const u = new URL(href);
+    return u.protocol === 'http:' || u.protocol === 'https:' ? href : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export function SourceList({ sources, title, className }: SourceListProps) {
   const { t } = useTranslation();
   const heading = title ?? t('ui.sources.title');
@@ -34,8 +46,8 @@ export function SourceList({ sources, title, className }: SourceListProps) {
             <li key={s.id} className="flex gap-2">
               <span aria-hidden className="text-ink-faint">{i + 1}.</span>
               <span>
-                {s.href ? (
-                  <a href={s.href} className="font-semibold text-brand-700 underline outline-none focus-visible:shadow-focus">{s.title}</a>
+                {safeHref(s.href) ? (
+                  <a href={safeHref(s.href)} rel="noopener noreferrer" className="font-semibold text-brand-700 underline outline-none focus-visible:shadow-focus">{s.title}</a>
                 ) : (
                   <span className="font-semibold text-ink">{s.title}</span>
                 )}
