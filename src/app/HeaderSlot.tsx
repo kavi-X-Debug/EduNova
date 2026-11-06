@@ -25,8 +25,14 @@ export function HeaderSlot() {
           variant="ghost"
           leftIcon={<LogOut aria-hidden className="h-4 w-4" />}
           onClick={async () => {
-            await signOut();
-            navigate('/login', { replace: true });
+            try {
+              await signOut();
+            } finally {
+              // Always leave the signed-in area, even if the service call fails
+              // (shared school devices must not stay signed in).
+              useSessionStore.setState({ user: null, role: null });
+              navigate('/login', { replace: true });
+            }
           }}
         >
           {t('nav.account.signOut')}
