@@ -9,13 +9,13 @@ import { useLocale } from '@/i18n';
 import { studentService, teacherService } from '@/services';
 import { useSessionStore } from '@/store';
 import { WellbeingPrompt } from '../components/WellbeingPrompt';
-import { useTT } from '../strings';
+import { useTranslation } from 'react-i18next';
 
 const focusCls = 'focus-visible:shadow-focus focus-visible:outline-none';
 
 export default function StudentPage() {
   const { id = '' } = useParams();
-  const t = useTT();
+  const { t } = useTranslation();
   const { locale } = useLocale();
   const teacherId = useSessionStore((s) => s.user?.id ?? '');
 

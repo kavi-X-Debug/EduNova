@@ -5,13 +5,13 @@ import { useAsync } from '@/lib';
 import { teacherService } from '@/services';
 import { useSessionStore } from '@/store';
 import { bandChartData, bandSummary } from '../bands';
-import { useTT } from '../strings';
+import { useTranslation } from 'react-i18next';
 
 const linkCls =
   'inline-flex min-h-11 items-center rounded-md px-3 text-sm font-semibold text-brand-700 underline hover:bg-brand-50 focus-visible:shadow-focus focus-visible:outline-none';
 
 export default function TeacherOverviewPage() {
-  const t = useTT();
+  const { t } = useTranslation();
   const teacherId = useSessionStore((s) => s.user?.id ?? '');
   const { data, loading, error, reload } = useAsync(() => teacherService.listClasses(teacherId), [teacherId]);
 
