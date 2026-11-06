@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Celebration animation: confetti bursts when a concept is mastered">
+  <style>
+    .badge { animation: pop 2.4s ease-out infinite; transform-origin: 200px 130px; transform-box: view-box; }
+    .bit { animation: burst 2.4s ease-out infinite; transform-origin: 200px 130px; transform-box: view-box; opacity: 0; }
+    .title { font: 700 20px system-ui, sans-serif; fill: #0f172a; text-anchor: middle; }
+    .sub { font: 500 14px system-ui, sans-serif; fill: #475569; text-anchor: middle; }
+    @keyframes pop { 0% { transform: scale(0.4); } 15% { transform: scale(1.12); } 25%, 100% { transform: scale(1); } }
+    @keyframes burst { 0%, 20% { transform: translate(0,0) scale(.4); opacity: 0; } 30% { opacity: 1; } 100% { transform: var(--to) scale(1); opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } .bit { display: none; } }
+  </style>
+
+  <rect width="400" height="300" rx="20" fill="#f0fdf4"/>
+
+  <!-- Confetti pieces fly outward with per-piece direction -->
+  <rect class="bit" x="196" y="126" width="8" height="14" rx="2" fill="#f43f5e" style="--to: translate(-120px,-70px) rotate(200deg)"/>
+  <rect class="bit" x="196" y="126" width="8" height="14" rx="2" fill="#6366f1" style="--to: translate(120px,-70px) rotate(-180deg); animation-delay:.1s"/>
+  <circle class="bit" cx="200" cy="130" r="6" fill="#f59e0b" style="--to: translate(-90px,40px); animation-delay:.05s"/>
+  <circle class="bit" cx="200" cy="130" r="6" fill="#10b981" style="--to: translate(95px,45px); animation-delay:.15s"/>
+  <rect class="bit" x="196" y="126" width="8" height="14" rx="2" fill="#0ea5e9" style="--to: translate(-40px,-110px) rotate(90deg); animation-delay:.2s"/>
+  <rect class="bit" x="196" y="126" width="8" height="14" rx="2" fill="#a855f7" style="--to: translate(45px,-105px) rotate(-90deg); animation-delay:.25s"/>
+
+  <!-- Badge -->
+  <g class="badge">
+    <circle cx="200" cy="130" r="50" fill="#16a34a"/>
+    <circle cx="200" cy="130" r="40" fill="none" stroke="#bbf7d0" stroke-width="4" stroke-dasharray="4 6"/>
+    <path d="M178 130 L195 147 L226 114" stroke="#ffffff" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <text x="200" y="222" class="title">Concept mastered!</text>
+  <text x="200" y="246" class="sub">Fractions · Level 3 unlocked</text>
+</svg>

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200" role="img" aria-label="Animated personalized learning path: steps light up in sequence">
+  <style>
+    .track { stroke: #e2e8f0; stroke-width: 8; fill: none; stroke-linecap: round; }
+    .progress { stroke: #6366f1; stroke-width: 8; fill: none; stroke-linecap: round; stroke-dasharray: 520; stroke-dashoffset: 520; animation: draw 5s ease-out infinite; }
+    .step { fill: #ffffff; stroke: #cbd5e1; stroke-width: 3; }
+    .done { fill: #6366f1; stroke: #6366f1; animation: lit 5s ease-out infinite; }
+    .label { font: 600 13px system-ui, sans-serif; fill: #334155; text-anchor: middle; }
+    .current { animation: blink 1.6s ease-in-out infinite; }
+    .check { stroke: #ffffff; stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    @keyframes draw { 0% { stroke-dashoffset: 520; } 60%, 100% { stroke-dashoffset: 0; } }
+    @keyframes lit { 0%, 15% { fill: #ffffff; stroke: #cbd5e1; } 25%, 100% { fill: #6366f1; stroke: #6366f1; } }
+    @keyframes blink { 0%,100% { r: 10; opacity: 1; } 50% { r: 14; opacity: 0.4; } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } .progress { stroke-dashoffset: 0; } }
+  </style>
+
+  <rect width="640" height="200" rx="20" fill="#f8fafc"/>
+  <path class="track" d="M60 100 L580 100"/>
+  <path class="progress" d="M60 100 L580 100"/>
+
+  <!-- Steps: division refresher -> equivalent fractions -> fraction operations -> decimal conversion -> mixed practice -> mastery check -->
+  <g>
+    <circle class="step done" cx="60" cy="100" r="22"/>
+    <path class="check" d="M50 100 L57 107 L70 92"/>
+    <text x="60" y="144" class="label">Division</text>
+  </g>
+  <g>
+    <circle class="step done" cx="196" cy="100" r="22" style="animation-delay:.4s"/>
+    <path class="check" d="M186 100 L193 107 L206 92"/>
+    <text x="196" y="144" class="label">Equivalent</text>
+  </g>
+  <g>
+    <circle class="step done" cx="332" cy="100" r="22" style="animation-delay:.8s"/>
+    <path class="check" d="M322 100 L329 107 L342 92"/>
+    <text x="332" y="144" class="label">Fraction ops</text>
+  </g>
+  <g>
+    <circle class="step current" cx="468" cy="100" r="12" fill="#f59e0b" stroke="#f59e0b"/>
+    <text x="468" y="144" class="label">Decimals (now)</text>
+  </g>
+  <g>
+    <circle class="step" cx="580" cy="100" r="22"/>
+    <text x="580" y="144" class="label">Mastery check</text>
+  </g>
+
+  <text x="320" y="36" class="label" style="font-size:14px;fill:#0f172a">Your next step: Decimal conversion</text>
+</svg>

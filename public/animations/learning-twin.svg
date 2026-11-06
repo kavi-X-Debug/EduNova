@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" role="img" aria-label="Animated Learning Twin: concept nodes glow as mastery grows">
+  <style>
+    .link { stroke: #cbd5e1; stroke-width: 2; fill: none; stroke-dasharray: 6 6; animation: dash 3s linear infinite; }
+    .node { fill: #ffffff; stroke-width: 3; }
+    .label { font: 600 14px system-ui, sans-serif; fill: #1e293b; text-anchor: middle; }
+    .ring { fill: none; stroke-width: 6; stroke-linecap: round; transform-origin: center; transform-box: fill-box; }
+    .strong { stroke: #16a34a; }
+    .medium { stroke: #f59e0b; }
+    .weak   { stroke: #e11d48; }
+    .pulse  { animation: pulse 2.4s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+    .spin   { animation: spin 14s linear infinite; transform-origin: 240px 180px; }
+    .packet { fill: #6366f1; animation: travel 4s ease-in-out infinite; }
+    @keyframes dash { to { stroke-dashoffset: -24; } }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes travel { 0% { offset-distance: 0%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { offset-distance: 100%; opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+
+  <rect width="480" height="360" rx="24" fill="#f8fafc"/>
+
+  <!-- Prerequisite links -->
+  <path class="link" d="M240 180 L110 92"/>
+  <path class="link" d="M240 180 L370 92"/>
+  <path class="link" d="M240 180 L110 268"/>
+  <path class="link" d="M240 180 L370 268"/>
+
+  <!-- Orbit -->
+  <circle class="spin" cx="240" cy="180" r="128" fill="none" stroke="#c7d2fe" stroke-width="2" stroke-dasharray="2 10"/>
+
+  <!-- Learner core -->
+  <g class="pulse">
+    <circle cx="240" cy="180" r="46" fill="#6366f1"/>
+    <circle cx="240" cy="180" r="46" fill="none" stroke="#a5b4fc" stroke-width="8" opacity="0.5"/>
+  </g>
+  <text x="240" y="186" class="label" style="fill:#ffffff;font-size:16px">Learner</text>
+
+  <!-- Concept nodes with mastery rings -->
+  <g>
+    <circle class="node" cx="110" cy="92" r="34" stroke="#16a34a"/>
+    <circle class="ring strong" cx="110" cy="92" r="42" stroke-dasharray="230 264" transform="rotate(-90 110 92)"/>
+    <text x="110" y="97" class="label">Fractions</text>
+  </g>
+  <g>
+    <circle class="node" cx="370" cy="92" r="34" stroke="#f59e0b"/>
+    <circle class="ring medium" cx="370" cy="92" r="42" stroke-dasharray="150 264" transform="rotate(-90 370 92)"/>
+    <text x="370" y="97" class="label">Decimals</text>
+  </g>
+  <g>
+    <circle class="node" cx="110" cy="268" r="34" stroke="#e11d48"/>
+    <circle class="ring weak" cx="110" cy="268" r="42" stroke-dasharray="70 264" transform="rotate(-90 110 268)"/>
+    <text x="110" y="273" class="label">Division</text>
+  </g>
+  <g>
+    <circle class="node" cx="370" cy="268" r="34" stroke="#16a34a"/>
+    <circle class="ring strong" cx="370" cy="268" r="42" stroke-dasharray="200 264" transform="rotate(-90 370 268)"/>
+    <text x="370" y="273" class="label">Ratios</text>
+  </g>
+
+  <!-- Evidence packet travelling along a link -->
+  <circle class="packet" r="6" style="offset-path: path('M110 268 L240 180');"/>
+
+  <text x="240" y="340" class="label" style="font-size:12px;fill:#64748b">Mastery rings update as new evidence arrives</text>
+</svg>
