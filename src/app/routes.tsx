@@ -11,6 +11,8 @@ import { questsRoutes } from '@/features/student/quests/routes';
 import { revisionRoutes } from '@/features/student/revision/routes';
 import { teacherRoutes } from '@/features/teacher/routes';
 import { adminRoutes } from '@/features/admin/routes';
+import { useT } from '@/i18n';
+import { LoadingState } from '@/components/ui';
 import { HeaderSlot } from './HeaderSlot';
 import { RedirectHome, RequireRole, RouteFocus } from './guards';
 
@@ -33,6 +35,11 @@ const adminNav: NavItem[] = [
   { to: '/admin/audit', labelKey: 'nav.admin.audit', icon: ScrollText },
 ];
 
+function AppLoading() {
+  const t = useT();
+  return <LoadingState label={t('ui.common.loading')} />;
+}
+
 const Root = () => (
   <>
     <RouteFocus />
@@ -43,6 +50,7 @@ const Root = () => (
 export const routes: RouteObject[] = [
   {
     element: <Root />,
+    HydrateFallback: AppLoading,
     children: [
       { path: '/', element: <RedirectHome /> },
       { element: <AuthLayout headerSlot={<HeaderSlot />} />, children: authRoutes },
