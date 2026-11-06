@@ -524,5 +524,6 @@
   "admin.audit.action.settings.localeDefault": "இயல்புநிலை மொழியை மாற்றினார்",
   "admin.audit.target.session": "தற்போதைய அமர்வு",
   "admin.audit.target.unknown": "அறியப்படாத உருப்படி",
-  "student.dashboard.nextStep.alt": "உங்கள் அடுத்த படி குறிக்கப்பட்ட கற்றல் பாதையின் விளக்கப்படம்"
+  "student.dashboard.nextStep.alt": "உங்கள் அடுத்த படி குறிக்கப்பட்ட கற்றல் பாதையின் விளக்கப்படம்",
+  "auth.onboarding.saveError": "உங்கள் தேர்வுகளைச் சேமிக்க முடியவில்லை. தயவுசெய்து மீண்டும் முயற்சிக்கவும்."
 }

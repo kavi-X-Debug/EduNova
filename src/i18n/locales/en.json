@@ -524,5 +524,6 @@
   "admin.audit.action.settings.localeDefault": "Changed the default language",
   "admin.audit.target.session": "Current session",
   "admin.audit.target.unknown": "Unknown item",
-  "student.dashboard.nextStep.alt": "Illustration of your learning path with your next step marked"
+  "student.dashboard.nextStep.alt": "Illustration of your learning path with your next step marked",
+  "auth.onboarding.saveError": "We could not save your choices. Please try again."
 }
