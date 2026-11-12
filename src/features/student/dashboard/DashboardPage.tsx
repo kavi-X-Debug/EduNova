@@ -18,8 +18,11 @@ import {
 import { averageLevel, bandFromLevel, useAsync, type AsyncState } from '@/lib';
 import { studentService } from '@/services';
 import { useSessionStore } from '@/store';
-import { usePageFocus } from '../onboarding/usePageFocus';
+import type { ReadinessBand as ReadinessBandName } from '@/types';
 import { countReadyNow } from './revisionDue';
+
+/** Ring arc is quantised to the band so it cannot encode a precise score. */
+const BAND_ARC: Record<ReadinessBandName, number> = { building: 0.25, developing: 0.5, secure: 0.75, strong: 1 };
 
 const linkBtn = (primary: boolean) =>
   cn(
@@ -58,7 +61,6 @@ export default function DashboardPage() {
   const { t } = useTranslation();
   const user = useSessionStore((s) => s.user);
   const userId = user?.id ?? '';
-  const ref = usePageFocus<HTMLDivElement>();
 
   const [now] = useState(() => Date.now());
   const path = useAsync(() => studentService.getLearningPath(userId), [userId]);
@@ -92,10 +94,10 @@ export default function DashboardPage() {
   const latestExam = exams.data && [...exams.data].sort((a, b) => b.date.localeCompare(a.date))[0];
 
   return (
-    <div ref={ref}>
+    <div>
       <PageHeader title={t('student.dashboard.greeting', { name: firstName })} description={t('student.dashboard.subtitle')} />
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Block
           title={t('student.dashboard.nextStep.title')}
           state={path}
@@ -103,7 +105,7 @@ export default function DashboardPage() {
           emptyText={t('student.dashboard.empty')}
           emptyAction={<Link to="/student/diagnostic" className={linkBtn(true)}>{t('student.diagnostic.start')}</Link>}
           errorText={t('student.dashboard.error')}
-          className="md:col-span-2 xl:col-span-2"
+          className="md:col-span-2 lg:col-span-2"
         >
           {(steps) =>
             next && (
@@ -155,7 +157,7 @@ export default function DashboardPage() {
           emptyText={t('student.dashboard.mastery.empty')}
           emptyAction={<Link to="/student/diagnostic" className={linkBtn(true)}>{t('student.diagnostic.start')}</Link>}
           errorText={t('student.dashboard.error')}
-          className="md:col-span-2 xl:col-span-2"
+          className="md:col-span-2 lg:col-span-2"
         >
           {() => (
             <ul className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -163,7 +165,7 @@ export default function DashboardPage() {
                 <li key={s.subject} className="flex min-w-0 items-start gap-4 rounded-lg border border-line p-3">
                   {/* Decorative arc only; the band below carries the meaning (no numbers). */}
                   <div aria-hidden className="shrink-0">
-                    <MasteryRing value={s.level} label={t(`subject.${s.subject}`)}>
+                    <MasteryRing value={BAND_ARC[s.band]} label={t(`subject.${s.subject}`)}>
                       <span />
                     </MasteryRing>
                   </div>

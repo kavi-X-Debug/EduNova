@@ -9,7 +9,6 @@ import { studentService } from '@/services';
 import { useSessionStore } from '@/store';
 import type { Locale } from '@/types';
 import { RedirectByRole } from './RedirectByRole';
-import { usePageFocus } from './usePageFocus';
 
 const LOCALES: Locale[] = ['en', 'si', 'ta'];
 const GRADES = [6, 7, 8, 9, 10, 11];
@@ -36,7 +35,6 @@ function Wizard({ userId, initialGrade }: { userId: string; initialGrade?: numbe
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { locale, setLocale } = useLocale();
-  const ref = usePageFocus<HTMLDivElement>();
   const formRef = useRef<HTMLFormElement>(null);
   const [step, setStep] = useState(1);
   const [grade, setGrade] = useState(initialGrade ? String(initialGrade) : '');
@@ -83,7 +81,7 @@ function Wizard({ userId, initialGrade }: { userId: string; initialGrade?: numbe
   const stepLabel = t('auth.onboarding.step', { current: step, total: TOTAL });
 
   return (
-    <div ref={ref}>
+    <div>
       <h1 className="text-2xl font-bold text-ink">{t('auth.onboarding.title')}</h1>
       <p className="mt-1 text-sm font-semibold text-ink-soft">{stepLabel}</p>
       <ProgressBar className="mt-2" value={(step / TOTAL) * 100} label={stepLabel} />

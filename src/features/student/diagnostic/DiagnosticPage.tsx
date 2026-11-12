@@ -7,7 +7,6 @@ import { bandFromLevel, useAsync } from '@/lib';
 import { studentService } from '@/services';
 import { useSessionStore } from '@/store';
 import type { Mastery, Question, QuizAttempt, ReadinessBand as Band } from '@/types';
-import { usePageFocus } from '../onboarding/usePageFocus';
 
 interface ConceptResult {
   conceptId: string;
@@ -30,7 +29,7 @@ export default function DiagnosticPage() {
   const { t } = useTranslation();
   const user = useSessionStore((s) => s.user);
   const userId = user?.id ?? '';
-  const ref = usePageFocus<HTMLDivElement>();
+  const ref = useRef<HTMLDivElement>(null);
   const qs = useAsync(() => studentService.getDiagnosticQuestions(userId), [userId]);
 
   const savedRef = useRef<QuizAttempt | null>(null);
