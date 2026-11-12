@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { BookOpenCheck, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { AnimatedIllustration, Badge, Banner, Button, Card, EmptyState, ErrorState, LoadingState, PageHeader } from '@/components/ui';
@@ -15,16 +15,14 @@ interface ItemRowProps {
   item: RevisionItem;
   now: number;
   locale: Locale;
-  nextDays?: number;
 }
 
-function ItemRow({ item, now, locale, nextDays }: ItemRowProps) {
+function ItemRow({ item, now, locale }: ItemRowProps) {
   const { t } = useTranslation();
   const offset = dayOffset(item.dueAt, now);
-  const concept = t(`concept.${item.conceptId}`, { defaultValue: item.conceptId });
+  const concept = t(`concept.${item.conceptId}`);
   let status: string;
-  if (nextDays !== undefined) status = t('student.revision.nextCount', { count: nextDays });
-  else if (offset > 0) status = t('student.revision.due', { when: formatRelative(item.dueAt, locale, now) });
+  if (offset > 0) status = t('student.revision.due', { when: formatRelative(item.dueAt, locale, now) });
   else if (offset === 0) status = t('student.revision.readyToday');
   else status = t('student.revision.readySince', { when: formatRelative(item.dueAt, locale, now) });
 
@@ -47,23 +45,12 @@ export default function RevisionPage() {
   const { data, loading, error, reload } = useAsync(() => studentService.getRevisionQueue(userId), [userId]);
   const [now, setNow] = useState(() => Date.now());
   const [session, setSession] = useState<RevisionItem[] | null>(null);
-  const rootRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const h1 = rootRef.current?.querySelector('h1');
-    if (h1) {
-      h1.setAttribute('tabindex', '-1');
-      h1.focus({ preventScroll: true });
-    }
-  }, []);
-
   const hasData = data !== undefined;
   useEffect(() => {
     if (hasData) announce(t('a11y.loaded'));
   }, [hasData, t]);
 
   const { ready, upcoming } = useMemo(() => splitQueue(data ?? [], now), [data, now]);
-  const pending = ready;
 
   // Results are already saved by the service; refetch so the queue survives reload and re-sorts.
   const exitSession = () => {
@@ -73,7 +60,7 @@ export default function RevisionPage() {
   };
 
   return (
-    <div ref={rootRef}>
+    <div>
       <PageHeader title={t('student.revision.title')} description={t('student.revision.subtitle')} />
 
       {loading && !hasData && <LoadingState lines={5} />}
@@ -103,16 +90,16 @@ export default function RevisionPage() {
             <h2 id="ready-heading" className="text-xl font-semibold text-ink">
               {t('student.dashboard.revisionDue.title')}
             </h2>
-            {pending.length > 0 ? (
+            {ready.length > 0 ? (
               <>
-                <p className="text-sm text-ink-soft">{t('student.dashboard.revisionDue.count', { count: pending.length })}</p>
+                <p className="text-sm text-ink-soft">{t('student.dashboard.revisionDue.count', { count: ready.length })}</p>
                 <ul className="flex flex-col gap-2">
-                  {pending.map((i) => (
+                  {ready.map((i) => (
                     <ItemRow key={i.id} item={i} now={now} locale={locale} />
                   ))}
                 </ul>
                 <div className="sticky bottom-20 z-10 md:static">
-                  <Button size="lg" fullWidth onClick={() => setSession(pending)} className="shadow-raised md:w-auto">
+                  <Button size="lg" fullWidth onClick={() => setSession(ready)} className="shadow-raised md:w-auto">
                     {t('student.revision.start')}
                   </Button>
                 </div>

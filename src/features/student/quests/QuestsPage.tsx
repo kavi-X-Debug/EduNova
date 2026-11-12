@@ -17,10 +17,6 @@ interface Celebration {
 }
 
 /** The pressed button disappears once its mission is done, so hand focus to a stable heading (user-initiated, so not focus theft). */
-function moveFocusTo(id: string) {
-  window.setTimeout(() => document.getElementById(id)?.focus(), 60);
-}
-
 export default function QuestsPage() {
   const { t } = useTranslation();
   const userId = useSessionStore((s) => s.user?.id) ?? 'guest';
@@ -29,21 +25,22 @@ export default function QuestsPage() {
   const [saveFailed, setSaveFailed] = useState(false);
   const [celebration, setCelebration] = useState<Celebration | null>(null);
   const pref = useCelebrationPref();
-  const rootRef = useRef<HTMLDivElement>(null);
+  const timers = useRef<number[]>([]);
 
-  // Route change: focus the page heading (no focus theft on later async updates).
+  // Clear pending focus timers on unmount.
   useEffect(() => {
-    const h1 = rootRef.current?.querySelector('h1');
-    if (h1) {
-      h1.setAttribute('tabindex', '-1');
-      h1.focus({ preventScroll: true });
-    }
+    const list = timers.current;
+    return () => list.forEach((id) => window.clearTimeout(id));
   }, []);
 
   const hasData = data !== undefined;
   useEffect(() => {
     if (hasData) announce(t('a11y.loaded'));
   }, [hasData, t]);
+
+  const moveFocusTo = (id: string) => {
+    timers.current.push(window.setTimeout(() => document.getElementById(id)?.focus(), 60));
+  };
 
   const handleComplete = async (quest: Quest, missionId: string) => {
     setSaveFailed(false);
@@ -55,7 +52,7 @@ export default function QuestsPage() {
         const title = t(quest.titleKey);
         const summary = t('student.quests.celebration.summary', { title, xp: quest.xp });
         setCelebration({ questId: quest.id, title, xp: quest.xp });
-        announce(`${t('student.quests.complete')} ${summary}`);
+        announce(summary);
         moveFocusTo('quest-celebration');
       } else {
         announce(t('student.quests.mission.savedAnnounce'));
@@ -79,7 +76,7 @@ export default function QuestsPage() {
   const totalXp = completed.reduce((sum, q) => sum + q.xp, 0);
 
   return (
-    <div ref={rootRef}>
+    <div>
       <PageHeader title={t('student.quests.title')} description={t('student.quests.subtitle')} />
 
       <Banner tone="info" className="mb-6">

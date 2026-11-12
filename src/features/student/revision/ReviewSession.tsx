@@ -41,19 +41,13 @@ export function ReviewSession({ items, onExit }: ReviewSessionProps) {
     if (failedRecall) errorRef.current?.focus();
   }, [failedRecall]);
 
-  useEffect(() => {
-    if (finished) announce(t('student.revision.done'));
-  }, [finished, t]);
-
   const rate = async (recall: Recall) => {
     setSaving(recall);
     setFailedRecall(null);
     try {
       const updated = await studentService.recordReview(userId, item.id, RECALL_QUALITY[recall]);
       setSaved((r) => [...r, updated]);
-      announce(
-        `${t('student.revision.nextCount', { count: updated.intervalDays })}. ${t('student.revision.due', { when: formatDate(updated.dueAt, locale) })}`,
-      );
+      announce(t('student.revision.due', { when: formatDate(updated.dueAt, locale) }));
       setRevealed(false);
       setIndex((i) => i + 1);
     } catch {
@@ -74,7 +68,7 @@ export function ReviewSession({ items, onExit }: ReviewSessionProps) {
         <ul className="w-full text-left text-sm text-ink-soft">
           {saved.map((s) => (
             <li key={s.id} className="flex flex-wrap justify-between gap-2 border-b border-line py-2">
-              <span className="font-medium text-ink">{t(`concept.${s.conceptId}`, { defaultValue: s.conceptId })}</span>
+              <span className="font-medium text-ink">{t(`concept.${s.conceptId}`)}</span>
               <span>{t('student.revision.due', { when: formatDate(s.dueAt, locale) })}</span>
             </li>
           ))}
@@ -86,7 +80,7 @@ export function ReviewSession({ items, onExit }: ReviewSessionProps) {
     );
   }
 
-  const concept = t(`concept.${item.conceptId}`, { defaultValue: item.conceptId });
+  const concept = t(`concept.${item.conceptId}`);
   const percent = (index / items.length) * 100;
 
   return (
