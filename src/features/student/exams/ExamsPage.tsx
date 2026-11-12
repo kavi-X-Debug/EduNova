@@ -43,7 +43,7 @@ export default function ExamsPage() {
     <div>
       {header}
       <p className="mb-4 max-w-prose text-sm text-ink-soft">{t('student.exams.readiness.note')}</p>
-      <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {data.map((report) => {
           
           const name = t(`student.exams.name.${report.examId}` as TKey);
@@ -61,7 +61,7 @@ export default function ExamsPage() {
                 </div>
                 <Link
                   to={report.id}
-                  aria-label={`${t('student.exams.report.title')}: ${name}`}
+                  aria-label={t('student.exams.report.linkLabel' as TKey, { name })}
                   className={`mt-auto inline-flex items-center gap-1 self-start rounded-md border border-line-strong bg-surface px-4 py-2 text-sm font-semibold text-brand-700 hover:bg-surface-sunken ${touchTarget} ${focusRing}`}
                 >
                   {t('student.exams.report.title')}
