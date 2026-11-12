@@ -63,7 +63,7 @@ function Overview({ data }: { data: OverviewData }) {
                   <li key={r.id} className="py-2">
                     <p className="text-sm font-semibold text-ink">{r.action}</p>
                     <p className="text-sm text-ink-soft">
-                      {r.actor} · {r.target}
+                      {t('admin.audit.actorTarget', { actor: r.actor, target: r.target })}
                     </p>
                     <time dateTime={r.at} className="text-xs text-ink-soft">
                       {formatDateTime(r.at, locale)}

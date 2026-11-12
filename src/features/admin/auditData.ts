@@ -17,20 +17,36 @@ export interface AuditBundle {
   targets: Map<string, string>;
 }
 
+/**
+ * Class id -> name pairs for audit targets. Isolated here on purpose.
+ * WARNING: this relies on a mock quirk: `teacherService.listClasses('')` returns every class only
+ * because the mock treats an unknown teacher id as "demo access to all". A real backend will not,
+ * and the call also exposes per-class band counts that admins do not need.
+ * TODO(go-live): add `adminService.listClasses()` (id + name only) or have the audit API return
+ * resolved target labels, then replace the body below and delete the mock fallback.
+ * Any failure degrades to no names, so affected targets render as "Unknown item".
+ */
+async function loadClassNames(): Promise<(readonly [string, string])[]> {
+  try {
+    const classes = await teacherService.listClasses('');
+    return classes.map((c) => [c.id, c.name] as const);
+  } catch {
+    return [];
+  }
+}
 /** Loads audit events plus the lookups needed to turn ids into readable names. */
 export async function loadAudit(): Promise<AuditBundle> {
   const [events, users, docs, classes] = await Promise.all([
     adminService.listAuditEvents(),
     adminService.listUsers(),
     adminService.listCurriculum(),
-    // Unknown teacher id returns every class (admin needs the full set for names only).
-    teacherService.listClasses('').catch(() => []),
+    loadClassNames(),
   ]);
   const actors = new Map(users.map((u) => [u.id, u.name]));
   const targets = new Map<string, string>([
     ...users.map((u) => [u.id, u.name] as const),
     ...docs.map((d) => [d.id, d.title] as const),
-    ...classes.map((c) => [c.id, c.name] as const),
+    ...classes,
   ]);
   return { events, actors, targets };
 }
@@ -43,7 +59,7 @@ export function toRows(bundle: AuditBundle, t: AdminT): AuditRow[] {
     if (!target) {
       if (e.target === 'session') target = t('admin.audit.target.session') as string;
       else if (LOCALES.includes(e.target)) target = t(`common.language.${e.target}`) as string;
-      else target = t('admin.audit.target.unknown', { defaultValue: 'Unknown item' }) as string;
+      else target = t('admin.audit.target.unknown') as string;
     }
     return {
       id: e.id,

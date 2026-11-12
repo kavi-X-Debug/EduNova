@@ -64,7 +64,7 @@ function AuditLog({ bundle }: { bundle: AuditBundle }) {
                 <Card className="flex flex-col gap-1">
                   <p className="font-semibold text-ink">{r.action}</p>
                   <p className="text-sm text-ink-soft">
-                    {r.actor} · {r.target}
+                    {t('admin.audit.actorTarget', { actor: r.actor, target: r.target })}
                   </p>
                   <time dateTime={r.at} className="text-xs text-ink-soft">
                     {when(r.at)}

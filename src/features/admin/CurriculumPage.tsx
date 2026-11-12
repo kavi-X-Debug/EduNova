@@ -10,7 +10,7 @@ import { StatusBadge } from './StatusBadge';
 import { STATUSES, useAdminLocale, type Status } from './shared';
 
 function CurriculumManager({ initial }: { initial: CurriculumDoc[] }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const locale = useAdminLocale();
   const toast = useToast();
   const [docs, setDocs] = useState(initial);
@@ -18,6 +18,7 @@ function CurriculumManager({ initial }: { initial: CurriculumDoc[] }) {
   const [confirm, setConfirm] = useState<{ doc: CurriculumDoc } | null>(null);
   const inFlight = useRef(new Set<string>());
 
+  const subjectLabel = (s: string) => (i18n.exists(`subject.${s}`) ? t(`subject.${s}`) : t('admin.curriculum.subject.unknown'));
   const statusLabel = (s: Status) => t(`admin.curriculum.status.${s}`);
   const setSavingFlag = (id: string, on: boolean) =>
     setSaving((prev) => {
@@ -87,7 +88,7 @@ function CurriculumManager({ initial }: { initial: CurriculumDoc[] }) {
             {docs.map((d) => (
               <Tr key={d.id}>
                 <Th scope="row" className="font-medium text-ink">{d.title}</Th>
-                <Td>{t(`subject.${d.subject}`, { defaultValue: d.subject })}</Td>
+                <Td>{subjectLabel(d.subject)}</Td>
                 <Td>{t('common.grade', { grade: d.grade })}</Td>
                 <Td>
                   <div className="flex min-w-[12rem] flex-col gap-2">
@@ -108,7 +109,7 @@ function CurriculumManager({ initial }: { initial: CurriculumDoc[] }) {
             <Card className="flex flex-col gap-2">
               <p className="font-semibold text-ink">{d.title}</p>
               <p className="text-sm text-ink-soft">
-                {t(`subject.${d.subject}`, { defaultValue: d.subject })} · {t('common.grade', { grade: d.grade })} · {formatDate(d.updatedAt, locale)}
+                {t('admin.curriculum.meta', { subject: subjectLabel(d.subject), grade: t('common.grade', { grade: d.grade }), date: formatDate(d.updatedAt, locale) })}
               </p>
               <div>
                 <StatusBadge status={d.status} />
@@ -142,7 +143,7 @@ function CurriculumManager({ initial }: { initial: CurriculumDoc[] }) {
       >
         {confirm && (
           <p className="text-sm text-ink-soft">
-            {confirm.doc.title}: {statusLabel(confirm.doc.status)} → {statusLabel('published')}
+            {t('admin.curriculum.publish.change', { title: confirm.doc.title, from: statusLabel(confirm.doc.status), to: statusLabel('published') })}
           </p>
         )}
       </Modal>
