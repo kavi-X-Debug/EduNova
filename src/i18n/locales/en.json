@@ -467,5 +467,19 @@
   "admin.audit.target.unknown": "Unknown item",
   "student.dashboard.nextStep.alt": "Illustration of your learning path with your next step marked",
   "auth.onboarding.saveError": "We could not save your choices. Please try again.",
-  "teacher.class.forbidden": "This class is not one of yours, or it does not exist."
+  "teacher.class.forbidden": "This class is not one of yours, or it does not exist.",
+  "admin.audit.actorTarget": "{{actor}} · {{target}}",
+  "admin.curriculum.subject.unknown": "Other subject",
+  "admin.curriculum.meta": "{{subject}} · {{grade}} · {{date}}",
+  "admin.curriculum.publish.change": "{{title}}: {{from}} → {{to}}",
+  "student.exams.chart.bandCount": "{{band}}: {{count}}",
+  "student.exams.report.subtitle": "Exam report, {{date}}",
+  "student.exams.report.linkLabel": "Report: {{name}}",
+  "student.path.nextStep.summary": "Your next step: {{kind}}, {{topic}}",
+  "student.tutor.unsourced.note": "This answer has no sources. Check it with your teacher before relying on it.",
+  "teacher.wellbeing.aboutPrivate": "About {{name}} (private to you)",
+  "teacher.class.sortDirection": "Sort direction: {{direction}}",
+  "teacher.student.viewNamed": "View profile for {{name}}",
+  "teacher.overview.classMeta_one": "Grade {{grade}} · {{count}} student",
+  "teacher.overview.classMeta_other": "Grade {{grade}} · {{count}} students"
 }
