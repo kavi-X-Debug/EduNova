@@ -467,5 +467,19 @@
   "admin.audit.target.unknown": "அறியப்படாத உருப்படி",
   "student.dashboard.nextStep.alt": "உங்கள் அடுத்த படி குறிக்கப்பட்ட கற்றல் பாதையின் விளக்கப்படம்",
   "auth.onboarding.saveError": "உங்கள் தேர்வுகளைச் சேமிக்க முடியவில்லை. தயவுசெய்து மீண்டும் முயற்சிக்கவும்.",
-  "teacher.class.forbidden": "இந்த வகுப்பு உங்களுடையது அல்ல, அல்லது அது இல்லை."
+  "teacher.class.forbidden": "இந்த வகுப்பு உங்களுடையது அல்ல, அல்லது அது இல்லை.",
+  "admin.audit.actorTarget": "{{actor}} · {{target}}",
+  "admin.curriculum.subject.unknown": "பிற பாடம்",
+  "admin.curriculum.meta": "{{subject}} · {{grade}} · {{date}}",
+  "admin.curriculum.publish.change": "{{title}}: {{from}} → {{to}}",
+  "student.exams.chart.bandCount": "{{band}}: {{count}}",
+  "student.exams.report.subtitle": "தேர்வு அறிக்கை, {{date}}",
+  "student.exams.report.linkLabel": "அறிக்கை: {{name}}",
+  "student.path.nextStep.summary": "உங்கள் அடுத்த படி: {{kind}}, {{topic}}",
+  "student.tutor.unsourced.note": "இந்தப் பதிலுக்கு மூலங்கள் இல்லை. நம்புவதற்கு முன் உங்கள் ஆசிரியரிடம் சரிபார்த்துக் கொள்ளுங்கள்.",
+  "teacher.wellbeing.aboutPrivate": "{{name}} பற்றி (உங்களுக்கு மட்டும் தனிப்பட்டது)",
+  "teacher.class.sortDirection": "வரிசைப்படுத்தும் திசை: {{direction}}",
+  "teacher.student.viewNamed": "{{name}} இன் சுயவிவரத்தைப் பார்",
+  "teacher.overview.classMeta_one": "தரம் {{grade}} · {{count}} மாணவர்",
+  "teacher.overview.classMeta_other": "தரம் {{grade}} · {{count}} மாணவர்கள்"
 }

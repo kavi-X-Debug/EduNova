@@ -467,5 +467,19 @@
   "admin.audit.target.unknown": "නොදන්නා අයිතමය",
   "student.dashboard.nextStep.alt": "ඔබේ ඊළඟ පියවර සලකුණු කර ඇති ඔබේ ඉගෙනුම් මාර්ගයේ රූප සටහන",
   "auth.onboarding.saveError": "ඔබේ තේරීම් සුරැකීමට නොහැකි විය. කරුණාකර නැවත උත්සාහ කරන්න.",
-  "teacher.class.forbidden": "මෙම පන්තිය ඔබේ පන්තියක් නොවේ, නැතහොත් එය නොපවතී."
+  "teacher.class.forbidden": "මෙම පන්තිය ඔබේ පන්තියක් නොවේ, නැතහොත් එය නොපවතී.",
+  "admin.audit.actorTarget": "{{actor}} · {{target}}",
+  "admin.curriculum.subject.unknown": "වෙනත් විෂයක්",
+  "admin.curriculum.meta": "{{subject}} · {{grade}} · {{date}}",
+  "admin.curriculum.publish.change": "{{title}}: {{from}} → {{to}}",
+  "student.exams.chart.bandCount": "{{band}}: {{count}}",
+  "student.exams.report.subtitle": "විභාග වාර්තාව, {{date}}",
+  "student.exams.report.linkLabel": "වාර්තාව: {{name}}",
+  "student.path.nextStep.summary": "ඔබේ ඊළඟ පියවර: {{kind}}, {{topic}}",
+  "student.tutor.unsourced.note": "මෙම පිළිතුරට මූලාශ්‍ර නැත. මෙය විශ්වාස කිරීමට පෙර ඔබේ ගුරුවරයා සමඟ පරීක්ෂා කර බලන්න.",
+  "teacher.wellbeing.aboutPrivate": "{{name}} ගැන (ඔබට පමණක් පෞද්ගලිකයි)",
+  "teacher.class.sortDirection": "පිළිවෙළ දිශාව: {{direction}}",
+  "teacher.student.viewNamed": "{{name}} ගේ පැතිකඩ බලන්න",
+  "teacher.overview.classMeta_one": "{{grade}} ශ්‍රේණිය · සිසුන් {{count}} දෙනෙක්",
+  "teacher.overview.classMeta_other": "{{grade}} ශ්‍රේණිය · සිසුන් {{count}} දෙනෙක්"
 }
