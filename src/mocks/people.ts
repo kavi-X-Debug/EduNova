@@ -1,3 +1,8 @@
+/**
+ * MOCK ONLY: demo users and the email->user lookup (`demoUserFor`) perform NO authentication, and any
+ * unknown email signs in as the demo account. Replace with real session verification at go-live; no
+ * production path may depend on this file or on the role/user persisted in localStorage.
+ */
 import type { AuditEvent, ClassSummary, Locale, StudentRow, User } from '@/types';
 import { bandFromMastery } from '@/lib/mastery';
 import { rngFor, daysAgo } from './rng';
