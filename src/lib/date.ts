@@ -36,7 +36,3 @@ export function formatRelative(iso: string, locale: Locale, now: number = Date.n
   }
   return rtf.format(0, 'second');
 }
-
-export function formatNumber(n: number, locale: Locale, opts?: Intl.NumberFormatOptions): string {
-  return new Intl.NumberFormat(localeTag(locale), opts).format(n);
-}

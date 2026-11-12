@@ -16,6 +16,5 @@ export const studentService: StudentService = mockStudentService;
 export const teacherService: TeacherService = mockTeacherService;
 export const adminService: AdminService = mockAdminService;
 
-// Mock-only helpers (remove with the mocks): failure/empty toggles and English text for mock i18n keys.
+// Mock-only helper (remove with the mocks): failure/empty toggles.
 export { mockControls } from '@/mocks/config';
-export { mockEn } from '@/mocks/en';
