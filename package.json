@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "preview": "vite preview",
-    "i18n:check": "node scripts/check-i18n.mjs"
+    "i18n:check": "node scripts/check-i18n.mjs && node scripts/check-i18n-usage.mjs"
   },
   "dependencies": {
     "i18next": "^26.7.2",
