@@ -1,9 +1,22 @@
 import type { ReactNode } from 'react';
+import type { ReadinessBand } from '@/types';
 import { cn } from './cn';
 
+/** Fixed arcs per band, so the ring cannot encode a precise level. */
+const ARC: Record<ReadinessBand, number> = { building: 0.25, developing: 0.5, secure: 0.75, strong: 1 };
+
+function bandFromValue(v: number): ReadinessBand {
+  if (v >= 0.75) return 'strong';
+  if (v >= 0.5) return 'secure';
+  if (v >= 0.25) return 'developing';
+  return 'building';
+}
+
 export interface MasteryRingProps {
-  /** Mastery 0-1, drives the ring length only. Never rendered as a number. */
-  value: number;
+  /** Preferred. Drives a fixed arc (25/50/75/100%). */
+  band?: ReadinessBand;
+  /** @deprecated Use `band`. A 0-1 value is quantised to a band; it is never shown or drawn precisely. */
+  value?: number;
   /** Accessible name (translated). Include the band wording, never a percentage. */
   label: string;
   size?: number;
@@ -12,8 +25,9 @@ export interface MasteryRingProps {
   className?: string;
 }
 
-export function MasteryRing({ value, label, size = 64, children, className }: MasteryRingProps) {
-  const v = Math.max(0, Math.min(1, value));
+export function MasteryRing({ band, value, label, size = 64, children, className }: MasteryRingProps) {
+  const b: ReadinessBand = band ?? bandFromValue(Math.max(0, Math.min(1, value ?? 0)));
+  const v = ARC[b];
   const stroke = 6;
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;

@@ -1,6 +1,6 @@
 import { useState, type ComponentType, type ReactNode } from 'react';
 import { MoreHorizontal } from 'lucide-react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/components/ui/cn';
 import { Modal } from '@/components/ui/Modal';
@@ -36,6 +36,8 @@ export function AppShell({ navItems, brandKey = 'app.name', headerSlot, sidebarF
   const needsMore = navItems.length > 5;
   const primary = needsMore ? navItems.slice(0, 4) : navItems;
   const overflow = needsMore ? navItems.slice(4) : [];
+  const { pathname } = useLocation();
+  const overflowActive = overflow.some((i) => (i.end ? pathname === i.to : pathname === i.to || pathname.startsWith(`${i.to}/`)));
   return (
     <div className="min-h-screen bg-surface-muted text-ink">
       <SkipLink />
@@ -89,8 +91,9 @@ export function AppShell({ navItems, brandKey = 'app.name', headerSlot, sidebarF
                 type="button"
                 aria-expanded={moreOpen}
                 aria-haspopup="dialog"
+                aria-current={overflowActive ? 'page' : undefined}
                 onClick={() => setMoreOpen(true)}
-                className="flex min-h-[56px] w-full flex-col items-center justify-center gap-0.5 px-1 text-xs font-semibold text-ink-soft outline-none focus-visible:shadow-focus"
+                className={cn('flex min-h-[56px] w-full flex-col items-center justify-center gap-0.5 px-1 text-xs font-semibold outline-none focus-visible:shadow-focus', overflowActive ? 'text-brand-700' : 'text-ink-soft')}
               >
                 <MoreHorizontal aria-hidden className="h-5 w-5" />
                 <span>{t('nav.menu.open')}</span>
