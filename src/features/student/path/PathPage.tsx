@@ -125,8 +125,7 @@ export default function PathPage() {
           />
           {current && (
             <p className="mt-4 text-sm text-ink">
-              <span className="font-semibold">{t('student.dashboard.nextStep.title')}: </span>
-              {kindLabel(current.kind)} · {conceptTitle(current.conceptId)}
+              {t('student.path.nextStep.summary' as TKey, { kind: kindLabel(current.kind), topic: conceptTitle(current.conceptId) })}
             </p>
           )}
         </Card>
@@ -180,7 +179,7 @@ export default function PathPage() {
                       <span className="text-base text-ink">{conceptTitle(step.conceptId)}</span>
                       <span className="text-sm text-ink-soft">
                         {t('student.path.estimate', { minutes: step.estimatedMinutes })}
-                        {step.status === 'locked' && ` · ${t('student.path.locked.hint')}`}
+                        {step.status === 'locked' && <span className="block">{t('student.path.locked.hint')}</span>}
                       </span>
                     </span>
                   </button>
@@ -196,8 +195,9 @@ export default function PathPage() {
               {conceptTitle(selected.conceptId)}
             </h2>
             <p className="mt-1 text-sm text-ink-soft">
-              {kindLabel(selected.kind)} · {t(`student.path.status.${selected.status}`)} ·{' '}
-              {t('student.path.estimate', { minutes: selected.estimatedMinutes })}
+              <span className="me-3 inline-block">{kindLabel(selected.kind)}</span>
+              <span className="me-3 inline-block">{t(`student.path.status.${selected.status}`)}</span>
+              <span className="inline-block">{t('student.path.estimate', { minutes: selected.estimatedMinutes })}</span>
             </p>
 
             {selected.status === 'locked' && (

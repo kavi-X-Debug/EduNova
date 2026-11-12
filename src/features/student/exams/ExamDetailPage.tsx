@@ -73,12 +73,14 @@ export default function ExamDetailPage() {
   // Weakest topics first so the student sees where to focus.
   const breakdown = [...report.conceptBreakdown].sort((a, b) => bandRank(a.band) - bandRank(b.band));
   const counts = BAND_ORDER.map((b) => ({ band: b, count: breakdown.filter((m) => m.band === b).length })).filter((c) => c.count > 0);
-  const summary = counts.map((c) => `${t(`student.exams.band.${c.band}`)}: ${c.count}`).join(', ');
+  const summary = new Intl.ListFormat(locale, { style: 'narrow', type: 'unit' }).format(
+    counts.map((c) => t('student.exams.chart.bandCount' as TKey, { band: t(`student.exams.band.${c.band}`), count: c.count })),
+  );
 
   return (
     <div>
       {backLink}
-      <PageHeader title={name} description={`${t('student.exams.report.title')} · ${formatDate(report.date, locale)}`} />
+      <PageHeader title={name} description={t('student.exams.report.subtitle' as TKey, { date: formatDate(report.date, locale) })} />
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <div className="flex flex-col gap-6">

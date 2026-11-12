@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Bot, Send, User as UserIcon } from 'lucide-react';
+import { AlertTriangle, Bot, Send, User as UserIcon } from 'lucide-react';
 import { Banner, Button, Card, ErrorState, PageHeader, SourceList, Textarea, cn, type SourceItem } from '@/components/ui';
-import { tk, useT } from '@/i18n';
-import { announce } from '@/lib/a11y';
+import { tk, useT, type TKey } from '@/i18n';
 import { studentService } from '@/services';
 import { useSessionStore } from '@/store';
 import type { TutorMessage } from '@/types';
@@ -23,6 +22,7 @@ function toSources(m: TutorMessage): SourceItem[] {
 function MessageBubble({ message }: { message: TutorMessage }) {
   const t = useT();
   const fromTutor = message.from === 'tutor';
+  const unsourced = fromTutor && message.sources.length === 0;
   return (
     <li className={cn('flex gap-3', fromTutor ? 'justify-start' : 'justify-end')}>
       {fromTutor && (
@@ -33,12 +33,18 @@ function MessageBubble({ message }: { message: TutorMessage }) {
       <article
         className={cn(
           'flex max-w-[85%] flex-col gap-2 rounded-lg border p-3 md:max-w-[75%]',
-          fromTutor ? 'border-line bg-surface' : 'border-brand-100 bg-brand-50',
+          !fromTutor ? 'border-brand-100 bg-brand-50' : unsourced ? 'border-warning-500 bg-warning-50' : 'border-line bg-surface',
         )}
       >
-        <h3 className="text-xs font-semibold text-ink-soft">{t(fromTutor ? 'student.tutor.from.tutor' : 'student.tutor.from.student')}</h3>
+        <h2 className="text-xs font-semibold text-ink-soft">{t(fromTutor ? 'student.tutor.from.tutor' : 'student.tutor.from.student')}</h2>
         <p className="whitespace-pre-wrap break-words text-base text-ink">{message.text}</p>
         {/* Every tutor answer shows its sources; an empty list renders the explicit "no sources" state. */}
+        {unsourced && (
+          <p className="flex items-start gap-2 rounded-md border border-warning-500 bg-surface p-2 text-sm font-semibold text-ink">
+            <AlertTriangle aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-warning-700" />
+            {t('student.tutor.unsourced.note' as TKey)}
+          </p>
+        )}
         {fromTutor && <SourceList sources={toSources(message)} title={t('student.tutor.sources')} />}
       </article>
       {!fromTutor && (
@@ -77,7 +83,6 @@ export default function TutorPage() {
       const reply = await studentService.askTutor(userId, question);
       if (requestId !== requestRef.current) return;
       setMessages((prev) => [...prev, { ...reply, from: 'tutor', sources: reply.sources ?? [] }]);
-      announce(t('a11y.newMessage'));
     } catch {
       if (requestId !== requestRef.current) return;
       setFailedText(question);
