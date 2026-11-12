@@ -1,35 +1,21 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import type { KeyboardEvent, RefObject } from 'react';
-
-/** Tailwind's `sr-only` utility: hide visually, keep for assistive tech. */
-export const visuallyHidden = 'sr-only';
-/** Reverts sr-only on focus (e.g. skip links). */
-export const visuallyHiddenFocusable = 'sr-only focus:not-sr-only';
+import { useEffect, useRef, useState } from 'react';
+import type { RefObject } from 'react';
 
 const FOCUSABLE =
   'a[href],button:not([disabled]),input:not([disabled]):not([type="hidden"]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"]),[contenteditable="true"]';
 
-export function getFocusable(root: HTMLElement): HTMLElement[] {
+function getFocusable(root: HTMLElement): HTMLElement[] {
   return Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
     (el) => !el.hasAttribute('hidden') && el.getAttribute('aria-hidden') !== 'true',
   );
 }
 
 /** Remember the focused element; returns a function that restores focus to it. */
-export function captureFocus(): () => void {
+function captureFocus(): () => void {
   const el = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   return () => {
     if (el && el.isConnected) el.focus({ preventScroll: true });
   };
-}
-
-/** Hook form of captureFocus: restores focus to the prior element when `active` turns false or on unmount. */
-export function useFocusReturn(active: boolean) {
-  useEffect(() => {
-    if (!active) return;
-    const restore = captureFocus();
-    return restore;
-  }, [active]);
 }
 
 /**
@@ -108,12 +94,13 @@ export function usePrefersReducedMotion(): boolean {
 // component can announce without rendering a region itself.
 type Politeness = 'polite' | 'assertive';
 const regions: Partial<Record<Politeness, HTMLElement>> = {};
+const timers: Partial<Record<Politeness, number>> = {};
 
 function getRegion(p: Politeness): HTMLElement {
   let el = regions[p];
   if (!el || !el.isConnected) {
     el = document.createElement('div');
-    el.className = visuallyHidden;
+    el.className = 'sr-only';
     el.setAttribute('aria-live', p);
     el.setAttribute('aria-atomic', 'true');
     el.setAttribute('role', p === 'assertive' ? 'alert' : 'status');
@@ -127,80 +114,11 @@ function getRegion(p: Politeness): HTMLElement {
 export function announce(message: string, politeness: Politeness = 'polite') {
   if (typeof document === 'undefined') return;
   const el = getRegion(politeness);
+  // A newer announcement supersedes a pending one: clear its timer so none leak or fire late.
+  window.clearTimeout(timers[politeness]);
   el.textContent = '';
-  window.setTimeout(() => {
+  timers[politeness] = window.setTimeout(() => {
     el.textContent = message;
+    timers[politeness] = undefined;
   }, 50);
-}
-
-/** Returns a stable `announce(message, politeness?)` function. */
-export function useAnnounce() {
-  return announce;
-}
-
-// ---- Roving tabindex -------------------------------------------------------
-interface RovingOptions {
-  orientation?: 'horizontal' | 'vertical' | 'both';
-  loop?: boolean;
-  /** Controlled/initial active index. */
-  initialIndex?: number;
-  onChange?: (index: number) => void;
-}
-
-/**
- * Roving tabindex for tablists, toolbars, menus, radio-like groups.
- * Usage: const { getItemProps, containerProps } = useRovingTabindex(count);
- *   <div role="tablist" {...containerProps}> <button {...getItemProps(i)} /> ...
- * Honors RTL-agnostic arrow keys; Home/End supported.
- */
-export function useRovingTabindex(count: number, options: RovingOptions = {}) {
-  const { orientation = 'horizontal', loop = true, initialIndex = 0, onChange } = options;
-  const [active, setActive] = useState(initialIndex);
-  const refs = useRef<(HTMLElement | null)[]>([]);
-
-  const focusIndex = useCallback(
-    (i: number) => {
-      setActive(i);
-      onChange?.(i);
-      refs.current[i]?.focus();
-    },
-    [onChange],
-  );
-
-  const onKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLElement>) => {
-      const next = orientation === 'vertical' ? 'ArrowDown' : 'ArrowRight';
-      const prev = orientation === 'vertical' ? 'ArrowUp' : 'ArrowLeft';
-      const keys = {
-        next: [next, ...(orientation === 'both' ? ['ArrowDown'] : [])],
-        prev: [prev, ...(orientation === 'both' ? ['ArrowUp'] : [])],
-      };
-      let i: number;
-      if (keys.next.includes(e.key)) i = active + 1;
-      else if (keys.prev.includes(e.key)) i = active - 1;
-      else if (e.key === 'Home') i = 0;
-      else if (e.key === 'End') i = count - 1;
-      else return;
-      e.preventDefault();
-      if (i < 0) i = loop ? count - 1 : 0;
-      if (i > count - 1) i = loop ? 0 : count - 1;
-      focusIndex(i);
-    },
-    [active, count, focusIndex, loop, orientation],
-  );
-
-  const getItemProps = (index: number) => ({
-    ref: (el: HTMLElement | null) => {
-      refs.current[index] = el;
-    },
-    tabIndex: index === active ? 0 : -1,
-    onFocus: () => setActive(index),
-  });
-
-  return {
-    activeIndex: active,
-    setActiveIndex: focusIndex,
-    getItemProps,
-    containerProps: { onKeyDown },
-  };
 }
