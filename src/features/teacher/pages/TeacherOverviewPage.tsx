@@ -24,7 +24,7 @@ export default function TeacherOverviewPage() {
         <EmptyState icon={<Users className="h-8 w-8" />} title={t('teacher.overview.empty')} />
       )}
       {!loading && !error && data && data.length > 0 && (
-        <ul className="grid gap-4 xl:grid-cols-2">
+        <ul className="grid gap-4 lg:grid-cols-2">
           {data.map((c) => {
             const summary = bandSummary(c.name, c.bandCounts, t);
             return (
@@ -34,7 +34,7 @@ export default function TeacherOverviewPage() {
                     <div>
                       <h2 id={`class-${c.id}`} className="text-lg font-semibold text-ink">{c.name}</h2>
                       <p className="text-sm text-ink-soft">
-                        {t('common.grade', { grade: c.grade })} · {t('teacher.overview.students', { count: c.studentCount })}
+                        {t('teacher.overview.classMeta', { grade: c.grade, count: c.studentCount })}
                       </p>
                     </div>
                     <Link to={`classes/${c.id}`} className={linkCls} aria-label={t('teacher.overview.openClassNamed', { name: c.name })}>

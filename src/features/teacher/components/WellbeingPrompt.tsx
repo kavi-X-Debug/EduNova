@@ -14,7 +14,7 @@ export interface WellbeingPromptProps {
 /** Private, non-diagnostic prompt for the teacher only. Never rendered on student-facing pages. */
 export function WellbeingPrompt({ studentId, studentName, promptKey, onDismiss, linkToStudent }: WellbeingPromptProps) {
   const { t } = useTranslation();
-  const heading = t('teacher.wellbeing.about', { name: studentName });
+  const heading = t('teacher.wellbeing.aboutPrivate', { name: studentName });
   return (
     <Banner
       tone="wellbeing"
@@ -27,7 +27,6 @@ export function WellbeingPrompt({ studentId, studentName, promptKey, onDismiss, 
           ) : (
             heading
           )}
-          <span className="text-xs font-normal text-ink-soft">({t('teacher.wellbeing.private')})</span>
         </span>
       }
       actions={

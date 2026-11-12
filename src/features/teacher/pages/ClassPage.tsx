@@ -177,7 +177,7 @@ export default function ClassPage() {
               <EmptyState icon={<Users className="h-8 w-8" />} title={t('teacher.class.empty')} />
             ) : (
               <>
-                <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
                   <Input
                     type="search"
                     label={t('teacher.class.search')}
@@ -207,7 +207,7 @@ export default function ClassPage() {
                       variant="secondary"
                       className="self-end"
                       onClick={() => setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))}
-                      aria-label={`${t('teacher.class.sort')}: ${sortDir === 'asc' ? t('a11y.sortedAscending') : t('a11y.sortedDescending')}`}
+                      aria-label={t('teacher.class.sortDirection', { direction: sortDir === 'asc' ? t('a11y.sortedAscending') : t('a11y.sortedDescending') })}
                     >
                       {sortDir === 'asc' ? <ArrowUp aria-hidden className="h-4 w-4" /> : <ArrowDown aria-hidden className="h-4 w-4" />}
                     </Button>
@@ -256,9 +256,8 @@ export default function ClassPage() {
                               <Td><ReadinessBand band={s.band} compact /></Td>
                               <Td>{formatRelative(s.lastActive, locale)}</Td>
                               <Td className="text-right">
-                                <Link to={`/teacher/students/${s.id}`} className={`inline-flex min-h-11 items-center rounded-md px-3 font-semibold text-brand-700 underline ${focusCls}`}>
+                                <Link to={`/teacher/students/${s.id}`} className={`inline-flex min-h-11 items-center rounded-md px-3 font-semibold text-brand-700 underline ${focusCls}`} aria-label={t('teacher.student.viewNamed', { name: s.name })}>
                                   {t('teacher.student.view')}
-                                  <span className="sr-only"> — {s.name}</span>
                                 </Link>
                               </Td>
                             </Tr>
@@ -276,9 +275,8 @@ export default function ClassPage() {
                               <ReadinessBand band={s.band} compact />
                               <span className="text-sm text-ink-soft">{t('common.label.lastActive', { when: formatRelative(s.lastActive, locale) })}</span>
                             </div>
-                            <Link to={`/teacher/students/${s.id}`} className={`mt-2 inline-flex min-h-11 items-center rounded-md font-semibold text-brand-700 underline ${focusCls}`}>
+                            <Link to={`/teacher/students/${s.id}`} className={`mt-2 inline-flex min-h-11 items-center rounded-md font-semibold text-brand-700 underline ${focusCls}`} aria-label={t('teacher.student.viewNamed', { name: s.name })}>
                               {t('teacher.student.view')}
-                              <span className="sr-only"> — {s.name}</span>
                             </Link>
                           </Card>
                         </li>
