@@ -17,7 +17,11 @@ export default tseslint.config(
       // no-hardcoded-hex rule: colours come from Tailwind tokens only
       'no-restricted-syntax': [
         'error',
-        { selector: 'Literal[value=/^#[0-9a-fA-F]+$/]', message: 'No hex values: use Tailwind tokens.' },
+        // Colours come from Tailwind tokens only. Matches hex anywhere in a string/template
+        // (e.g. bg-[#fff]) and rgb()/hsl() calls.
+        { selector: 'Literal[value=/#[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]([^0-9a-zA-Z_-]|$)/]', message: 'No hex values: use Tailwind tokens.' },
+        { selector: 'TemplateElement[value.raw=/#[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]([^0-9a-zA-Z_-]|$)/]', message: 'No hex values: use Tailwind tokens.' },
+        { selector: 'Literal[value=/(rgb|hsl)a?\\(/]', message: 'No rgb/hsl values: use Tailwind tokens.' },
       ],
     },
   },
