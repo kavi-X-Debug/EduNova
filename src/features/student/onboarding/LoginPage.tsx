@@ -1,5 +1,5 @@
 import { useRef, useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Select } from '@/components/ui';
 import { announce } from '@/lib/a11y';
@@ -7,7 +7,6 @@ import { useSessionStore } from '@/store';
 import type { Role } from '@/types';
 import { destinationFor } from './destination';
 import { RedirectByRole } from './RedirectByRole';
-import { usePageFocus } from './usePageFocus';
 
 const ROLES: Role[] = ['student', 'teacher', 'admin'];
 
@@ -16,7 +15,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const user = useSessionStore((s) => s.user);
   const signIn = useSessionStore((s) => s.signIn);
-  const ref = usePageFocus<HTMLDivElement>();
+  const from = (useLocation().state as { from?: unknown } | null)?.from;
   const emailRef = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,7 +24,7 @@ export default function LoginPage() {
   const [formError, setFormError] = useState<string>();
   const [busy, setBusy] = useState(false);
 
-  if (user && !busy) return <RedirectByRole role={user.role} userId={user.id} />;
+  if (user && !busy) return <RedirectByRole role={user.role} userId={user.id} from={from} />;
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -41,7 +40,7 @@ export default function LoginPage() {
     setBusy(true);
     try {
       const u = await signIn(email, role);
-      navigate(await destinationFor(u.role, u.id), { replace: true });
+      navigate(await destinationFor(u.role, u.id, from), { replace: true });
     } catch {
       const msg = t('auth.login.error');
       setFormError(msg);
@@ -52,7 +51,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div ref={ref}>
+    <div>
       <h1 className="text-2xl font-bold text-ink">{t('auth.login.title')}</h1>
       <p className="mt-1 text-base text-ink-soft">{t('auth.login.subtitle')}</p>
       <form onSubmit={onSubmit} noValidate className="mt-6 flex flex-col gap-4" aria-busy={busy}>

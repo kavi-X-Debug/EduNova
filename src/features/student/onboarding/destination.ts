@@ -1,10 +1,16 @@
+import { homeFor } from '@/app/home';
 import { studentService } from '@/services';
 import type { Role } from '@/types';
 
-const HOME: Record<Role, string> = { student: '/student', teacher: '/teacher', admin: '/admin' };
+/** A post-login return path is accepted only if it is a same-app path inside the user's own area. */
+export function safeFrom(from: unknown, role: Role): string | null {
+  if (typeof from !== 'string' || !from.startsWith('/') || from.startsWith('//')) return null;
+  const home = homeFor(role);
+  return from === home || from.startsWith(`${home}/`) ? from : null;
+}
 
-/** Where to send a signed-in user: students without a saved profile go to /onboarding. */
-export async function destinationFor(role: Role, userId: string): Promise<string> {
+/** Where to send a signed-in user: students without a saved profile go to /onboarding first. */
+export async function destinationFor(role: Role, userId: string, from?: unknown): Promise<string> {
   if (role === 'student' && (await studentService.getProfile(userId)) === null) return '/onboarding';
-  return HOME[role];
+  return safeFrom(from, role) ?? homeFor(role);
 }
