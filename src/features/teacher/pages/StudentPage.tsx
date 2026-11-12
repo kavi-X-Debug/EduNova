@@ -23,10 +23,10 @@ export default function StudentPage() {
   const { data, loading, error, reload } = useAsync(
     async () => {
       const none = { student: undefined, className: undefined, mastery: [], concepts: [] };
-      const [classes, student] = await Promise.all([
-        teacherService.listClasses(teacherId),
-        teacherService.getStudent(id).catch(() => undefined),
-      ]);
+      // Ownership + not-found without swallowing transport errors: look only inside this teacher's own classes.
+      const classes = await teacherService.listClasses(teacherId);
+      const lists = await Promise.all(classes.map((c) => teacherService.listStudents(c.id)));
+      const student = lists.flat().find((s) => s.id === id);
       const mine = student ? classes.find((c) => c.id === student.classId) : undefined;
       if (!student || !mine) return none;
       const [mastery, concepts] = await Promise.all([studentService.getMastery(id), studentService.listConcepts()]);
