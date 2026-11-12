@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ToastContext, type ToastApi, type ToastOptions, type ToastTone } from './toastContext';
@@ -21,13 +21,26 @@ let counter = 0;
 export function ToastProvider({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
   const [items, setItems] = useState<Item[]>([]);
-  const dismiss = useCallback((id: number) => setItems((xs) => xs.filter((x) => x.id !== id)), []);
+  const timers = useRef(new Map<number, number>());
+  useEffect(() => {
+    const map = timers.current;
+    return () => {
+      map.forEach((tid) => window.clearTimeout(tid));
+      map.clear();
+    };
+  }, []);
+  const dismiss = useCallback((id: number) => {
+    const tid = timers.current.get(id);
+    if (tid !== undefined) window.clearTimeout(tid);
+    timers.current.delete(id);
+    setItems((xs) => xs.filter((x) => x.id !== id));
+  }, []);
   const show = useCallback(
     (opts: ToastOptions) => {
       const id = ++counter;
       setItems((xs) => [...xs, { ...opts, id }]);
       const d = opts.duration ?? 5000;
-      if (d > 0) window.setTimeout(() => dismiss(id), d);
+      if (d > 0) timers.current.set(id, window.setTimeout(() => dismiss(id), d));
     },
     [dismiss],
   );

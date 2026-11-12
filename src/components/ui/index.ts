@@ -16,6 +16,8 @@ export * from './Toast';
 export * from './toastContext';
 export * from './Tooltip';
 export * from './Table';
+export * from './ButtonLink';
+export * from './SortableTh';
 export * from './EmptyState';
 export * from './ErrorState';
 export * from './Skeleton';
