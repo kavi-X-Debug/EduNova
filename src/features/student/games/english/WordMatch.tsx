@@ -5,10 +5,16 @@ import { focusRing } from '@/components/ui/cn';
 import { useGt as useT } from '@/features/student/games/useGt';
 import type { GameComponentProps } from '@/types';
 import { playSound, RoundFeedback, useGameSession, type GameSession } from '../engine';
+import { Sprite } from '../engine/Sprite';
 import { makeWordMatchRound, ROUNDS_PER_PLAY, type WordMatchRound } from './wordMatch.generator';
 
 type Side = 'L' | 'R';
 interface Sel { side: Side; pair: number }
+
+/** Words that have a picture in the Flow art: the picture rides along inside the button (decorative; the word is the clue). */
+const WORD_PICTURE: Record<string, string> = { apple: 'apple', apples: 'apple', tree: 'tree', trees: 'tree' };
+/** The sprite that sits beside each kind of prompt. */
+const KIND_SPRITE: Record<string, string> = { opposite: 'card-pair', plural: 'apple', young: 'tree' };
 
 /** One word button. A matched pair shares a number, so a match never depends on colour alone. */
 function WordButton({ word, selected, matchNo, disabled, onClick }: { word: string; selected: boolean; matchNo?: number; disabled: boolean; onClick: () => void }) {
@@ -31,6 +37,7 @@ function WordButton({ word, selected, matchNo, disabled, onClick }: { word: stri
       )}
     >
       {done && <Check aria-hidden className="h-5 w-5 shrink-0" />}
+      {WORD_PICTURE[word.toLowerCase()] && <Sprite name={WORD_PICTURE[word.toLowerCase()]} size={32} className="h-8 w-8" />}
       <span>{word}</span>
       {done && (
         <>
@@ -52,6 +59,7 @@ function RoundView({ session }: { session: GameSession<WordMatchRound> }) {
   const [sel, setSel] = useState<Sel | null>(null);
   const [missed, setMissed] = useState<number[]>([]);
   const [note, setNote] = useState<{ text: string; ok: boolean } | null>(null);
+  const [last, setLast] = useState<{ a: string; b: string; n: number } | null>(null);
 
   const choose = (side: Side, pair: number) => {
     if (!asking || matched.includes(pair)) return;
@@ -66,6 +74,7 @@ function RoundView({ session }: { session: GameSession<WordMatchRound> }) {
       const p = round.pairs[pair];
       const now = [...matched, pair];
       setMatched(now);
+      setLast({ a: p.a, b: p.b, n: now.length });
       setNote({ text: t('games.english.wordMatch.matched', { a: p.a, b: p.b }), ok: true });
       playSound('tap');
       if (now.length === round.pairs.length) {
@@ -84,7 +93,10 @@ function RoundView({ session }: { session: GameSession<WordMatchRound> }) {
 
   return (
     <div className="flex flex-col gap-5">
-      <p className="text-xl font-bold text-ink">{t(`games.english.wordMatch.prompt.${round.kind}`)}</p>
+      <div className="flex items-center gap-3">
+        <Sprite name={KIND_SPRITE[round.kind] ?? 'card-pair'} size={56} eager className="h-14 w-14 motion-ok:animate-gx-english-hover" />
+        <p className="text-xl font-bold text-ink">{t(`games.english.wordMatch.prompt.${round.kind}`)}</p>
+      </div>
       <div className="grid grid-cols-2 gap-x-4 gap-y-3">
         <div role="group" aria-label={t('games.english.wordMatch.leftLabel')} className="flex flex-col gap-3">
           {round.pairs.map((p, i) => (
@@ -96,6 +108,20 @@ function RoundView({ session }: { session: GameSession<WordMatchRound> }) {
             <WordButton key={round.pairs[i].b} word={round.pairs[i].b} selected={sel?.side === 'R' && sel.pair === i} matchNo={matchNo(i)} disabled={!asking} onClick={() => choose('R', i)} />
           ))}
         </div>
+      </div>
+      {/* The latest matched pair: two little cards slide together and pop. A decorative copy of the status text below. */}
+      <div aria-hidden className="flex h-14 items-center justify-center gap-1 overflow-hidden">
+        {last && (
+          <div key={last.n} className="flex items-center gap-1 motion-ok:animate-gx-pop" style={{ animationDelay: '440ms' }}>
+            <span lang="en" className="rounded-lg border-2 border-success-700 bg-success-50 px-3 py-1 text-lg font-bold text-success-700 motion-ok:animate-gx-english-slide-l">
+              {last.a}
+            </span>
+            <Sprite name="card-pair" size={32} className="h-8 w-8" />
+            <span lang="en" className="rounded-lg border-2 border-success-700 bg-success-50 px-3 py-1 text-lg font-bold text-success-700 motion-ok:animate-gx-english-slide-r">
+              {last.b}
+            </span>
+          </div>
+        )}
       </div>
       <p role="status" aria-live="polite" className={cn('min-h-7 text-lg font-bold', note && !sel && !note.ok ? 'text-warning-700' : note && !sel ? 'text-success-700' : 'text-brand-700')}>
         {status_}
