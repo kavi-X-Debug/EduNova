@@ -42,3 +42,6 @@ Rendered by `BadgeImage` (`src/components/ui/BadgeImage.tsx`) on Badges, Home "M
 ## Older SVG art (not AI raster)
 
 `public/animations/*.svg`, `public/images/hero-learning-companion.svg` and `public/favicon.svg` are hand-made vector files used by the teacher and admin pages and the app shell; they are not part of the Flow set.
+
+## Games (`/student/games`)
+No new raster art was added. Game thumbnails are a token-coloured SVG (`GameThumb`) with the existing subject icon on top. A game may set `thumbnail.image` (e.g. `public/games/<id>.png`, a NEW subfolder; none exist yet) and it is only used if it loads. New badges `first-game`, `game-five`, `new-subject`, `every-subject` have no Flow PNG yet (the vector medal `BadgeArt` shows; add `public/badges/<id>.png` to override). Sounds are generated with Web Audio (no audio files), off by default.

@@ -5,6 +5,7 @@ import type { TeacherService } from '@/services/teacher';
 import type { ExamReport, LearningPathStep, Mastery, Quest, RevisionItem, User } from '@/types';
 import { makeMastery } from '@/lib/mastery';
 import { INTERVALS } from './learning';
+import { listStats, recordGame } from './games';
 import { DAY } from './rng';
 import { clone, orEmpty, simulate } from './config';
 import { CONCEPTS, MVP_GRADE, SUBJECTS } from './concepts';
@@ -170,6 +171,10 @@ export const mockStudentService: StudentService = {
       open.forEach((s, i) => (s.status = i === 0 ? 'in_progress' : i === 1 ? 'next' : 'locked'));
       return clone(step);
     }),
+
+  recordGamePlay: (userId, gameId, input) => simulate(() => clone(recordGame(userId, gameId, input, masteryOf(userId)))),
+
+  listGameStats: (userId) => simulate(() => clone(orEmpty(listStats(userId)))),
 
   getProfile: (userId) =>
     simulate(() => {

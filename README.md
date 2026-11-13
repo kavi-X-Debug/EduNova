@@ -23,6 +23,7 @@ npm run dev        # http://localhost:5173
 | `npm run typecheck` | Type-check only |
 | `npm run lint` | ESLint (includes a rule rejecting bare hex-colour string literals) |
 | `npm run i18n:check` | Verifies en/si/ta have identical keys and no empty values |
+| `npm test` | Vitest unit tests (seeded generators, scoring, game registry integrity, mastery nudge); `src/**/*.test.ts`, node environment, no browser needed |
 | `npm run format` | Prettier |
 
 **Demo logins** (mock, no password is checked): `student@edunova.lk`, `teacher@edunova.lk`, `admin@edunova.lk`.
@@ -49,6 +50,7 @@ Signed-out visitors are redirected to `/login`; a user visiting another role's a
 | | `/student/revision` | Spaced revision | `features/student/revision` |
 | | `/student/learn` | Learn hub: learning trail, warm-up quiz, remember it again, test results | `features/student/hubs` |
 | | `/student/play` | Play hub: adventures and badges | `features/student/hubs` |
+| | `/student/games`, `/student/games/:gameId` | Games library and full-page game player (Play nav item stays highlighted) | `features/student/games` |
 | | `/student/me` | Me: profile plus "Show me around" tour | `features/student/hubs` |
 | | `/student/badges`, `/student/profile` | Badges, profile (highlight Play and Me in the nav) | `features/student/badges`, `features/profile` |
 | `TeacherLayout` | `/teacher` | Class overview | `features/teacher` |
@@ -129,6 +131,7 @@ Suggested mapping (adjust to your schema):
 | `authService.signIn/signOut/currentUser` | use Supabase Auth directly in the client wrapper (or `/auth/*`) | `auth.users` + a `profiles` table (role, locale, grade) |
 | `studentService.getMastery`, `listConcepts` | `GET /students/:id/mastery`, `GET /concepts` | `concepts`, `mastery` tables |
 | `getDiagnosticQuestions`, `submitQuiz` | `GET /students/:id/diagnostic`, `POST /quiz-attempts` | `questions`, `quiz_attempts`; mark answers on the server |
+| `recordGamePlay(userId, gameId, {stars, correct, total, durationSec, conceptIds, subject, level})`, `listGameStats(userId)` | `POST /students/:id/games/:gameId/plays`, `GET /students/:id/games/stats` | `game_plays` (or per-game stats); the server must clamp the mastery nudge (about -0.02..+0.04 per play, -0.05..+0.15 total per concept, band only, never a mark) and emit the `game_played` reward event; never expose other students' stats |
 | `getLearningPath`, `getRevisionQueue`, `recordReview` | `GET /students/:id/path`, `.../revision`, `POST .../revision/:itemId/review` | `path_steps`, `revision_items` |
 | `askTutor(userId, text, locale)` | `POST /tutor/messages` with `{ text, locale }` | LLM call server-side; **must return non-empty `sources`**, and the answer text and source titles **must be in `locale`** (en/si/ta): put the language in the system prompt and store source titles per locale |
 | `listExamReports` | `GET /students/:id/exam-reports` | store bands only, never a predicted mark |

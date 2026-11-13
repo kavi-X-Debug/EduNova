@@ -1,6 +1,6 @@
 import { useState, type ComponentType, type FormEvent, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, ChevronDown, PartyPopper, Save, Type, Wind } from 'lucide-react';
+import { Check, ChevronDown, PartyPopper, Save, Type, Volume2, Wind } from 'lucide-react';
 import {
   ANIMAL_AVATAR_IDS,
   AVATAR_COLOURS,
@@ -18,7 +18,7 @@ import { useLocale, type TKey } from '@/i18n';
 import { announce } from '@/lib/a11y';
 import { profileService, studentService } from '@/services';
 import type { StudentProfile } from '@/services';
-import { useA11yPrefsStore, useSessionStore } from '@/store';
+import { useA11yPrefsStore, useGamePrefsStore, useSessionStore } from '@/store';
 import { LanguageChoices, SubjectChoices } from '@/features/student/onboarding/choices';
 import { kidControl, kidFieldWrap } from '@/features/student/onboarding/kidStyles';
 import { useCelebrationPref } from '@/features/student/quests/useCelebrationPref';
@@ -81,6 +81,8 @@ export function KidsProfile({ user, profile, student, intro }: { user: User; pro
   const largeText = useA11yPrefsStore((s) => s.largeText);
   const setPref = useA11yPrefsStore((s) => s.setPref);
   const party = useCelebrationPref();
+  const sound = useGamePrefsStore((s) => s.sound);
+  const setSound = useGamePrefsStore((s) => s.setSound);
 
   const changeLocale = (next: Locale) => {
     void setLocale(next);
@@ -243,6 +245,15 @@ export function KidsProfile({ user, profile, student, intro }: { user: User; pro
             onChange={(v) => {
               party.setEnabled(v);
               announce(t(v ? 'kidsplay.me.party.on' : 'kidsplay.me.party.off'));
+            }}
+          />
+          <SettingToggle
+            icon={Volume2}
+            label={t('games.me.sound')}
+            on={sound}
+            onChange={(v) => {
+              setSound(v);
+              announce(t(v ? 'games.me.sound.on' : 'games.me.sound.off'));
             }}
           />
         </div>

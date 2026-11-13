@@ -1,4 +1,4 @@
-import { Award, Rocket } from 'lucide-react';
+import { Award, Gamepad2, Rocket } from 'lucide-react';
 import { BigLinkCard, HelpBubble, PageHeader } from '@/components/ui';
 import { useT } from '@/i18n';
 
@@ -9,6 +9,9 @@ export default function PlayHubPage() {
     <div>
       <PageHeader title={t('kids.play.title')} description={t('kids.play.subtitle')} actions={<HelpBubble textKey="kids.play.help" align="end" />} />
       <ul className="stagger grid gap-4 md:grid-cols-2">
+        <li>
+          <BigLinkCard to="/student/games" icon={Gamepad2} title={t('games.lib.title')} description={t('games.hub.desc')} />
+        </li>
         <li>
           <BigLinkCard to="/student/quests" icon={Rocket} title={t('kids.play.adventures.title')} description={t('kids.play.adventures.desc')} />
         </li>
