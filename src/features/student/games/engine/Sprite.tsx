@@ -19,8 +19,8 @@ export function Sprite({ name, size = 64, className, style, eager }: { name: str
       decoding="async"
       loading={eager ? 'eager' : 'lazy'}
       draggable={false}
-      className={cn('pointer-events-none max-w-none select-none object-contain', className)}
-      style={style}
+      className={cn('pointer-events-none inline-block max-w-none shrink-0 select-none object-contain', className)}
+      style={{ width: size, height: size, ...style }}
       onError={() => setFailed(true)}
     />
   );

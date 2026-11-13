@@ -75,3 +75,16 @@ Made with Google Flow (AI-generated). **Check Flow's terms of use before any pub
 Flow sprites from `public/game-sprites/` (256 x 256 transparent PNG), drawn through `games/engine/Sprite.tsx` (`<Sprite name size className />`: `alt=""`, `aria-hidden`, not draggable, lazy except the trophy; renders nothing if the file is missing). All decorative; the question, hint and answer stay text. Motion is `gx-maths-*` (block in `tailwind.config.ts`) behind `motion-ok:`.
 - **Number Line Jump** (`maths/NumberLineJump.tsx`, `FrogScene`): `sun` (slow shine), `lily-pad` (start and each landing), `frog` (sits and bobs while waiting), `frog-jump` (shown while hopping), `finish-flag` (appears on the answer once the frog lands, waves), `star` (pops on a right answer). After an answer the frog hops along the real jumps, one arc per jump with a squash on landing; wrong answer = a small wobble first, then it still hops to the right place. Reduced motion: the frog is shown at the end, still.
 - **Mixed Challenge** (`mixed/MixedChallenge.tsx`, `TrophyStage`): `trophy` (slow shine, grows once on the last round), `star` (pops on a right answer), `rocket` (flies up once after each answer), plus the five `/subjects/*.png` icons under the trophy; the current round's subject is ringed and pulses softly.
+## Sinhala games: Flow sprites in play (`gx-sinhala-*`)
+
+Small `<Sprite name="..." size={n} />` (`games/engine/Sprite.tsx`): a decorative `<img>` of `/game-sprites/<name>.png` (alt="", aria-hidden, lazy, async decode, not draggable); if the file is missing it is not drawn. Keyframes: one block `gx-sinhala-*` in `tailwind.config.ts`, always behind `motion-ok:`. Sinhala stays live text (nothing baked into images).
+
+| Game | Sprites | What moves |
+|---|---|---|
+| word-builder | puzzle-piece, pencil, picture sprites (tree, sun, mountain, star, cat, bell, grass) | tiles are CSS wooden blocks with the live letters; one puzzle piece per slot snaps in as the slot is filled; on a right answer the word gets an underline that draws itself and a pencil writes in; wrong = the piece row nudges |
+| match-word-picture | picture sprites, card-pair | a partner card sits dashed with "?"; on a right match both cards slide together and the card-pair sprite pops |
+| sentence-order | pencil | CSS coloured blocks (no ribbon sprite: coloured strip), blocks bounce into place, pencil taps the finished sentence on a right answer |
+| fix-the-spelling | magnifier, eraser, check, pencil | magnifier sweeps over the picture (slow, twice); wrong pick gets an eraser swipe, the right option a check pop |
+| reading-race | tortoise, storybook, finish-flag | a calm path above the story: the tortoise takes one step per finished page and waddles on a right answer; flag waves at the end; the storybook turns a page when the read-along moves line |
+
+`SinhalaPicture` (`sinhala/pictures.tsx`) now uses a sprite for words that have one (tree, sun, mountain, star, cat, bell, grass) and falls back to the drawn picture if the sprite fails.

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { cn } from '@/components/ui';
 import type { PictureId } from './data/words';
 
@@ -163,11 +163,25 @@ const ART: Record<PictureId, ReactNode> = {
   ),
 };
 
-/** A picture. Decorative by default; pass `label` (translated) when it carries meaning on its own. */
-export function SinhalaPicture({ id, label, className }: { id: PictureId; label?: string; className?: string }) {
+/** Words whose meaning matches a Flow sprite in /game-sprites (same name). Everything else keeps the drawn picture. */
+const SPRITE: Partial<Record<PictureId, string>> = { tree: 'tree', sun: 'sun', mountain: 'mountain', star: 'star', cat: 'cat', bell: 'bell', grass: 'grass' };
+
+function Drawn({ id, label, className }: { id: PictureId; label?: string; className?: string }) {
   return (
     <svg viewBox="0 0 100 100" role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : true} className={cn('h-auto w-full', className)}>
       {ART[id]}
     </svg>
+  );
+}
+
+/** A picture. Decorative by default; pass `label` (translated) when it carries meaning on its own. Uses the Flow sprite when there is one (falls back to the drawing if it fails to load). */
+export function SinhalaPicture({ id, label, className }: { id: PictureId; label?: string; className?: string }) {
+  const [broken, setBroken] = useState(false);
+  const sprite = SPRITE[id];
+  if (!sprite || broken) return <Drawn id={id} label={label} className={className} />;
+  return (
+    <span role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : true} className={cn('block aspect-square w-full', className)}>
+      <img src={`/game-sprites/${sprite}.png`} alt="" width={256} height={256} loading="lazy" decoding="async" draggable={false} onError={() => setBroken(true)} className="h-full w-full select-none object-contain" />
+    </span>
   );
 }
