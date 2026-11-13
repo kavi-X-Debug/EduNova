@@ -20,7 +20,7 @@ export function Table({ caption, captionHidden, className, children, ...rest }: 
 }
 
 export const THead = ({ className, ...p }: HTMLAttributes<HTMLTableSectionElement>) => <thead className={cn('bg-surface-muted', className)} {...p} />;
-export const TBody = ({ className, ...p }: HTMLAttributes<HTMLTableSectionElement>) => <tbody className={cn('[&>tr:hover]:bg-surface-muted [&>tr:focus-within]:bg-surface-muted', className)} {...p} />;
+export const TBody = ({ className, ...p }: HTMLAttributes<HTMLTableSectionElement>) => <tbody className={cn('[&>tr:hover]:bg-surface-muted [&>tr:focus-within]:bg-surface-muted [&>tr:hover>td:first-child]:shadow-[inset_3px_0_0_theme(colors.brand.500)] [&>tr:focus-within>td:first-child]:shadow-[inset_3px_0_0_theme(colors.brand.500)]', className)} {...p} />;
 export const Tr = ({ className, ...p }: HTMLAttributes<HTMLTableRowElement>) => <tr className={cn('border-t border-line transition-colors duration-fast ease-standard', className)} {...p} />;
 export const Th = ({ className, scope = 'col', ...p }: ThHTMLAttributes<HTMLTableCellElement>) => <th scope={scope} className={cn('px-4 py-3 font-semibold text-ink-soft', className)} {...p} />;
-export const Td = ({ className, ...p }: TdHTMLAttributes<HTMLTableCellElement>) => <td className={cn('px-4 py-3 text-ink', className)} {...p} />;
+export const Td = ({ className, ...p }: TdHTMLAttributes<HTMLTableCellElement>) => <td className={cn('px-4 py-3 text-ink transition-shadow duration-base ease-standard', className)} {...p} />;

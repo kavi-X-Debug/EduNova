@@ -208,7 +208,7 @@ export default function PathPage() {
                     {conceptTitle(g.concept)}
                   </h3>
                   {meta.length > 0 && <p className="mb-2 text-xs text-ink-soft">{meta.join(' · ')}</p>}
-                  <ol className="flex flex-col gap-2">
+                  <ol className="relative flex flex-col gap-2 before:absolute before:bottom-8 before:left-[30px] before:top-8 before:w-0.5 before:origin-top before:bg-line-strong motion-ok:before:animate-fx-line-grow">
                     {g.steps.map((step) => {
                       const isSelected = step.id === selected.id;
                       const index = subjectSteps.indexOf(step);
@@ -230,8 +230,10 @@ export default function PathPage() {
                             <span
                               aria-hidden
                               className={cn(
-                                'flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-sm font-semibold',
+                                'relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-sm font-semibold',
                                 step.status === 'done' ? 'border-success-500 bg-success-50 text-success-700' : 'border-line-strong bg-surface text-ink-soft',
+                                // Unlock pop once, then a gentle bounce a few times on the next step.
+                                (step.status === 'next' || step.status === 'in_progress') && 'border-brand-500 text-brand-700 motion-ok:[animation:fx-unlock_420ms_cubic-bezier(0,0,0.2,1)_backwards,fx-nudge_2.4s_ease-in-out_1s_3]',
                               )}
                             >
                               {index + 1}
@@ -334,6 +336,7 @@ export default function PathPage() {
         </Card>
         <AnimatedIllustration
           name="learning-path"
+          float
           alt={t('student.path.illustration.alt')}
           className="mx-auto w-full max-w-xs"
         />

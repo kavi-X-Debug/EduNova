@@ -45,7 +45,7 @@ export function SourceList({ sources, title, className }: SourceListProps) {
       ) : (
         <ol className="flex flex-col gap-1 text-sm">
           {sources.map((s, i) => (
-            <li key={s.id} className="flex gap-2">
+            <li key={s.id} className="flex gap-2 animate-fx-pop-in" style={{ animationDelay: `${Math.min(i, 6) * 70}ms` }}>
               <span aria-hidden className="text-ink-faint">{i + 1}.</span>
               <span>
                 {safeHref(s.href) ? (

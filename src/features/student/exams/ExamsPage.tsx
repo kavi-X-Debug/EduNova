@@ -49,7 +49,7 @@ export default function ExamsPage() {
           const name = t(`student.exams.name.${report.examId}` as TKey);
           return (
             <li key={report.id}>
-              <Card as="article" className="flex h-full flex-col gap-4">
+              <Card as="article" interactive className="flex h-full flex-col gap-4">
                 <div>
                   <h2 className="text-lg font-semibold text-ink">{name}</h2>
                   <p className="text-sm text-ink-soft">{formatDate(report.date, locale)}</p>
@@ -65,7 +65,7 @@ export default function ExamsPage() {
                   className={`mt-auto inline-flex items-center gap-1 self-start rounded-md border border-line-strong bg-surface px-4 py-2 text-sm font-semibold text-brand-700 hover:bg-surface-sunken ${touchTarget} ${focusRing}`}
                 >
                   {t('student.exams.report.title')}
-                  <ChevronRight aria-hidden className="h-4 w-4" />
+                  <ChevronRight aria-hidden className="fx-icon h-4 w-4" />
                 </Link>
               </Card>
             </li>

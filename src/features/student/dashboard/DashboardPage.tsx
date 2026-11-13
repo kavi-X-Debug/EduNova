@@ -1,7 +1,7 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { MessageCircle, RefreshCw } from 'lucide-react';
+import { Hand, MessageCircle, RefreshCw } from 'lucide-react';
 import {
   AnimatedIllustration,
   Badge,
@@ -27,8 +27,8 @@ const BAND_ARC: Record<ReadinessBandName, number> = { building: 0.25, developing
 
 const linkBtn = (primary: boolean) =>
   cn(
-    'inline-flex min-h-[44px] items-center justify-center rounded-md border px-4 py-2 text-sm font-semibold outline-none focus-visible:shadow-focus',
-    primary ? 'border-transparent bg-brand-600 text-surface hover:bg-brand-700' : 'border-line-strong bg-surface text-ink hover:bg-surface-sunken',
+    'inline-flex min-h-[44px] items-center justify-center rounded-md border px-4 py-2 text-sm font-semibold outline-none transition-colors duration-fast ease-standard focus-visible:shadow-focus',
+    primary ? 'fx-shine border-transparent bg-brand-600 text-surface hover:bg-brand-700' : 'border-line-strong bg-surface text-ink hover:bg-surface-sunken',
   );
 
 interface BlockProps<T> {
@@ -39,11 +39,14 @@ interface BlockProps<T> {
   emptyAction?: ReactNode;
   errorText: string;
   className?: string;
+  /** Card lifts and glows on hover/focus (use when the card holds a link). */
+  interactive?: boolean;
+  spotlight?: boolean;
   children: (d: T) => ReactNode;
 }
 
 /** One dashboard card with its own loading, empty and error states. */
-function Block<T>({ title, state, isEmpty, emptyText, emptyAction, errorText, className, children }: BlockProps<T>) {
+function Block<T>({ title, state, isEmpty, emptyText, emptyAction, errorText, className, interactive, spotlight, children }: BlockProps<T>) {
   const { t } = useTranslation();
   let content: ReactNode;
   if (state.loading && state.data === undefined) content = <LoadingState label={t('a11y.loading')} lines={3} />;
@@ -52,7 +55,7 @@ function Block<T>({ title, state, isEmpty, emptyText, emptyAction, errorText, cl
     content = <EmptyState title={emptyText} action={emptyAction} className="p-4" />;
   } else content = children(state.data);
   return (
-    <Card as="section" className={className} aria-label={title} title={title}>
+    <Card as="section" interactive={interactive} spotlight={spotlight} className={className} aria-label={title} title={title}>
       {content}
     </Card>
   );
@@ -97,7 +100,16 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <PageHeader title={t('student.dashboard.greeting', { name: firstName })} description={t('student.dashboard.subtitle')} />
+      <PageHeader
+        title={
+          <>
+            {t('student.dashboard.greeting', { name: firstName })}
+            {/* Decorative: waves once on arrival; static under reduced motion. */}
+            <Hand aria-hidden className="ms-2 inline-block h-6 w-6 origin-[70%_80%] align-[-2px] text-accent-500 motion-ok:animate-fx-wave md:h-7 md:w-7" />
+          </>
+        }
+        description={t('student.dashboard.subtitle')}
+      />
 
       <div className="stagger grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Block
@@ -108,11 +120,13 @@ export default function DashboardPage() {
           emptyAction={<Link to="/student/diagnostic" className={linkBtn(true)}>{t('student.diagnostic.start')}</Link>}
           errorText={t('student.dashboard.error')}
           className="md:col-span-2 lg:col-span-2"
+          interactive
+          spotlight
         >
           {(steps) =>
             next && (
               <div className="flex flex-col gap-4 md:flex-row md:items-center">
-                <AnimatedIllustration name="learning-path" alt={t('student.dashboard.nextStep.alt')} className="aspect-[4/3] h-auto w-full max-w-xs shrink-0 md:w-48" />
+                <AnimatedIllustration name="learning-path" alt={t('student.dashboard.nextStep.alt')} float className="aspect-[4/3] h-auto w-full max-w-xs shrink-0 md:w-48" />
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     {nextSubject && <Badge tone="neutral">{t(`subject.${nextSubject}`)}</Badge>}
@@ -137,11 +151,12 @@ export default function DashboardPage() {
           isEmpty={() => false}
           emptyText={t('student.revision.empty')}
           errorText={t('student.revision.error')}
+          interactive
         >
           {() => (
             <div className="flex flex-col items-start gap-3">
               <p className="flex items-center gap-2 text-lg font-semibold text-ink">
-                <RefreshCw aria-hidden className="h-5 w-5 text-brand-600" />
+                <RefreshCw aria-hidden className="fx-icon h-5 w-5 text-brand-600" />
                 {dueCount > 0 ? t('student.dashboard.revisionDue.count', { count: dueCount }) : t('student.revision.empty')}
               </p>
               {dueCount > 0 && (
@@ -190,6 +205,7 @@ export default function DashboardPage() {
           isEmpty={() => !activeQuest}
           emptyText={t('student.dashboard.quest.empty')}
           errorText={t('student.quests.error')}
+          interactive
         >
           {() =>
             activeQuest && (
@@ -222,6 +238,7 @@ export default function DashboardPage() {
           isEmpty={(d) => d.length === 0}
           emptyText={t('student.exams.empty')}
           errorText={t('student.exams.error')}
+          interactive
         >
           {() =>
             latestExam && (
@@ -237,10 +254,10 @@ export default function DashboardPage() {
           }
         </Block>
 
-        <Card as="section" aria-label={t('student.dashboard.tutor.title')} title={t('student.dashboard.tutor.title')}>
+        <Card as="section" interactive aria-label={t('student.dashboard.tutor.title')} title={t('student.dashboard.tutor.title')}>
           <div className="flex flex-col items-start gap-3">
             <p className="flex items-start gap-2 text-sm text-ink-soft">
-              <MessageCircle aria-hidden className="mt-0.5 h-5 w-5 shrink-0 text-brand-600" />
+              <MessageCircle aria-hidden className="fx-icon mt-0.5 h-5 w-5 shrink-0 text-brand-600" />
               {t('student.dashboard.tutor.body')}
             </p>
             <Link to="/student/tutor" className={linkBtn(true)}>

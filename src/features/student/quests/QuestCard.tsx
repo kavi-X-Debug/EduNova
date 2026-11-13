@@ -1,6 +1,6 @@
 import { CheckCircle2, Circle, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Badge, Button, Card, ProgressBar } from '@/components/ui';
+import { Badge, Button, Card, DrawCheck, ProgressBar } from '@/components/ui';
 import type { Quest } from '@/types';
 
 export interface QuestCardProps {
@@ -51,7 +51,7 @@ export function QuestCard({ quest, pendingIds, onComplete }: QuestCardProps) {
               <div className="flex-1">
                 <p className="flex items-start gap-2 text-sm font-medium text-ink">
                   {m.done ? (
-                    <CheckCircle2 aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-success-700" />
+                    <DrawCheck className="mt-0.5 shrink-0 text-success-700" />
                   ) : (
                     <Circle aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-ink-faint" />
                   )}

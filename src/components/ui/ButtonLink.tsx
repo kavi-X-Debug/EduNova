@@ -12,7 +12,7 @@ export interface ButtonLinkProps extends LinkProps {
 }
 
 const variants: Record<ButtonVariant, string> = {
-  primary: 'bg-brand-600 text-surface hover:bg-brand-700 active:bg-brand-700 border border-transparent',
+  primary: 'fx-shine bg-brand-600 text-surface hover:bg-brand-700 active:bg-brand-700 border border-transparent',
   secondary: 'bg-surface text-ink border border-line-strong hover:bg-surface-sunken hover:border-ink-faint active:bg-line',
   ghost: 'bg-transparent text-brand-700 border border-transparent hover:bg-brand-50 active:bg-brand-100',
   danger: 'bg-danger-700 text-surface hover:bg-danger-500 active:bg-danger-500 border border-transparent',
