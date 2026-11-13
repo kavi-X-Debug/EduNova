@@ -12,7 +12,7 @@ export const sinhalaGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 5,
     kind: 'drag',
-    thumbnail: { tone: 'leaf' },
+    thumbnail: { tone: 'leaf', image: '/games/word-builder.webp' },
     load: () => import('./WordBuilder'),
   },
   {
@@ -25,7 +25,7 @@ export const sinhalaGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 4,
     kind: 'match',
-    thumbnail: { tone: 'sun' },
+    thumbnail: { tone: 'sun', image: '/games/match-word-picture.webp' },
     load: () => import('./MatchWordPicture'),
   },
   {
@@ -38,7 +38,7 @@ export const sinhalaGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 5,
     kind: 'sequence',
-    thumbnail: { tone: 'bloom' },
+    thumbnail: { tone: 'bloom', image: '/games/sentence-order.webp' },
     load: () => import('./SentenceOrder'),
   },
   {
@@ -51,7 +51,7 @@ export const sinhalaGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 4,
     kind: 'tap',
-    thumbnail: { tone: 'sky' },
+    thumbnail: { tone: 'sky', image: '/games/fix-the-spelling.webp' },
     load: () => import('./FixSpelling'),
   },
   {
@@ -64,7 +64,7 @@ export const sinhalaGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 6,
     kind: 'tap',
-    thumbnail: { tone: 'brand' },
+    thumbnail: { tone: 'brand', image: '/games/reading-race.webp' },
     load: () => import('./ReadingRace'),
   },
 ];

@@ -13,7 +13,7 @@ export const mixedGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 4,
     kind: 'mixed',
-    thumbnail: { tone: 'brand' },
+    thumbnail: { tone: 'brand', image: '/games/mixed-challenge.webp' },
     load: () => import('./MixedChallenge'),
   },
 ];

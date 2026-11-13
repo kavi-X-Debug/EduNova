@@ -12,7 +12,7 @@ export const englishGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 4,
     kind: 'match',
-    thumbnail: { tone: 'sky' },
+    thumbnail: { tone: 'sky', image: '/games/word-match.webp' },
     load: () => import('./WordMatch'),
   },
   {
@@ -25,7 +25,7 @@ export const englishGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 5,
     kind: 'tap',
-    thumbnail: { tone: 'sun' },
+    thumbnail: { tone: 'sun', image: '/games/spelling-bee.webp' },
     load: () => import('./SpellingBee'),
   },
   {
@@ -38,7 +38,7 @@ export const englishGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 5,
     kind: 'sequence',
-    thumbnail: { tone: 'brand' },
+    thumbnail: { tone: 'brand', image: '/games/sentence-scramble.webp' },
     load: () => import('./SentenceScramble'),
   },
   {
@@ -51,7 +51,7 @@ export const englishGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 4,
     kind: 'tap',
-    thumbnail: { tone: 'leaf' },
+    thumbnail: { tone: 'leaf', image: '/games/pick-the-preposition.webp' },
     load: () => import('./PickThePreposition'),
   },
   {
@@ -64,7 +64,7 @@ export const englishGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 5,
     kind: 'drag',
-    thumbnail: { tone: 'bloom' },
+    thumbnail: { tone: 'bloom', image: '/games/past-or-present.webp' },
     load: () => import('./PastOrPresent'),
   },
   {
@@ -77,7 +77,7 @@ export const englishGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 5,
     kind: 'sequence',
-    thumbnail: { tone: 'sky' },
+    thumbnail: { tone: 'sky', image: '/games/story-sequence.webp' },
     load: () => import('./StorySequence'),
   },
   {
@@ -90,7 +90,7 @@ export const englishGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 4,
     kind: 'tap',
-    thumbnail: { tone: 'leaf' },
+    thumbnail: { tone: 'leaf', image: '/games/fill-the-gap.webp' },
     load: () => import('./FillTheGap'),
   },
 ];

@@ -54,6 +54,46 @@ const fxAnimation = {
 const fxShadow = { 'fx-glow': '0 10px 28px rgba(67,56,202,0.16), 0 2px 6px rgba(15,23,42,0.08)' };
 // ---- end Motion round 2 ----
 
+// ---- Game motion (gx-*). Gentle and finite: transform/opacity only, nothing faster than ~400ms, no flashing. Gate in markup with `motion-ok:`. ----
+const gxKeyframes = {
+  'gx-pop': { '0%': { transform: 'scale(0.97)' }, '55%': { transform: 'scale(1.035)' }, '100%': { transform: 'scale(1)' } },
+  'gx-glow': { '0%': { opacity: '0', transform: 'scale(0.96)' }, '40%': { opacity: '0.7', transform: 'scale(1.02)' }, '100%': { opacity: '0', transform: 'scale(1.06)' } },
+  'gx-sparkle': {
+    '0%': { opacity: '0', transform: 'translateY(4px) scale(0.4)' },
+    '35%': { opacity: '1', transform: 'translateY(-2px) scale(1)' },
+    '100%': { opacity: '0', transform: 'translateY(-14px) scale(0.8)' },
+  },
+  'gx-nudge-x': { '0%,100%': { transform: 'translateX(0)' }, '25%': { transform: 'translateX(-4px)' }, '60%': { transform: 'translateX(3px)' }, '85%': { transform: 'translateX(-1px)' } },
+  'gx-fade-up': { from: { opacity: '0', transform: 'translateY(6px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+  'gx-star-pop': { '0%': { opacity: '0.4', transform: 'scale(0.6)' }, '60%': { opacity: '1', transform: 'scale(1.18)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
+  'gx-star-float': { '0%,100%': { transform: 'translateY(0) rotate(0deg)' }, '50%': { transform: 'translateY(-10px) rotate(6deg)' } },
+  'gx-zoom': { from: { transform: 'scale(1)' }, to: { transform: 'scale(1.08)' } },
+  'gx-fly-up': {
+    '0%': { opacity: '0', transform: 'translateY(28px) scale(0.92)' },
+    '25%': { opacity: '1', transform: 'translateY(12px) scale(1)' },
+    '75%': { opacity: '1', transform: 'translateY(-14px) scale(1)' },
+    '100%': { opacity: '0', transform: 'translateY(-34px) scale(0.96)' },
+  },
+  'gx-rise': { from: { opacity: '0', transform: 'translateY(10px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+  'gx-bob': { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-4px)' } },
+  'gx-hop': { '0%': { transform: 'translateY(0) scale(1)' }, '30%': { transform: 'translateY(0) scale(1.06, 0.94)' }, '60%': { transform: 'translateY(-10px) scale(1)' }, '100%': { transform: 'translateY(0) scale(1)' } },
+};
+const gxAnimation = {
+  'gx-pop': 'gx-pop 450ms cubic-bezier(0, 0, 0.2, 1) 1',
+  'gx-glow': 'gx-glow 900ms ease-out 1 forwards',
+  'gx-sparkle': 'gx-sparkle 1400ms ease-out 1 backwards',
+  'gx-nudge-x': 'gx-nudge-x 700ms ease-in-out 1',
+  'gx-fade-up': 'gx-fade-up 420ms cubic-bezier(0, 0, 0.2, 1) 1 backwards',
+  'gx-star-pop': 'gx-star-pop 450ms cubic-bezier(0, 0, 0.2, 1) 1 backwards',
+  'gx-star-float': 'gx-star-float 5s ease-in-out 2',
+  'gx-zoom': 'gx-zoom 14s ease-out 1 forwards',
+  'gx-fly-up': 'gx-fly-up 3200ms ease-in-out 1 forwards',
+  'gx-rise': 'gx-rise 450ms cubic-bezier(0, 0, 0.2, 1) 1 backwards',
+  'gx-bob': 'gx-bob 4s ease-in-out 3',
+  'gx-hop': 'gx-hop 600ms cubic-bezier(0, 0, 0.2, 1) 1',
+};
+// ---- end Game motion ----
+
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   // Hover styles only where a real hover exists (no sticky hover on touch).
@@ -108,6 +148,7 @@ export default {
         'badge-shine': { from: { transform: 'translateX(-70px)' }, to: { transform: 'translateX(70px)' } },
         'badge-pop': { '0%': { opacity: '0', transform: 'scale(0.6)' }, '60%': { opacity: '1', transform: 'scale(1.08)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
         ...fxKeyframes,
+        ...gxKeyframes,
       },
       animation: {
         'fade-in': 'fade-in 200ms cubic-bezier(0, 0, 0.2, 1) backwards',
@@ -121,6 +162,7 @@ export default {
         'badge-shine': 'badge-shine 900ms cubic-bezier(0.2, 0, 0, 1) 1',
         'badge-pop': 'badge-pop 600ms cubic-bezier(0, 0, 0.2, 1) backwards',
         ...fxAnimation,
+        ...gxAnimation,
       },
       fontFamily: {
         sans: ['Inter', 'Noto Sans Sinhala', 'Noto Sans Tamil', 'system-ui', 'sans-serif'],

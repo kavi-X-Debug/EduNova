@@ -12,7 +12,7 @@ export const scienceGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 5,
     kind: 'sort',
-    thumbnail: { tone: 'bloom' },
+    thumbnail: { tone: 'bloom', image: '/games/magnet-lab.webp' },
     load: () => import('./MagnetLab'),
   },
   {
@@ -25,7 +25,7 @@ export const scienceGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 5,
     kind: 'sort',
-    thumbnail: { tone: 'sun' },
+    thumbnail: { tone: 'sun', image: '/games/light-shadows.webp' },
     load: () => import('./LightShadows'),
   },
   {
@@ -38,7 +38,7 @@ export const scienceGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 4,
     kind: 'tap',
-    thumbnail: { tone: 'sky' },
+    thumbnail: { tone: 'sky', image: '/games/sound-detective.webp' },
     load: () => import('./SoundDetective'),
   },
   {
@@ -51,7 +51,7 @@ export const scienceGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 5,
     kind: 'sequence',
-    thumbnail: { tone: 'sky' },
+    thumbnail: { tone: 'sky', image: '/games/water-cycle-order.webp' },
     load: () => import('./WaterCycleOrder'),
   },
   {
@@ -64,7 +64,7 @@ export const scienceGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 5,
     kind: 'sequence',
-    thumbnail: { tone: 'leaf' },
+    thumbnail: { tone: 'leaf', image: '/games/food-chain-builder.webp' },
     load: () => import('./FoodChainBuilder'),
   },
   {
@@ -77,7 +77,7 @@ export const scienceGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 5,
     kind: 'mixed',
-    thumbnail: { tone: 'sun' },
+    thumbnail: { tone: 'sun', image: '/games/circuit-builder.webp' },
     load: () => import('./CircuitBuilder'),
   },
 ];

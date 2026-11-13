@@ -12,7 +12,7 @@ export const mathsGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 4,
     kind: 'tap',
-    thumbnail: { tone: 'brand' },
+    thumbnail: { tone: 'brand', image: '/games/number-line-jump.webp' },
     load: () => import('./NumberLineJump'),
   },
 ];

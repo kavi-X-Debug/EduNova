@@ -15,6 +15,10 @@ export const AVATAR_PRESETS: { id: string; icon: IconType }[] = [
 export const CLASSIC_AVATAR_IDS = ['rocket', 'star', 'leaf', 'book', 'sun', 'wave'];
 /** Ids whose label is kidsplay.avatar.<id> instead of profile.avatar.preset.<id>. */
 export const ANIMAL_AVATAR_IDS = ['cat', 'dog', 'fish', 'bird', 'rabbit', 'turtle'];
+/** The five picture avatars a child can choose (a cute round picture each, public/avatars/<id>.png). Same ids as before, so saved profiles keep working. */
+export const KID_AVATAR_IDS = ['cat', 'dog', 'rabbit', 'turtle', 'bird'] as const;
+/** Picture for a preset id, if it has one (the older fish, rocket, star... have only an icon). */
+export const avatarImage = (id: string | undefined): string | undefined => (id && (KID_AVATAR_IDS as readonly string[]).includes(id) ? `/avatars/${id}.png` : undefined);
 /** Colour keys -> token classes. Labels live in i18n as profile.avatar.colour.<key>. */
 export const AVATAR_COLOURS: Record<string, string> = {
   brand: 'bg-brand-100 text-brand-700',
