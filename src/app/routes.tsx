@@ -1,5 +1,5 @@
 import { createBrowserRouter, type RouteObject } from 'react-router-dom';
-import { BarChart3, ClipboardList, LayoutDashboard, MessagesSquare, Route as RouteIcon, ScrollText, Swords, Users, RefreshCw, Stethoscope, Library, Award, UserCircle } from 'lucide-react';
+import { BarChart3, BookOpen, Gamepad2, House, LayoutDashboard, MessageCircleQuestionMark, ScrollText, UserCircle, UserRound, Users, Library } from 'lucide-react';
 import { AdminLayout, AuthLayout, StudentLayout, TeacherLayout, type NavItem } from '@/layouts';
 import { authRoutes } from '@/features/student/onboarding/routes';
 import { dashboardRoutes } from '@/features/student/dashboard/routes';
@@ -10,6 +10,8 @@ import { examsRoutes } from '@/features/student/exams/routes';
 import { questsRoutes } from '@/features/student/quests/routes';
 import { revisionRoutes } from '@/features/student/revision/routes';
 import { badgesRoutes } from '@/features/student/badges/routes';
+import { hubRoutes } from '@/features/student/hubs/routes';
+import { TourHost } from '@/features/student/tour/WelcomeTour';
 import { profileRoutes } from '@/features/profile/routes';
 import { teacherRoutes } from '@/features/teacher/routes';
 import { adminRoutes } from '@/features/admin/routes';
@@ -17,16 +19,13 @@ import { HeaderSlot } from './HeaderSlot';
 import { RedirectHome, RequireRole } from './guards';
 import { AppLoading, Root } from './Root';
 
+/** Student nav: 5 big items, one short word each. Older pages stay routable and highlight their parent item. */
 const studentNav: NavItem[] = [
-  { to: '/student', labelKey: 'nav.student.dashboard', icon: LayoutDashboard, end: true },
-  { to: '/student/path', labelKey: 'nav.student.path', icon: RouteIcon },
-  { to: '/student/tutor', labelKey: 'nav.student.tutor', icon: MessagesSquare },
-  { to: '/student/quests', labelKey: 'nav.student.quests', icon: Swords },
-  { to: '/student/revision', labelKey: 'nav.student.revision', icon: RefreshCw },
-  { to: '/student/exams', labelKey: 'nav.student.exams', icon: ClipboardList },
-  { to: '/student/diagnostic', labelKey: 'nav.student.diagnostic', icon: Stethoscope },
-  { to: '/student/badges', labelKey: 'nav.student.badges', icon: Award },
-  { to: '/student/profile', labelKey: 'nav.account.profile', icon: UserCircle },
+  { to: '/student', labelKey: 'nav.kids.home', icon: House, end: true },
+  { to: '/student/learn', labelKey: 'nav.kids.learn', icon: BookOpen, alsoActiveFor: ['/student/path', '/student/diagnostic', '/student/revision', '/student/exams'] },
+  { to: '/student/tutor', labelKey: 'nav.kids.ask', icon: MessageCircleQuestionMark },
+  { to: '/student/play', labelKey: 'nav.kids.play', icon: Gamepad2, alsoActiveFor: ['/student/quests', '/student/badges'] },
+  { to: '/student/me', labelKey: 'nav.kids.me', icon: UserRound, alsoActiveFor: ['/student/profile'] },
 ];
 const teacherNav: NavItem[] = [
   { to: '/teacher', labelKey: 'nav.teacher.overview', icon: BarChart3, end: true },
@@ -52,9 +51,15 @@ export const routes: RouteObject[] = [
         children: [
           {
             path: '/student',
-            element: <StudentLayout navItems={studentNav} headerSlot={<HeaderSlot />} />,
+            element: (
+              <>
+                <StudentLayout navItems={studentNav} headerSlot={<HeaderSlot />} />
+                <TourHost />
+              </>
+            ),
             children: [
               ...dashboardRoutes,
+              ...hubRoutes,
               ...diagnosticRoutes,
               ...pathRoutes,
               ...tutorRoutes,

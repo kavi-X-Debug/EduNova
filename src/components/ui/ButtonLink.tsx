@@ -30,7 +30,7 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(functio
         'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition duration-fast ease-standard motion-ok:active:scale-[0.98] motion-reduce:transition-none',
         touchTarget,
         focusRing,
-        size === 'lg' ? 'px-6 py-3 text-base' : 'px-4 py-2 text-sm',
+        size === 'xl' ? 'min-h-[56px] px-7 py-3.5 text-lg' : size === 'lg' ? 'px-6 py-3 text-base' : 'px-4 py-2 text-sm',
         variants[variant],
         fullWidth && 'w-full',
         className,

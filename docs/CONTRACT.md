@@ -70,3 +70,58 @@ Rules of thumb:
 `studentService.askTutor(userId, text, locale)` receives the UI language. The returned `TutorMessage.text` **and every `sources[].title`** must be written in `locale` (`TutorMessage.locale` echoes it; the UI sets `lang` on the bubble). `sources` must never be empty. The mock keeps per-locale answers in `src/mocks/tutorContent.ts`.
 For a real LLM: send `locale` to the server; the server's system prompt must say, for example, "Answer in Sinhala (si) / Tamil (ta) / English (en) as requested, using the Sri Lankan school curriculum terms; keep formulas and numerals as-is; cite the retrieved sources; if no source supports the answer say so and do not invent one." Source titles come from the retrieval index: store a title per locale (fall back to English only if none exists, and then still return it). Questions may be typed in any language regardless of `locale`; reply in `locale`.
 Messages already on screen keep the language they were written in when the user switches language (each bubble carries its own `lang`).
+
+
+## Kids UX components (student side, Grade 6)
+Brief: `docs/KIDS-UX-BRIEF.md`. All live in `src/components/ui` (import from `@/components/ui`), use tokens only, honour reduced motion (`motion-ok:`), and every visible string is an i18n key (`kids.*`, `nav.kids.*`). **Keep these APIs stable**: phase 2 pages build on them.
+
+### Mascot "Nova" and SpeechBubble
+```tsx
+<Mascot mood="happy|thinking|cheer|oops|sleepy" size="sm|md|lg" label?={t('kids.mascot.label')} animate?={true} />
+<SpeechBubble speakText?="plain text to read aloud" speakLocale?="si" tail?="auto|start|top|none">Hi Kavi!</SpeechBubble>
+<MascotMessage mood size speakText>Hi {{name}}! Ready for a 5 minute lesson?</MascotMessage>   // Nova + bubble, stacks on phones
+```
+- Mascot is decorative (`aria-hidden`) unless you pass `label`; the message must always be in the text next to it. Sizes 48 / 80 / 128px. Idle animation is a finite soft float (wiggle for `cheer`, none for `oops`), only with `motion-ok:`.
+- Moods: `happy` (default, greetings), `thinking` (waiting, "let me check"), `cheer` (finished something, done state), `oops` (errors: "Oops, let's try again"), `sleepy` (nothing to do right now / empty).
+- SpeechBubble text is 18px bold; with `speakText` it shows a SpeakButton (hidden when the device has no voice).
+
+### SpeakButton (read aloud)
+```tsx
+<SpeakButton text={string} locale?={Locale} label?={string} size?="sm|md" whenUnavailable?="hide|disable" />
+const { supported, available, speaking, speak, stop } = useSpeech(locale?)   // src/lib/speech.ts
+```
+- Uses `window.speechSynthesis`, language tag from the UI language (`en-US`, `si-LK`, `ta-LK`); a voice for the same primary language (e.g. `ta-IN`) also counts. Voices are re-read on `voiceschanged`.
+- **Honesty rule: we never claim Sinhala or Tamil read-aloud.** Most devices have no si/ta voice; then `available` is false and the button is hidden (default) or disabled with the text "This device has no voice for this language" (`whenUnavailable="disable"`). English is allowed while the voice list is still loading. Do not add copy that promises read-aloud in si/ta; do not rely on it for instructions (everything must also be readable).
+- One voice at a time across the app; pressing again stops; it stops on route change and on unmount. Accessible name is `kids.speak.label` / `kids.speak.stop`. Pass plain text (no markup) and `locale` if the text is not in the UI language.
+
+### HelpBubble ("What is this?")
+```tsx
+<HelpBubble textKey="kids.home.help" titleKey?="kids.help.title" icon?={Lightbulb} align?="start|end" />
+```
+Small 44px "?" button (`aria-haspopup="dialog"`, `aria-expanded`) opening a non-modal popover: icon, heading, 1-2 short sentences (add your own `kids.<page>.help` key in en/si/ta), close button and a SpeakButton. Escape or the close button closes and returns focus to the "?"; clicking elsewhere closes; focus moves to the close button on open; the panel is nudged to stay inside a 390px screen. Static text, no aria-live. Put it in `PageHeader actions` with `align="end"`.
+
+### BigActionButton and Button size="xl"
+```tsx
+<BigActionButton to="/student/path" icon={<Play />} fullWidth?>Start</BigActionButton>   // link
+<BigActionButton onClick={...} variant?="primary|secondary">Next</BigActionButton>        // button
+<Button size="xl" /> <ButtonLink size="xl" />                                              // same 56px look, existing variants
+```
+56px minimum height, 18px bold text, rounded-xl, icon (24px) plus a few words. Use ONE per screen as the primary action.
+
+### BigLinkCard (hub cards)
+```tsx
+<BigLinkCard to="/student/path" icon={Route} title="My learning trail" description="Your lessons, one step at a time." aside?={node} />
+```
+Whole card is a link (88px+ tall): 56px icon tile, 20px title, one sentence, chevron. Used by the Learn and Play hubs.
+
+### GrowMeter (readiness as a picture)
+```tsx
+<GrowMeter band="building|developing|secure|strong" size?="sm|md|lg" showHint? hideWord? label?={string} />
+```
+Seedling, sprout, plant, tree for the four `ReadinessBand` values, with the word (`kids.grow.<band>`: Seedling, Sprout, Plant, Tree) and an optional kind sentence (`kids.grow.hint.<band>`). **No numeric props: never a mark, rank or percent.** `role="img"` with the name "How strong am I? {band word}". The old `ReadinessBand` is untouched; pages should migrate to GrowMeter (heading text: `kids.grow.title`).
+
+### Navigation, hubs, tour (foundation)
+- `StudentLayout` passes `variant="kids"` to `AppShell` (56px sidebar rows, 28px icons, 64px bottom bar with 14px labels). `NavItem.alsoActiveFor?: string[]` highlights a parent item for sub-pages (Learn also covers `/student/path|diagnostic|revision|exams`, Play covers `/student/quests|badges`, Me covers `/student/profile`). Items use `<Link aria-current="page">`.
+- New student routes: `/student/learn`, `/student/play`, `/student/me` (`src/features/student/hubs`). All older routes keep working.
+- Welcome tour: `TourHost` (mounted beside `StudentLayout`) opens once on first visit to Home; "done" is stored per student in localStorage (`edunova.tour`, a real backend should keep a `tourDone` flag on the profile). Replay: `useTourStore.getState().openTour()` (Me > "Show me around"). Uses `Modal` (focus trap, Escape = skip) and `announce()` for each step.
+- Home "Today's plan": `src/features/student/dashboard/todaysPlan.ts` freezes up to 3 steps per calendar day (localStorage `edunova.plan.<userId>`) so finished steps keep their checkmark; data still comes from `studentService.getLearningPath/getRevisionQueue` and `rewardsService.listRecentBadges`.

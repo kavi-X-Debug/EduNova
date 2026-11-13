@@ -40,20 +40,24 @@ Signed-out visitors are redirected to `/login`; a user visiting another role's a
 | Layout | Route | Page | Folder |
 |---|---|---|---|
 | `AuthLayout` | `/login`, `/onboarding` | Sign in, first-run setup | `features/student/onboarding` |
-| `StudentLayout` | `/student` | Dashboard | `features/student/dashboard` |
+| `StudentLayout` | `/student` | Home: "Today's plan" for a child | `features/student/dashboard` |
 | | `/student/diagnostic` | Diagnostic | `features/student/diagnostic` |
 | | `/student/path` | Learning path | `features/student/path` |
 | | `/student/tutor` | AI tutor (answers always show sources) | `features/student/tutor` |
 | | `/student/exams`, `/student/exams/:id` | Exam reports (readiness bands) | `features/student/exams` |
 | | `/student/quests` | Quests and missions | `features/student/quests` |
 | | `/student/revision` | Spaced revision | `features/student/revision` |
+| | `/student/learn` | Learn hub: learning trail, warm-up quiz, remember it again, test results | `features/student/hubs` |
+| | `/student/play` | Play hub: adventures and badges | `features/student/hubs` |
+| | `/student/me` | Me: profile plus "Show me around" tour | `features/student/hubs` |
+| | `/student/badges`, `/student/profile` | Badges, profile (highlight Play and Me in the nav) | `features/student/badges`, `features/profile` |
 | `TeacherLayout` | `/teacher` | Class overview | `features/teacher` |
 | | `/teacher/classes/:id` | Class student table | `features/teacher` |
 | | `/teacher/students/:id` | Student detail | `features/teacher` |
 | `AdminLayout` | `/admin` | Overview | `features/admin` |
 | | `/admin/users`, `/admin/curriculum`, `/admin/audit` | Users, curriculum, audit log | `features/admin` |
 
-Layouts show a sidebar at 834px and wider and a bottom navigation (with a "More" menu) below that.
+Layouts show a sidebar at 834px and wider and a bottom navigation (with a "More" menu when there are more than 5 items) below that. The student nav has 5 big items (Home, Learn, Ask, Play, Me); the older pages stay routable and highlight their parent item.
 
 ## Design tokens
 
