@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { LoadingState } from '@/components/ui';
 import { useT } from '@/i18n';
 import { announce } from '@/lib/a11y';
+import { RewardCelebrator } from '@/features/student/badges/RewardCelebrator';
 
 export function AppLoading() {
   const t = useT();
@@ -44,6 +45,7 @@ export function Root() {
     <>
       <RouteFocus />
       <Outlet />
+      <RewardCelebrator />
     </>
   );
 }

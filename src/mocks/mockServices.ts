@@ -155,6 +155,18 @@ export const mockStudentService: StudentService = {
       return clone(item);
     }),
 
+  completePathStep: (userId, stepId) =>
+    simulate(() => {
+      const steps = memo(pathStore, userId, () => buildPath(userId, cohortOf(userId)));
+      const step = steps.find((s) => s.id === stepId);
+      if (!step) throw new Error(`Path step not found: ${stepId}`);
+      if (step.status === 'locked') throw new Error(`Path step is locked: ${stepId}`);
+      step.status = 'done';
+      const open = steps.filter((s) => s.status !== 'done');
+      open.forEach((s, i) => (s.status = i === 0 ? 'in_progress' : i === 1 ? 'next' : 'locked'));
+      return clone(step);
+    }),
+
   getProfile: (userId) =>
     simulate(() => {
       const mem = profileStore.get(userId);
