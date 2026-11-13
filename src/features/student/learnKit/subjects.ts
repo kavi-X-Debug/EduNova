@@ -10,3 +10,7 @@ export const SUBJECT_STYLE: Record<string, { icon: LucideIcon; tile: string }> =
 };
 
 export const subjectStyle = (subject: string) => SUBJECT_STYLE[subject] ?? { icon: Shapes, tile: 'bg-surface-sunken text-ink' };
+
+/** Google Flow picture per subject (public/subjects, 256 x 256). Unknown subjects have none and use the colour tile. */
+const SUBJECT_IMAGES = ['maths', 'science', 'sinhala', 'english', 'ict', 'trail', 'atom'];
+export const subjectImage = (subject: string): string | undefined => (SUBJECT_IMAGES.includes(subject) ? `/subjects/${subject}.png` : undefined);

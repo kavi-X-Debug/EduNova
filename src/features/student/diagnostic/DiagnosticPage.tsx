@@ -9,7 +9,7 @@ import { useSessionStore } from '@/store';
 import type { Concept, Mastery, Question, QuizAttempt, ReadinessBand as Band } from '@/types';
 import type { TKey } from '@/i18n';
 import { DotProgress, KidEmpty, KidError, KidLoading } from '../learnKit/KidState';
-import { subjectStyle } from '../learnKit/subjects';
+import { SubjectIcon } from '../learnKit/SubjectIcon';
 
 interface ConceptResult {
   conceptId: string;
@@ -148,14 +148,11 @@ export default function DiagnosticPage() {
         <ul className="stagger grid gap-4 md:grid-cols-2">
           {subjects.map((s) => {
             const items = results.filter((r) => subjectOf(r.conceptId) === s);
-            const { icon: Icon, tile } = subjectStyle(s);
             return (
               <li key={s || 'other'}>
-                <Card as="section" aria-labelledby={`diag-s-${s}`} className="flex h-full flex-col gap-4">
+                <Card as="section" aria-labelledby={`diag-s-${s}`} className="group flex h-full flex-col gap-4">
                   <div className="flex items-center gap-3">
-                    <span aria-hidden className={cn('flex h-12 w-12 items-center justify-center rounded-xl', tile)}>
-                      <Icon className="h-7 w-7" />
-                    </span>
+                    <SubjectIcon subject={s} size="md" />
                     <h3 id={`diag-s-${s}`} className="text-xl font-bold text-ink">
                       {s ? t(`subject.${s}` as TKey) : t('kidslearn.diag.result.other')}
                     </h3>

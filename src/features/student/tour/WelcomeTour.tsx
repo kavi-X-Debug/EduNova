@@ -18,7 +18,7 @@ interface Step {
 
 /** 5 short steps: what Home is, how to start a lesson, where to ask, where badges live, how to see it again. */
 const STEPS: Step[] = [
-  { icon: House, mood: 'cheer', title: 'kids.tour.s1.title', text: 'kids.tour.s1.text' },
+  { icon: House, mood: 'wave', title: 'kids.tour.s1.title', text: 'kids.tour.s1.text' },
   { icon: BookOpen, mood: 'happy', title: 'kids.tour.s2.title', text: 'kids.tour.s2.text' },
   { icon: MessageCircleQuestionMark, mood: 'thinking', title: 'kids.tour.s3.title', text: 'kids.tour.s3.text' },
   { icon: Gamepad2, mood: 'cheer', title: 'kids.tour.s4.title', text: 'kids.tour.s4.text' },

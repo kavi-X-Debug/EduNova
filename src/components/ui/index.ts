@@ -35,6 +35,7 @@ export * from './SourceList';
 export * from './Charts';
 export * from './AnimatedIllustration';
 export * from './Mascot';
+export { preloadMascots, MASCOT_MOODS } from './mascotAssets';
 export * from './SpeechBubble';
 export * from './SpeakButton';
 export * from './HelpBubble';

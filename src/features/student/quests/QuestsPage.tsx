@@ -127,7 +127,7 @@ export default function QuestsPage() {
               <BigActionButton onClick={() => setCelebration(null)}>{t('kidsplay.adv.cheer.ok')}</BigActionButton>
             </Card>
           ) : (
-            <MascotMessage mood="happy" size="md" speakText={t('kidsplay.adv.hello')}>
+            <MascotMessage mood="wave" size="md" speakText={t('kidsplay.adv.hello')}>
               {t('kidsplay.adv.hello')}
             </MascotMessage>
           )}

@@ -10,9 +10,15 @@ Every badge works with **no image files at all**. `BadgeImage` (src/components/u
 - **Not earned yet:** a soft grey silhouette (no padlock, no text, no animation).
 - **Animation (earned only):** slow glow-ring pulse (4 s), a few small twinkling sparkles (3.6 s), a one-off shine sweep on hover or keyboard focus, and a one-time "pop" when a badge is newly earned (celebration card). Keyframes are tokens in tailwind.config.ts (`badge-glow`, `badge-twinkle`, `badge-shine`, `badge-pop`) used behind the `motion-ok:` variant, so with reduced motion (OS setting or `html[data-motion="reduced"]`) the medal is completely static.
 
-## Google Flow images override the built-in badges
+## Flow art ships for all 16 badges
 
-If a real image exists, it is used instead of the vector medal: put `public/badges/<badgeId>.png` (or `.webp`) in place and `BadgeImage` picks it up automatically (PNG is tried first, then WebP; each id is probed once per page session). Missing or broken files silently fall back to the vector medal, so a partial set is safe to ship. Images are plain pictures, so they do not get the glow, sparkle or pop animation (the greyed look for locked badges still applies). **No badge images are included in the repository.** Google Flow is an external tool and was not used to create the built-in art.
+Flow art for all 16 badges now ships in `public/badges/<badgeId>.png` (generated with Google Flow, Nano Banana 2.1, backgrounds removed, transparent PNG; see docs/ASSETS.md). `BadgeImage` uses them automatically: PNG is tried first, then WebP, and each id is probed once per page session. **The built-in vector medal (`BadgeArt`) is only the fallback** for a missing or broken file (or a new badge that has no image yet), so a partial set is safe to ship.
+
+Earned Flow images get the same life as the vector medal: a soft glow ring in the rarity colour (4 s pulse), a few twinkling sparkles, a one-off shine sweep on hover or keyboard focus, and the one-time pop for a newly earned badge. All of it uses the `badge-*` / `fx-sheen` keyframe tokens behind `motion-ok:`, so with reduced motion it is static. Locked badges stay soft grey (40% opacity, greyscale) and still.
+
+### How to replace an image
+
+Overwrite `public/badges/<badgeId>.png` with a new 512 x 512 transparent PNG (same file name, no code change), or add a `.webp` if you remove the PNG. Hard-refresh to bypass the browser cache. Keep the subject centred with about 8% padding so the glow ring and sparkles sit around it.
 
 ## Specification (every Flow image)
 
@@ -183,6 +189,7 @@ Children's educational app badge, bright cheerful colourful medal, soft rounded 
 
 ## Checklist
 
+- [x] (Done) All 16 images were generated in Google Flow; the steps below apply when you regenerate or add one:
 - [ ] (Optional) Generate the 16 images in Google Flow with the prompts above (same session or same style reference so the set matches).
 - [ ] Export each as PNG with a transparent background, 512 x 512 px (use a background remover if Flow adds one).
 - [ ] Check there is no text, number or letter in any image.
