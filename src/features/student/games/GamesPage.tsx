@@ -9,6 +9,7 @@ import { useSessionStore } from '@/store';
 import type { GameDefinition, GameStat, GameSubject } from '@/types';
 import { KidEmpty, KidError, KidLoading } from '../learnKit/KidState';
 import { SubjectIcon } from '../learnKit/SubjectIcon';
+import { ScenePicture } from './engine/GameFx';
 import { GameCard } from './GameCard';
 import { GAMES, GAME_SUBJECTS } from './registry';
 import { subjectKey } from './labels';
@@ -27,9 +28,9 @@ function Row({ title, children }: { title: string; children: ReactNode }) {
 function Cards({ games, stats }: { games: GameDefinition[]; stats: Map<string, GameStat> }) {
   return (
     <>
-      {games.map((g) => (
+      {games.map((g, i) => (
         <li key={g.id}>
-          <GameCard game={g} stat={stats.get(g.id)} />
+          <GameCard game={g} stat={stats.get(g.id)} index={i} />
         </li>
       ))}
     </>
@@ -73,9 +74,13 @@ export default function GamesPage() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader className="mb-0" title={t('games.lib.title')} description={t('games.lib.subtitle')} actions={<HelpBubble textKey="games.lib.help" align="end" />} />
-      <MascotMessage mood="happy" size="md" speakText={t('games.lib.nova', { name: firstName })}>
-        {t('games.lib.nova', { name: firstName })}
-      </MascotMessage>
+      <section aria-label={t('games.lib.title')} className="relative isolate flex min-h-[220px] items-center overflow-hidden rounded-xl border border-line bg-brand-50 p-4 shadow-card md:min-h-[260px] md:p-8">
+        <ScenePicture src="/games/games-hero.webp" zoom eager className="absolute inset-0 -z-10 h-full w-full" />
+        <span aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-surface/70 via-surface/20 to-transparent" />
+        <MascotMessage mood="wave" size="md" speakText={t('games.lib.nova', { name: firstName })} className="max-w-xl">
+          {t('games.lib.nova', { name: firstName })}
+        </MascotMessage>
+      </section>
 
       {statsQ.error && <KidError onRetry={statsQ.reload} />}
       {GAMES.length === 0 && <KidEmpty title={t('games.lib.none.title')} body={t('games.lib.none.body')} />}

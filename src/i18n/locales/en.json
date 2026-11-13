@@ -1162,6 +1162,8 @@
   "games.finish.another": "Try another game",
   "games.finish.back": "Back to games",
   "games.finish.announce": "You finished the game and got {{stars}} of 3 stars.",
+  "games.milestone.title": "Star milestone!",
+  "games.milestone.body": "You have collected {{count}} stars. Keep shining!",
   "games.stars.label": "{{count}} of {{max}} stars",
   "games.feedback.right.0": "Yes! That's right!",
   "games.feedback.right.1": "Great job!",

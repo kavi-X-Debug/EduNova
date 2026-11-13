@@ -36,6 +36,12 @@ describe('game registry', () => {
           for (const l of Object.keys(locales)) expect(locales[l][key], `${l} ${key}`).toBeTruthy();
         }
       });
+      it('points at its scene picture in public/games (the file exists)', async () => {
+        const fs = await import('node:fs');
+        const path = await import('node:path');
+        expect(g.thumbnail.image).toBe(`/games/${g.id}.webp`);
+        expect(fs.existsSync(path.resolve(process.cwd(), 'public', 'games', `${g.id}.webp`))).toBe(true);
+      });
     });
   }
 });

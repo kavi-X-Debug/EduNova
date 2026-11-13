@@ -1,6 +1,6 @@
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState, type ComponentType } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, CircleHelp, Dices, Pause, Play, RotateCcw, X } from 'lucide-react';
+import { ArrowLeft, CircleHelp, Dices, Pause, Play, RotateCcw, Star, X } from 'lucide-react';
 import { BigActionButton, Button, MascotMessage, Modal, cn } from '@/components/ui';
 import { focusRing } from '@/components/ui/cn';
 import { useGt as useT } from '@/features/student/games/useGt';
@@ -8,14 +8,20 @@ import { announce } from '@/lib/a11y';
 import { studentService } from '@/services';
 import { useSessionStore } from '@/store';
 import type { GameComponentProps, GameDefinition, GameLevel } from '@/types';
-import { DotProgress, KidLoading } from '../../learnKit/KidState';
+import { KidLoading } from '../../learnKit/KidState';
+import { GameThumb } from '../GameThumb';
 import { GameContext, type GameCtx } from './GameContext';
+import { FloatingStars, RoundStars, ScenePicture, StarsCountUp } from './GameFx';
+import { crossedMilestone } from './milestone';
 import { newSeed } from './rng';
 import { computeStars } from './scoring';
 import { playSound } from './sound';
 import { StarsMeter } from './StarsMeter';
 
 type Phase = 'ready' | 'playing' | 'done';
+const BREAK_PIC = '/games/take-a-break.webp';
+const FINISH_PIC = '/games/finish-star.webp';
+const ROCKET_PIC = '/games/level-up-rocket.webp';
 interface Result { correct: number; total: number; stars: 1 | 2 | 3 }
 
 export interface GameShellProps {
@@ -47,6 +53,7 @@ export function GameShell({ game, Game, nextGame }: GameShellProps) {
   const [quitOpen, setQuitOpen] = useState(false);
   const [progress, setProgress] = useState({ index: 0, total: 0 });
   const [result, setResult] = useState<Result | null>(null);
+  const [milestone, setMilestone] = useState<number>();
   const startedAt = useRef(0);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const doneRef = useRef<HTMLHeadingElement>(null);
@@ -58,18 +65,29 @@ export function GameShell({ game, Game, nextGame }: GameShellProps) {
       setResult({ correct, total, stars });
       setPhase('done');
       announce(t('games.finish.announce', { stars }));
-      // Progress and rewards are a bonus: never block or fail the game screen.
-      void studentService
-        .recordGamePlay(userId, game.id, {
-          stars,
-          correct,
-          total,
-          durationSec: Math.max(1, Math.round((Date.now() - startedAt.current) / 1000)),
-          conceptIds: game.conceptIds,
-          subject: game.subject,
-          level,
-        })
-        .catch(() => undefined);
+      // Progress and rewards are a bonus: never block or fail the game screen. The star total before and after decides the milestone.
+      void (async () => {
+        const before = await studentService.listGameStats(userId).catch(() => undefined);
+        const saved = await studentService
+          .recordGamePlay(userId, game.id, {
+            stars,
+            correct,
+            total,
+            durationSec: Math.max(1, Math.round((Date.now() - startedAt.current) / 1000)),
+            conceptIds: game.conceptIds,
+            subject: game.subject,
+            level,
+          })
+          .catch(() => undefined);
+        if (!before || !saved) return;
+        const prevBest = before.find((x) => x.gameId === game.id)?.bestStars ?? 0;
+        const totalBefore = before.reduce((n, x) => n + x.bestStars, 0);
+        const reached = crossedMilestone(totalBefore, totalBefore - prevBest + Math.max(prevBest, saved.bestStars));
+        if (reached) {
+          setMilestone(reached);
+          announce(t('games.milestone.body', { count: reached }));
+        }
+      })();
     },
     [t, userId, game, level],
   );
@@ -78,6 +96,7 @@ export function GameShell({ game, Game, nextGame }: GameShellProps) {
     if (fresh) setSeed(newSeed(game.id));
     startedAt.current = Date.now();
     setResult(null);
+    setMilestone(undefined);
     setProgress({ index: 0, total: 0 });
     setShowHow(false);
     setPhase('playing');
@@ -94,7 +113,7 @@ export function GameShell({ game, Game, nextGame }: GameShellProps) {
   const title = t(game.titleKey);
 
   const howPanel = (
-    <MascotMessage mood="happy" size="md" speakText={how}>
+    <MascotMessage mood={phase === 'ready' ? 'wave' : 'happy'} size="md" speakText={how}>
       <span className="block text-lg font-bold">{t('games.shell.howTitle')}</span>
       <span className="mt-1 block text-lg font-normal text-ink">{how}</span>
     </MascotMessage>
@@ -103,9 +122,14 @@ export function GameShell({ game, Game, nextGame }: GameShellProps) {
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-5">
       <header className="flex flex-wrap items-center justify-between gap-3">
-        <h1 ref={titleRef} tabIndex={-1} className="text-2xl font-bold text-ink outline-none md:text-3xl">
-          {title}
-        </h1>
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="hidden w-28 shrink-0 md:block">
+            <GameThumb game={game} />
+          </div>
+          <h1 ref={titleRef} tabIndex={-1} className="text-2xl font-bold text-ink outline-none md:text-3xl">
+            {title}
+          </h1>
+        </div>
         {phase === 'playing' && (
           <div className="flex flex-wrap gap-2">
             <Button variant="secondary" size="xl" aria-expanded={showHow} onClick={() => setShowHow((v) => !v)}>
@@ -125,7 +149,13 @@ export function GameShell({ game, Game, nextGame }: GameShellProps) {
       </header>
 
       {phase === 'ready' && (
-        <section aria-label={t('games.shell.ready')} className="flex flex-col gap-6 rounded-xl border border-line bg-surface p-4 shadow-card md:p-6">
+        <section aria-label={t('games.shell.ready')} className="relative isolate flex flex-col gap-6 overflow-hidden rounded-xl border border-line bg-surface p-4 shadow-card md:p-6">
+          {game.thumbnail.image && (
+            <>
+              <ScenePicture src={game.thumbnail.image} zoom className="absolute inset-0 -z-10 h-full w-full opacity-40" />
+              <span aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-b from-surface/40 via-surface/80 to-surface" />
+            </>
+          )}
           {howPanel}
           <div>
             <h2 className="mb-2 text-xl font-bold text-ink">{t('games.shell.levelTitle')}</h2>
@@ -180,7 +210,7 @@ export function GameShell({ game, Game, nextGame }: GameShellProps) {
       {phase === 'playing' && (
         <>
           {showHow && howPanel}
-          {progress.total > 0 && <DotProgress current={progress.index + 1} total={progress.total} label={t('games.shell.progress', { current: progress.index + 1, total: progress.total })} />}
+          {progress.total > 0 && <RoundStars current={progress.index + 1} total={progress.total} label={t('games.shell.progress', { current: progress.index + 1, total: progress.total })} />}
           <GameContext.Provider value={ctx}>
             <div inert={paused} className="rounded-xl border border-line bg-surface p-4 shadow-card md:p-6">
               <Suspense fallback={<KidLoading />}>
@@ -192,7 +222,11 @@ export function GameShell({ game, Game, nextGame }: GameShellProps) {
       )}
 
       {phase === 'done' && result && (
-        <section aria-label={t('games.finish.title')} className="flex flex-col gap-6 rounded-xl border border-line bg-surface p-4 shadow-card md:p-6">
+        <section aria-label={t('games.finish.title')} className="relative flex flex-col gap-6 overflow-hidden rounded-xl border border-line bg-surface p-4 shadow-card md:p-6">
+          <div className="relative mx-auto w-full max-w-sm">
+            <ScenePicture src={FINISH_PIC} className="aspect-[8/5] w-full rounded-xl" eager />
+          </div>
+          <FloatingStars />
           <MascotMessage mood="cheer" size="lg" speakText={t(`games.finish.msg.${result.stars}`)}>
             <h2 ref={doneRef} tabIndex={-1} className="text-2xl font-bold text-ink outline-none">
               {t('games.finish.title')}
@@ -200,21 +234,39 @@ export function GameShell({ game, Game, nextGame }: GameShellProps) {
             <span className="mt-1 block text-lg font-normal text-ink">{t(`games.finish.msg.${result.stars}`)}</span>
           </MascotMessage>
           <div className="flex flex-col items-center gap-2">
-            <StarsMeter stars={result.stars} size="lg" />
+            <StarsCountUp stars={result.stars} />
             <p className="text-lg text-ink-soft">{t('games.finish.score', { correct: result.correct, total: result.total })}</p>
           </div>
+          {milestone !== undefined && (
+            <div className="flex items-center gap-4 rounded-xl border-2 border-brand-100 bg-brand-50 p-3 motion-ok:animate-gx-fade-up">
+              <div className="relative flex h-[90px] w-36 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-brand-100">
+                <Star aria-hidden className="h-10 w-10 fill-accent-500 text-accent-600" />
+                <ScenePicture src={ROCKET_PIC} width={144} height={90} className="absolute inset-0 motion-ok:animate-gx-fly-up" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-xl font-bold text-ink">{t('games.milestone.title')}</h3>
+                <p className="text-lg text-ink-soft">{t('games.milestone.body', { count: milestone })}</p>
+              </div>
+            </div>
+          )}
           <div className="flex flex-wrap justify-center gap-3">
-            <BigActionButton icon={<RotateCcw />} onClick={() => start(true)}>
-              {t('games.finish.again')}
-            </BigActionButton>
-            {nextGame && (
-              <BigActionButton variant="secondary" to={`/student/games/${nextGame.id}`} icon={<Dices />}>
-                {t('games.finish.another')}
+            <span className="motion-ok:animate-gx-rise" style={{ animationDelay: '300ms' }}>
+              <BigActionButton icon={<RotateCcw />} onClick={() => start(true)}>
+                {t('games.finish.again')}
               </BigActionButton>
+            </span>
+            {nextGame && (
+              <span className="motion-ok:animate-gx-rise" style={{ animationDelay: '450ms' }}>
+                <BigActionButton variant="secondary" to={`/student/games/${nextGame.id}`} icon={<Dices />}>
+                  {t('games.finish.another')}
+                </BigActionButton>
+              </span>
             )}
-            <BigActionButton variant="secondary" to="/student/games" icon={<ArrowLeft />}>
-              {t('games.finish.back')}
-            </BigActionButton>
+            <span className="motion-ok:animate-gx-rise" style={{ animationDelay: '600ms' }}>
+              <BigActionButton variant="secondary" to="/student/games" icon={<ArrowLeft />}>
+                {t('games.finish.back')}
+              </BigActionButton>
+            </span>
           </div>
         </section>
       )}
@@ -234,9 +286,12 @@ export function GameShell({ game, Game, nextGame }: GameShellProps) {
           </>
         }
       >
-        <MascotMessage mood="sleepy" size="sm">
-          {t('games.pause.body')}
-        </MascotMessage>
+        <div className="flex flex-col gap-4">
+          <ScenePicture src={BREAK_PIC} className="mx-auto aspect-[8/5] w-full max-w-xs rounded-xl" />
+          <MascotMessage mood="sleepy" size="sm">
+            {t('games.pause.body')}
+          </MascotMessage>
+        </div>
       </Modal>
       <Modal
         open={quitOpen}

@@ -58,3 +58,15 @@ All pictures in `src/features/student/games/science/art.tsx` are code: token-col
 - `ShadowScene` (Light and Shadows) and `WaterScene` (Water Cycle Order): small decorative scenes (`aria-hidden`).
 - `Glyph`: one lucide icon per item (nail, drum, deer, ...), always shown with the item's name. Some are approximate (a deer uses the rabbit icon, an elephant a generic shape, most birds the same bird), so the written name is what carries the meaning. These are placeholders until real illustrations exist.
 - Game thumbnails stay the shared `GameThumb` SVG plus the Science subject icon; no `public/games/*.png` was added.
+
+## Game scenes and profile avatars: `public/games/` and `public/avatars/` (agent/game-art)
+Made with Google Flow (AI-generated). **Check Flow's terms of use before any public release; no licence claim is made here.** All are decorative (`alt=""`), lazy-loaded with width and height, and fall back when a file fails.
+
+`public/games/` (WebP, 640 x 400, 8:5, 15-30 KB each, 30 files):
+- `<gameId>.webp` for all 26 games (number-line-jump, magnet-lab, light-shadows, sound-detective, water-cycle-order, food-chain-builder, circuit-builder, word-builder, match-word-picture, sentence-order, fix-the-spelling, reading-race, word-match, spelling-bee, sentence-scramble, pick-the-preposition, past-or-present, story-sequence, fill-the-gap, keyboard-explorer, mouse-maze, flowchart-builder, safe-or-unsafe, parts-of-a-computer, folder-sorter, mixed-challenge). Set as `thumbnail.image` in each subject's `index.ts`. Used by `GameCard` / `GameThumb` (library cards; the picture is scaled 1.08 to hide a thin baked-in white frame), the game page header (small, from 834px) and the "How to play" screen (faint, slowly zooming backdrop). `story-sequence` has the word "SCHOOL" baked into the picture; accepted, the picture is decorative. Fallback: the token-coloured SVG plus the subject icon.
+- `games-hero.webp`: hero banner at the top of the games library, behind Nova's speech bubble (`GamesPage`). Fallback: nothing is drawn, the bubble stays.
+- `finish-star.webp`: finish screen (`GameShell`, with floating stars and the star count-up).
+- `level-up-rocket.webp`: shown in the star-milestone card on the finish screen (flies up once; still when motion is reduced).
+- `take-a-break.webp`: the Pause dialog.
+
+`public/avatars/` (PNG, 256 x 256, transparent, about 27 KB each, 5 files): `cat.png`, `dog.png`, `rabbit.png`, `turtle.png`, `bird.png`. The only picture choices on the student Me page (radio group); `ProfileAvatar` shows them wherever a preset animal avatar is shown, with the chosen colour as a thin rim. Fallback: the lucide icon of the same preset id. Older preset ids (fish, rocket, ...) keep their icon.

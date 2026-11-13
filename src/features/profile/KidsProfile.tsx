@@ -1,10 +1,9 @@
-import { useState, type ComponentType, type FormEvent, type ReactNode } from 'react';
+import { useRef, useState, type ComponentType, type FormEvent, type KeyboardEvent, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { Check, ChevronDown, PartyPopper, Save, Type, Volume2, Wind } from 'lucide-react';
 import {
-  ANIMAL_AVATAR_IDS,
   AVATAR_COLOURS,
-  AVATAR_PRESETS,
+  KID_AVATAR_IDS,
   BigActionButton,
   Card,
   HelpBubble,
@@ -77,6 +76,8 @@ export function KidsProfile({ user, profile, student, intro }: { user: User; pro
   const [nameError, setNameError] = useState<string>();
   const [subjectError, setSubjectError] = useState<string>();
   const [saving, setSaving] = useState(false);
+  const [hop, setHop] = useState(0); // bumps on each pick so the chosen picture hops once (motion-ok only)
+  const radios = useRef<(HTMLButtonElement | null)[]>([]);
   const reduceMotion = useA11yPrefsStore((s) => s.reduceMotion);
   const largeText = useA11yPrefsStore((s) => s.largeText);
   const setPref = useA11yPrefsStore((s) => s.setPref);
@@ -114,9 +115,22 @@ export function KidsProfile({ user, profile, student, intro }: { user: User; pro
     }
   };
 
-  const labelFor = (id: string) => t((ANIMAL_AVATAR_IDS.includes(id) ? `kidsplay.avatar.${id}` : `profile.avatar.preset.${id}`) as TKey);
-  // Friendly animals first, then the classic pictures.
-  const presets = [...AVATAR_PRESETS].sort((a, b) => Number(ANIMAL_AVATAR_IDS.includes(b.id)) - Number(ANIMAL_AVATAR_IDS.includes(a.id)));
+  const labelFor = (id: string) => t(`kidsplay.avatar.${id}` as TKey);
+  const picked = avatar.kind === 'preset' ? avatar.presetId : undefined;
+  const choose = (id: string) => {
+    setAvatar({ ...avatar, kind: 'preset', presetId: id });
+    setHop((n) => n + 1);
+  };
+  // Radio group: arrow keys move the choice (and focus), Tab enters and leaves the group.
+  const onRadioKey = (e: KeyboardEvent<HTMLDivElement>) => {
+    const step = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
+    if (!step) return;
+    e.preventDefault();
+    const at = Math.max(0, KID_AVATAR_IDS.findIndex((id) => id === picked));
+    const to = (at + step + KID_AVATAR_IDS.length) % KID_AVATAR_IDS.length;
+    choose(KID_AVATAR_IDS[to]);
+    radios.current[to]?.focus();
+  };
   const shownName = name.trim() || user.name;
 
   return (
@@ -127,7 +141,11 @@ export function KidsProfile({ user, profile, student, intro }: { user: User; pro
       <form onSubmit={onSubmit} noValidate className="flex flex-col gap-6">
         <Card as="section" aria-label={t('kidsplay.me.title')} className="flex flex-col gap-6">
           <div className="flex items-center gap-4">
-            <ProfileAvatar name={shownName} avatar={avatar} size="xl" className="h-28 w-28 [&>svg]:h-14 [&>svg]:w-14" />
+            <span className="inline-flex motion-ok:animate-gx-bob">
+              <span key={hop} className={cn('inline-flex', hop > 0 && 'motion-ok:animate-gx-hop')}>
+                <ProfileAvatar name={shownName} avatar={avatar} size="xl" className="h-28 w-28 [&>svg]:h-14 [&>svg]:w-14" />
+              </span>
+            </span>
             <p className="min-w-0 break-words text-2xl font-bold text-ink">{shownName}</p>
           </div>
 
@@ -144,30 +162,39 @@ export function KidsProfile({ user, profile, student, intro }: { user: User; pro
           />
 
           <Section title={t('kidsplay.me.avatar.title')}>
-            <div className="grid grid-cols-4 gap-2 md:grid-cols-7">
-              <button
-                type="button"
-                aria-pressed={avatar.kind === 'initials'}
-                aria-label={t('profile.avatar.initials')}
-                title={t('profile.avatar.initials')}
-                onClick={() => setAvatar({ ...avatar, kind: 'initials', presetId: undefined })}
-                className={cn(pick, avatar.kind === 'initials' ? 'border-brand-600 bg-brand-50' : 'border-line')}
-              >
-                <ProfileAvatar name={shownName} avatar={{ kind: 'initials', colour: avatar.colour }} size="lg" />
-              </button>
-              {presets.map((p) => {
-                const on = avatar.kind === 'preset' && avatar.presetId === p.id;
+            <div role="radiogroup" aria-label={t('kidsplay.me.avatar.title')} onKeyDown={onRadioKey} className="flex flex-wrap justify-center gap-3 md:justify-start">
+              {KID_AVATAR_IDS.map((id, n) => {
+                const on = picked === id;
+                const label = labelFor(id);
                 return (
                   <button
-                    key={p.id}
+                    key={id}
+                    ref={(el) => {
+                      radios.current[n] = el;
+                    }}
                     type="button"
-                    aria-pressed={on}
-                    aria-label={labelFor(p.id)}
-                    title={labelFor(p.id)}
-                    onClick={() => setAvatar({ ...avatar, kind: 'preset', presetId: p.id })}
-                    className={cn(pick, on ? 'border-brand-600 bg-brand-50' : 'border-line')}
+                    role="radio"
+                    aria-checked={on}
+                    tabIndex={on || (!picked && n === 0) ? 0 : -1}
+                    onClick={() => choose(id)}
+                    className="group/pick flex w-24 flex-col items-center gap-2 rounded-xl p-1 outline-none focus-visible:shadow-focus md:w-28"
                   >
-                    <ProfileAvatar name={labelFor(p.id)} avatar={{ kind: 'preset', presetId: p.id, colour: avatar.colour }} size="lg" />
+                    <span className="relative">
+                      <span key={on ? hop : 0} className={cn('block rounded-full', on && 'motion-ok:animate-gx-hop')}>
+                        <ProfileAvatar
+                          name={label}
+                          avatar={{ kind: 'preset', presetId: id, colour: avatar.colour }}
+                          size="xl"
+                          className={cn('h-20 w-20 transition duration-base ease-standard md:h-24 md:w-24', on ? 'ring-4 ring-brand-600 ring-offset-2' : 'ring-2 ring-line group-hover/pick:ring-brand-500 motion-ok:group-hover/pick:scale-105')}
+                        />
+                      </span>
+                      {on && (
+                        <span aria-hidden className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-surface bg-brand-600 text-surface">
+                          <Check className="h-5 w-5" />
+                        </span>
+                      )}
+                    </span>
+                    <span className={cn('text-lg font-bold', on ? 'text-brand-700' : 'text-ink')}>{label}</span>
                   </button>
                 );
               })}

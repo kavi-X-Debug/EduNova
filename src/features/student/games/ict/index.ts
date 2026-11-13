@@ -12,7 +12,7 @@ export const ictGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 4,
     kind: 'tap',
-    thumbnail: { tone: 'brand' },
+    thumbnail: { tone: 'brand', image: '/games/keyboard-explorer.webp' },
     load: () => import('./KeyboardExplorer'),
   },
   {
@@ -25,7 +25,7 @@ export const ictGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 4,
     kind: 'drag',
-    thumbnail: { tone: 'sky' },
+    thumbnail: { tone: 'sky', image: '/games/mouse-maze.webp' },
     load: () => import('./MouseMaze'),
   },
   {
@@ -38,7 +38,7 @@ export const ictGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 5,
     kind: 'sequence',
-    thumbnail: { tone: 'bloom' },
+    thumbnail: { tone: 'bloom', image: '/games/flowchart-builder.webp' },
     load: () => import('./FlowchartBuilder'),
   },
   {
@@ -51,7 +51,7 @@ export const ictGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 4,
     kind: 'sort',
-    thumbnail: { tone: 'leaf' },
+    thumbnail: { tone: 'leaf', image: '/games/safe-or-unsafe.webp' },
     load: () => import('./SafeOrUnsafe'),
   },
   {
@@ -64,7 +64,7 @@ export const ictGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 5,
     kind: 'match',
-    thumbnail: { tone: 'sun' },
+    thumbnail: { tone: 'sun', image: '/games/parts-of-a-computer.webp' },
     load: () => import('./PartsOfComputer'),
   },
   {
@@ -77,7 +77,7 @@ export const ictGames: GameDefinition[] = [
     levels: [1, 2, 3],
     estimatedMinutes: 5,
     kind: 'sort',
-    thumbnail: { tone: 'sun' },
+    thumbnail: { tone: 'sun', image: '/games/folder-sorter.webp' },
     load: () => import('./FolderSorter'),
   },
 ];

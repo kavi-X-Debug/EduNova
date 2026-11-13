@@ -3,6 +3,7 @@ import { Check, Heart } from 'lucide-react';
 import { cn } from '@/components/ui';
 import { focusRing } from '@/components/ui/cn';
 import { useGt as useT } from '@/features/student/games/useGt';
+import { GxSparkles } from './GameFx';
 import { playSound } from './sound';
 
 export type ChoiceState = 'idle' | 'right' | 'wrong' | 'dim';
@@ -31,16 +32,17 @@ export function BigChoiceButton({ children, onClick, state = 'idle', disabled, l
         onClick();
       }}
       className={cn(
-        'flex min-h-16 w-full items-center justify-center gap-3 rounded-xl border-2 px-5 py-3 text-center text-xl font-bold transition duration-fast ease-standard motion-ok:active:scale-[0.98] motion-reduce:transition-none',
+        'relative flex min-h-16 w-full items-center justify-center gap-3 rounded-xl border-2 px-5 py-3 text-center text-xl font-bold transition duration-fast ease-standard motion-ok:active:scale-[0.98] motion-reduce:transition-none',
         focusRing,
         state === 'idle' && 'border-brand-100 bg-surface text-ink hover:border-brand-500 hover:bg-brand-50',
-        state === 'right' && 'border-success-700 bg-success-50 text-success-700',
-        state === 'wrong' && 'border-warning-700 bg-warning-50 text-warning-700',
+        state === 'right' && 'border-success-700 bg-success-50 text-success-700 motion-ok:animate-gx-pop',
+        state === 'wrong' && 'border-warning-700 bg-warning-50 text-warning-700 motion-ok:animate-gx-nudge-x',
         state === 'dim' && 'border-line bg-surface-muted text-ink-soft',
         disabled && state === 'idle' && 'cursor-not-allowed opacity-60',
         className,
       )}
     >
+      {state === 'right' && <GxSparkles />}
       {state === 'right' && <Check aria-hidden className="h-6 w-6 shrink-0" />}
       {state === 'wrong' && <Heart aria-hidden className="h-6 w-6 shrink-0" />}
       <span className="min-w-0 break-words">{children}</span>

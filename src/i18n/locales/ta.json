@@ -1162,6 +1162,8 @@
   "games.finish.another": "வேறு விளையாட்டு",
   "games.finish.back": "விளையாட்டுகளுக்குத் திரும்பு",
   "games.finish.announce": "விளையாட்டை முடித்து 3 இல் {{stars}} நட்சத்திரங்கள் பெற்றீர்கள்.",
+  "games.milestone.title": "நட்சத்திர மைல்கல்!",
+  "games.milestone.body": "நீங்கள் {{count}} நட்சத்திரங்களைச் சேர்த்துவிட்டீர்கள். தொடர்ந்து மின்னுங்கள்!",
   "games.stars.label": "{{max}} இல் {{count}} நட்சத்திரங்கள்",
   "games.feedback.right.0": "ஆம்! சரி!",
   "games.feedback.right.1": "அருமை!",

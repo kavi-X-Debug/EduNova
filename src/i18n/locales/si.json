@@ -1162,6 +1162,8 @@
   "games.finish.another": "වෙනත් ක්‍රීඩාවක්",
   "games.finish.back": "ක්‍රීඩා වෙත ආපසු",
   "games.finish.announce": "ඔබ ක්‍රීඩාව අවසන් කර තරු 3 න් {{stars}}ක් ලැබුවා.",
+  "games.milestone.title": "තරු සන්ධිස්ථානයක්!",
+  "games.milestone.body": "ඔබ තරු {{count}} ක් එකතු කර ගත්තා. දිගටම බබළන්න!",
   "games.stars.label": "තරු {{max}} න් {{count}}",
   "games.feedback.right.0": "ඔව්! හරි!",
   "games.feedback.right.1": "නියමයි!",

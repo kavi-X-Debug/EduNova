@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { ArrowRight, Star } from 'lucide-react';
 import { BigActionButton, Mascot } from '@/components/ui';
 import { useGt as useT } from '@/features/student/games/useGt';
+import { GxSparkles } from './GameFx';
 import type { GameSession } from './useGameSession';
 
 /**
@@ -24,12 +25,13 @@ export function RoundFeedback({ session }: { session: Pick<GameSession<unknown>,
       <div role="status" aria-live="polite" className="min-h-0">
         {status === 'right' && (
           <div className="flex items-center gap-4 rounded-xl border-2 border-success-700 bg-success-50 p-4 motion-ok:animate-fx-pop-in">
+            <GxSparkles />
             <Mascot mood="cheer" size="sm" />
             <p className="min-w-0 break-words text-xl font-bold text-success-700">{t(`games.feedback.right.${index % 3}`)}</p>
           </div>
         )}
         {status === 'wrong' && (
-          <div className="flex items-start gap-4 rounded-xl border-2 border-warning-700 bg-warning-50 p-4 motion-ok:animate-fx-pop-in">
+          <div className="flex items-start gap-4 rounded-xl border-2 border-warning-700 bg-warning-50 p-4 motion-ok:animate-gx-fade-up">
             <Mascot mood="happy" size="sm" />
             <div className="min-w-0">
               <p className="break-words text-xl font-bold text-warning-700">{t('games.feedback.wrong')}</p>
