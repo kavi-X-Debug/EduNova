@@ -20,6 +20,7 @@ import { studentService } from '@/services';
 import { useSessionStore } from '@/store';
 import type { ReadinessBand as ReadinessBandName } from '@/types';
 import { countReadyNow } from './revisionDue';
+import { RewardsCard } from '../badges/RewardsCard';
 
 /** Ring arc is quantised to the band so it cannot encode a precise score. */
 const BAND_ARC: Record<ReadinessBandName, number> = { building: 0.25, developing: 0.5, secure: 0.75, strong: 1 };
@@ -245,6 +246,8 @@ export default function DashboardPage() {
             </Link>
           </div>
         </Card>
+
+        <RewardsCard className="md:col-span-2 lg:col-span-3" />
       </div>
     </div>
   );

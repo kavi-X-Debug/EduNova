@@ -25,6 +25,18 @@
     letter-spacing: normal !important;
     text-transform: none !important;
   }
+  /* Profile preferences (stored on this device): larger text scales every rem-based size. */
+  html[data-large-text='true'] {
+    font-size: 125%;
+  }
+  html[data-reduce-motion='true'] *,
+  html[data-reduce-motion='true'] *::before,
+  html[data-reduce-motion='true'] *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
   /* Respect reduced motion globally. */
   @media (prefers-reduced-motion: reduce) {
     *,

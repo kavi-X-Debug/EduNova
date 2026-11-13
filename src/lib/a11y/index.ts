@@ -72,19 +72,25 @@ export function useFocusTrap<T extends HTMLElement>(
   }, [active, ref, initialFocus]);
 }
 
-/** Respects the OS "reduce motion" setting; updates live. */
+/** True when the person turned on "reduce motion" in their profile (html[data-reduce-motion="true"]). */
+const profileReducesMotion = (): boolean => typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true';
+
+/** Respects the OS "reduce motion" setting and the profile preference; updates live. */
 export function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(() =>
-    typeof window !== 'undefined' && typeof window.matchMedia === 'function'
-      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      : false,
-  );
+  const read = () =>
+    profileReducesMotion() ||
+    (typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const [reduced, setReduced] = useState(read);
   useEffect(() => {
-    if (typeof window.matchMedia !== 'function') return;
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const onChange = () => setReduced(mq.matches);
-    mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
+    const onChange = () => setReduced(read());
+    const mq = typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+    mq?.addEventListener('change', onChange);
+    const mo = new MutationObserver(onChange);
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduce-motion'] });
+    return () => {
+      mq?.removeEventListener('change', onChange);
+      mo.disconnect();
+    };
   }, []);
   return reduced;
 }

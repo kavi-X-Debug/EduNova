@@ -6,7 +6,7 @@ import {
 } from '@/components/ui';
 import { formatRelative, useAsync } from '@/lib';
 import { useLocale } from '@/i18n';
-import { studentService, teacherService } from '@/services';
+import { rewardsService, studentService, teacherService } from '@/services';
 import { useSessionStore } from '@/store';
 import { WellbeingPrompt } from '../components/WellbeingPrompt';
 import { useTranslation } from 'react-i18next';
@@ -22,15 +22,15 @@ export default function StudentPage() {
   // Ownership: the student must belong to one of this teacher's classes before anything else is fetched.
   const { data, loading, error, reload } = useAsync(
     async () => {
-      const none = { student: undefined, className: undefined, mastery: [], concepts: [] };
+      const none = { student: undefined, className: undefined, mastery: [], concepts: [], badges: undefined };
       // Ownership + not-found without swallowing transport errors: look only inside this teacher's own classes.
       const classes = await teacherService.listClasses(teacherId);
       const lists = await Promise.all(classes.map((c) => teacherService.listStudents(c.id)));
       const student = lists.flat().find((s) => s.id === id);
       const mine = student ? classes.find((c) => c.id === student.classId) : undefined;
       if (!student || !mine) return none;
-      const [mastery, concepts] = await Promise.all([studentService.getMastery(id), studentService.listConcepts()]);
-      return { student, className: mine.name, mastery, concepts };
+      const [mastery, concepts, badges] = await Promise.all([studentService.getMastery(id), studentService.listConcepts(), rewardsService.getBadgeCount(id)]);
+      return { student, className: mine.name, mastery, concepts, badges };
     },
     [id, teacherId],
   );
@@ -67,6 +67,8 @@ export default function StudentPage() {
               icon={<Avatar name={student.name} size="sm" />}
             />
             <Stat label={t('teacher.student.col.lastActive')} value={formatRelative(student.lastActive, locale)} />
+            {/* A count only, as encouragement: never a ranking or a comparison with other students. */}
+            {data.badges && <Stat label={t('teacher.student.badges.label')} value={t('teacher.student.badges.value', { earned: data.badges.earned, total: data.badges.total })} helper={t('teacher.student.badges.note')} />}
           </div>
 
           {student.wellbeingPromptKey && (
