@@ -23,7 +23,7 @@ export function Tooltip({ content, children }: TooltipProps) {
       <span
         id={id}
         role="tooltip"
-        className={cn('pointer-events-none absolute bottom-full left-1/2 z-40 mb-2 w-max max-w-xs -translate-x-1/2 rounded-sm bg-ink px-2 py-1 text-xs text-surface shadow-raised transition-[opacity,visibility] duration-fast ease-standard', open ? 'visible opacity-100' : 'invisible opacity-0')}
+        className={cn('pointer-events-none absolute bottom-full left-1/2 z-40 mb-2 w-max max-w-xs -translate-x-1/2 rounded-sm bg-ink px-2 py-1 text-xs text-surface shadow-raised origin-bottom transition-[opacity,visibility,transform] duration-fast ease-standard', open ? 'visible opacity-100' : 'invisible opacity-0 motion-ok:scale-95')}
       >
         {content}
       </span>

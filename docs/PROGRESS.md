@@ -54,3 +54,25 @@ Where used:
 - ProgressBar (scaleX from 0 on mount), MasteryRing (arc draws on mount), Skeleton (translateX shimmer replaces pulse), Modal (fade + sheet-up on mobile / pop on desktop; fades out before unmount, inert and aria-hidden while closing, focus trap and #root inert unchanged), Toast (slide-up in, fade-out on dismiss), Tooltip (opacity fade; still opens on focus).
 
 Reduced motion: a global rule in `@layer base` collapses animation/transition durations and delays to 0.01ms for both `@media (prefers-reduced-motion: reduce)` and `:root[data-motion="reduced"]`, so elements land in their end state with no movement; `motion-ok:` movement utilities and the skeleton shimmer do not apply. No hex values outside tailwind.config.ts; no letter-spacing or text transforms.
+
+## Motion round 2 (agent/motion-2)
+
+More expressive hovers and entrances, built on the round 1 tokens. Everything new is prefixed `fx-`; the tailwind.config.ts additions live in one contiguous block (`fxKeyframes`, `fxAnimation`, `fxShadow`, spread into the theme). Only transform, opacity and stroke-dashoffset animate. Loops are finite (they settle), except the tutor typing dots which exist only while waiting.
+
+New tokens: animations `fx-float` (6s x3), `fx-drift` (16s x2), `fx-wave` (once), `fx-wiggle`, `fx-bounce`, `fx-nudge` (2.4s x3), `fx-draw`, `fx-unlock`, `fx-sheen`, `fx-fill-shimmer` (x2), `fx-bubble-left/right`, `fx-typing`, `fx-pop-in`, `fx-menu-pop` (defined, unused), `fx-card-in`, `fx-line-grow`; shadow `shadow-fx-glow`; `future.hoverOnlyWhenSupported` (no sticky hover on touch). CSS helpers (src/styles/index.css): `.fx-page`, `.fx-shine`, `.fx-icon`, `.fx-nav-icon`, `.fx-shape`. New: `DrawCheck`, `AmbientShapes` (ui), `useCountUp` (src/lib).
+
+Where used:
+- Card `interactive`: lift plus soft brand glow on hover and focus-within, `.fx-icon` children wiggle (group/card). Applied to dashboard cards, exam report cards and teacher class cards. Card `spotlight`: cursor-follow soft glow (mouse pointers only, tint only, content never hidden); dashboard "Your next step".
+- Buttons: `fx-shine` sheen sweep on primary Button, ButtonLink and the dashboard link buttons (hover and keyboard focus).
+- AppShell: nav icons bounce on hover, focus and when a route becomes current; `AmbientShapes` (aria-hidden, pointer-events none, z -10) behind content; `.fx-page` staggers the first blocks of every route page (dashboard, quests, revision, exams, teacher, admin) 60ms apart. AuthLayout: card entrance (`fx-card-in`) plus ambient shapes.
+- Dashboard: greeting hand waves once; next-step illustration floats; Path page illustration floats; EmptyState icon floats.
+- Learning path: timeline line draws between steps (`fx-line-grow`), the next/in-progress step number pops on arrival then bobs gently three times.
+- Tabs: sliding underline (translateX plus scaleX of one bar, measured with ResizeObserver; falls back to the old border before measure).
+- ProgressBar: soft light sweep across the fill (two passes) and a percentage count-up (`useCountUp`; the progressbar role value is final immediately).
+- Quests: completed missions show a self-drawing tick (`DrawCheck`).
+- Tutor: bubbles slide in from their side, typing dots bounce while waiting, source chips pop in staggered (SourceList).
+- Tooltip: scale-from-origin pop (motion allowed only). Tables: accent bar on the hovered/focused row's first cell.
+
+Reduced motion: all movement is behind `motion-ok:` (OS setting or `html[data-motion="reduced"]`), and the global collapse rule still applies to enter animations, so reduced users get the static end state. Verified in the browser with the attribute set: nav icon, ambient shapes, bubbles, wave, float and shimmer all report no animation. Focus ring, focus traps, RouteFocus and live regions are untouched.
+
+Not done: streak flame flicker, XP/level bar and badge visuals (inside src/features/student/badges, owned by agent/badge-art), mastery ring light sweep, quest completion celebration changes (round 1 celebration kept). Tilt was left out on purpose (rotating text blurs Sinhala/Tamil glyph rendering); lift plus glow is used instead.

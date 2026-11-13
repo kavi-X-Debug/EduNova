@@ -29,7 +29,7 @@ export default function TeacherOverviewPage() {
             const summary = bandSummary(classLabel(c, t), c.bandCounts, t);
             return (
               <li key={c.id}>
-                <Card as="article" aria-labelledby={`class-${c.id}`} className="h-full">
+                <Card as="article" interactive aria-labelledby={`class-${c.id}`} className="h-full">
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div>
                       <h2 id={`class-${c.id}`} className="text-lg font-semibold text-ink">{classLabel(c, t)}</h2>

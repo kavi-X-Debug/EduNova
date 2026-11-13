@@ -39,11 +39,13 @@ export interface AnimatedIllustrationProps {
   size?: number;
   /** Set true for below-the-fold images only. Default is eager so the image never collapses to 0px. */
   lazy?: boolean;
+  /** Gentle float (a few slow cycles, then rests). Off under reduced motion. */
+  float?: boolean;
   className?: string;
 }
 
 /** SVGs honour prefers-reduced-motion internally. Never the only signal: pair with text. */
-export function AnimatedIllustration({ name, alt, size, lazy = false, className }: AnimatedIllustrationProps) {
+export function AnimatedIllustration({ name, alt, size, lazy = false, float = false, className }: AnimatedIllustrationProps) {
   const m = META[name];
   if (import.meta.env.DEV && alt.trim() === '') {
     console.warn(`AnimatedIllustration "${name}": empty alt. Provide alt text or render an adjacent text equivalent.`);
@@ -57,7 +59,7 @@ export function AnimatedIllustration({ name, alt, size, lazy = false, className 
       loading={lazy ? 'lazy' : 'eager'}
       decoding="async"
       style={{ aspectRatio: `${m.width} / ${m.height}` }}
-      className={cn('h-auto max-w-full', className)}
+      className={cn('h-auto max-w-full', float && 'motion-ok:animate-fx-float', className)}
     />
   );
 }

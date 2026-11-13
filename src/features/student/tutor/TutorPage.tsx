@@ -30,7 +30,7 @@ function MessageBubble({ message }: { message: TutorMessage }) {
   const fromTutor = message.from === 'tutor';
   const unsourced = fromTutor && message.sources.length === 0;
   return (
-    <li className={cn('flex gap-3', fromTutor ? 'justify-start' : 'justify-end')}>
+    <li className={cn('flex gap-3', fromTutor ? 'justify-start motion-ok:animate-fx-bubble-left' : 'justify-end motion-ok:animate-fx-bubble-right')}>
       {fromTutor && (
         <span aria-hidden className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-700">
           <Bot className="h-5 w-5" />
@@ -154,9 +154,9 @@ export default function TutorPage() {
               {pending && (
                 <li role="status" className="flex items-center gap-2 text-sm text-ink-soft">
                   <span aria-hidden className="flex gap-1">
-                    <span className="h-2 w-2 animate-pulse rounded-full bg-brand-500 motion-reduce:animate-none" />
-                    <span className="h-2 w-2 animate-pulse rounded-full bg-brand-500 [animation-delay:150ms] motion-reduce:animate-none" />
-                    <span className="h-2 w-2 animate-pulse rounded-full bg-brand-500 [animation-delay:300ms] motion-reduce:animate-none" />
+                    <span className="h-2 w-2 rounded-full bg-brand-500 motion-ok:animate-fx-typing" />
+                    <span className="h-2 w-2 rounded-full bg-brand-500 motion-ok:animate-fx-typing [animation-delay:180ms]" />
+                    <span className="h-2 w-2 rounded-full bg-brand-500 motion-ok:animate-fx-typing [animation-delay:360ms]" />
                   </span>
                   {t('student.tutor.thinking')}
                 </li>

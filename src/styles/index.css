@@ -75,4 +75,37 @@
   .stagger > :nth-child(6) { --i: 5; }
   .stagger > :nth-child(7) { --i: 6; }
   .stagger > :nth-child(n + 8) { --i: 7; }
+
+  /* ---- Motion round 2 (fx-*). All movement sits behind `motion-ok:`; reduced motion shows the static end state. ---- */
+  /* Page entrance: put `fx-page` on the route wrapper; the page's own blocks (children of its root) rise in 60ms apart.
+     Blocks that already use `.stagger` animate their own children instead. */
+  .fx-page > * > :not(.stagger) {
+    @apply animate-slide-up;
+    animation-delay: calc(var(--i, 0) * 60ms);
+  }
+  .fx-page > * > :nth-child(2) { --i: 1; }
+  .fx-page > * > :nth-child(3) { --i: 2; }
+  .fx-page > * > :nth-child(4) { --i: 3; }
+  .fx-page > * > :nth-child(5) { --i: 4; }
+  .fx-page > * > :nth-child(n + 6) { --i: 5; }
+
+  /* Shine sweep across a primary button on hover / keyboard focus. */
+  .fx-shine {
+    @apply relative overflow-hidden after:pointer-events-none after:absolute after:inset-y-0 after:left-0 after:w-1/3 after:-translate-x-[130%] after:bg-gradient-to-r after:from-transparent after:via-white/25 after:to-transparent motion-ok:hover:after:animate-fx-sheen motion-ok:focus-visible:after:animate-fx-sheen;
+  }
+
+  /* Icon wiggle when its parent `group/card` is hovered or has focus inside. */
+  .fx-icon {
+    @apply inline-block origin-center motion-ok:group-hover/card:animate-fx-wiggle motion-ok:group-focus-within/card:animate-fx-wiggle;
+  }
+
+  /* Nav icon bounce on hover, keyboard focus and when it becomes the current page (parent has `group`). */
+  .fx-nav-icon {
+    @apply motion-ok:group-hover:animate-fx-bounce motion-ok:group-focus-visible:animate-fx-bounce motion-ok:group-aria-[current=page]:animate-fx-bounce;
+  }
+
+  /* Decorative drifting background shapes. */
+  .fx-shape {
+    @apply pointer-events-none absolute rounded-full motion-ok:animate-fx-drift;
+  }
 }

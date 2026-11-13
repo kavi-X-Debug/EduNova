@@ -1,4 +1,4 @@
-import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { cn, focusRing, touchTarget } from './cn';
 
 export interface TabItem {
@@ -25,6 +25,22 @@ export function Tabs({ items, label, defaultId, value, onChange, className }: Ta
   const refs = useRef<Record<string, HTMLButtonElement | null>>({});
   const enabled = items.filter((i) => !i.disabled);
 
+  // Sliding underline: positioned with transform only (translateX + scaleX of a 1px-wide bar).
+  const listRef = useRef<HTMLDivElement>(null);
+  const [bar, setBar] = useState<{ x: number; w: number } | null>(null);
+  const measure = useCallback(() => {
+    const el = current ? refs.current[current] : null;
+    setBar(el ? { x: el.offsetLeft, w: el.offsetWidth } : null);
+  }, [current]);
+  useLayoutEffect(measure, [measure, items.length]);
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(measure);
+    ro.observe(list);
+    return () => ro.disconnect();
+  }, [measure]);
+
   const select = (id: string) => {
     setInner(id);
     onChange?.(id);
@@ -46,7 +62,14 @@ export function Tabs({ items, label, defaultId, value, onChange, className }: Ta
 
   return (
     <div className={className}>
-      <div role="tablist" aria-label={label} className="flex gap-1 overflow-x-auto overflow-y-hidden border-b border-line">
+      <div ref={listRef} role="tablist" aria-label={label} className="relative flex gap-1 overflow-x-auto overflow-y-hidden border-b border-line">
+        {bar && (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute bottom-0 left-0 h-0.5 w-px origin-left bg-brand-600 transition-transform duration-slow ease-standard"
+            style={{ transform: `translateX(${bar.x}px) scaleX(${bar.w})` }}
+          />
+        )}
         {items.map((it) => {
           const active = it.id === current;
           return (
@@ -64,7 +87,7 @@ export function Tabs({ items, label, defaultId, value, onChange, className }: Ta
               disabled={it.disabled}
               onClick={() => select(it.id)}
               onKeyDown={(e) => onKey(e, it.id)}
-              className={cn('-mb-px whitespace-nowrap border-b-2 px-4 text-sm font-semibold transition-colors duration-fast ease-standard disabled:opacity-50', touchTarget, focusRing, active ? 'border-brand-600 text-brand-700' : 'border-transparent text-ink-soft hover:border-line-strong hover:text-ink')}
+              className={cn('-mb-px whitespace-nowrap border-b-2 px-4 text-sm font-semibold transition-colors duration-fast ease-standard disabled:opacity-50', touchTarget, focusRing, active ? (bar ? 'border-transparent text-brand-700' : 'border-brand-600 text-brand-700') : 'border-transparent text-ink-soft hover:border-line-strong hover:text-ink')}
             >
               {it.label}
             </button>

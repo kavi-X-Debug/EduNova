@@ -4,6 +4,8 @@ export * from './Card';
 export * from './Badge';
 export * from './ReadinessBand';
 export * from './ProgressBar';
+export * from './DrawCheck';
+export * from './AmbientShapes';
 export * from './MasteryRing';
 export * from './Input';
 export * from './Select';
