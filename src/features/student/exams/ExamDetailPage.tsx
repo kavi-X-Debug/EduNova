@@ -1,18 +1,19 @@
-import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
-import { Banner, Card, EmptyState, ErrorState, LoadingState, PageHeader, ReadinessBand } from '@/components/ui';
-import { focusRing, touchTarget } from '@/components/ui/cn';
+import { useParams } from 'react-router-dom';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { BigActionButton, ButtonLink, Card, GrowMeter, HelpBubble, MascotMessage, PageHeader } from '@/components/ui';
 import { useLocale, type TKey } from '@/i18n';
-import { BAND_ORDER, bandRank, formatDate, useAsync } from '@/lib';
+import { bandRank, formatDate, useAsync } from '@/lib';
 import { studentService } from '@/services';
 import { useSessionStore } from '@/store';
 import type { Concept, ExamReport } from '@/types';
+import { KidEmpty, KidError, KidLoading } from '../learnKit/KidState';
 
 interface DetailData {
   reports: ExamReport[];
   concepts: Concept[];
 }
 
+/** One test result: how I am growing, 1-3 things to practise next, then a button into the trail. */
 export default function ExamDetailPage() {
   const { t, locale } = useLocale();
   const { id } = useParams<{ id: string }>();
@@ -23,21 +24,18 @@ export default function ExamDetailPage() {
   }, [userId]);
 
   const backLink = (
-    <Link
-      to="/student/exams"
-      className={`mb-2 inline-flex items-center gap-1 rounded-md px-2 text-sm font-semibold text-brand-700 hover:bg-brand-50 ${touchTarget} ${focusRing}`}
-    >
-      <ArrowLeft aria-hidden className="h-4 w-4" />
+    <ButtonLink to="/student/exams" variant="ghost" size="lg" leftIcon={<ArrowLeft aria-hidden className="h-5 w-5" />} className="mb-4">
       {t('student.exams.back')}
-    </Link>
+    </ButtonLink>
   );
+  const header = <PageHeader title={t('student.exams.report.title')} actions={<HelpBubble textKey="kidslearn.exams.help" align="end" />} />;
 
   if (loading && !data) {
     return (
-      <div aria-busy="true">
+      <div>
         {backLink}
-        <PageHeader title={t('student.exams.report.title')} />
-        <LoadingState lines={5} />
+        {header}
+        <KidLoading />
       </div>
     );
   }
@@ -45,8 +43,8 @@ export default function ExamDetailPage() {
     return (
       <div>
         {backLink}
-        <PageHeader title={t('student.exams.report.title')} />
-        <ErrorState description={t('student.exams.error')} onRetry={reload} />
+        {header}
+        <KidError onRetry={reload} body={t('student.exams.error')} />
       </div>
     );
   }
@@ -56,8 +54,8 @@ export default function ExamDetailPage() {
     return (
       <div>
         {backLink}
-        <PageHeader title={t('student.exams.report.title')} />
-        <EmptyState title={t('student.exams.notFound')} />
+        {header}
+        <KidEmpty title={t('student.exams.notFound')} />
       </div>
     );
   }
@@ -67,73 +65,67 @@ export default function ExamDetailPage() {
     const c = conceptById.get(cid);
     return c ? t(c.titleKey as TKey) : cid;
   };
-  
   const name = t(`student.exams.name.${report.examId}` as TKey);
 
-  // Weakest topics first so the student sees where to focus.
+  // Growing topics first would be nice, but the child needs to know where to practise: weakest first.
   const breakdown = [...report.conceptBreakdown].sort((a, b) => bandRank(a.band) - bandRank(b.band));
-  const counts = BAND_ORDER.map((b) => ({ band: b, count: breakdown.filter((m) => m.band === b).length })).filter((c) => c.count > 0);
-  // Plain separator: Intl.ListFormat is missing or English-only for si/ta in some runtimes.
-  const summary = counts
-    .map((c) => t('student.exams.chart.bandCount' as TKey, { band: t(`student.exams.band.${c.band}`), count: c.count }))
-    .join('; ');
+  // "What to practise next": up to 3 topics that are still growing, in simple words.
+  const weak = breakdown.filter((m) => m.band === 'building' || m.band === 'developing').slice(0, 3);
+  const nextSteps = weak.map((m) => t('kids.home.plan.step.practice', { topic: conceptTitle(m.conceptId) }));
+  if (nextSteps.length === 0) nextSteps.push(t('kidslearn.exams.next.keepGoing'));
 
   return (
-    <div>
-      {backLink}
-      <PageHeader title={name} description={t('student.exams.report.subtitle' as TKey, { date: formatDate(report.date, locale) })} />
-
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-        <div className="flex flex-col gap-6">
-          <Card title={t('student.exams.readiness.title')}>
-            <ReadinessBand band={report.band} />
-            <p className="mt-3 text-base text-ink">
-              <span className="font-semibold">{t(`student.exams.band.${report.band}`)}. </span>
-              {t(`student.exams.band.${report.band}.desc`)}
-            </p>
-            <Banner tone="info" className="mt-4">
-              <p className="font-semibold text-ink">{t('student.exams.readiness.bandNotMark')}</p>
-              <p>{t('student.exams.readiness.note')}</p>
-            </Banner>
-          </Card>
-
-          <Card title={t('student.exams.nextSteps.title')}>
-            {report.nextSteps.length === 0 ? (
-              <p className="text-sm text-ink-soft">{t('common.status.empty')}</p>
-            ) : (
-              <ul className="flex list-disc flex-col gap-2 ps-5 text-base text-ink">
-                {report.nextSteps.map((s) => (
-                  <li key={s}>{t(s as TKey)}</li>
-                ))}
-              </ul>
-            )}
-          </Card>
-        </div>
-
-        <Card as="section" title={t('student.exams.breakdown.title')} aria-label={t('student.exams.breakdown.title')}>
-          {breakdown.length === 0 ? (
-            <p className="text-sm text-ink-soft">{t('common.status.empty')}</p>
-          ) : (
-            <figure className="m-0 flex flex-col gap-3">
-              <figcaption className="min-w-0 break-words text-sm text-ink-soft">
-                {t('student.exams.chart.summary', {
-                  count: breakdown.length,
-                  summary,
-                })}
-              </figcaption>
-              {/* Each row's band graphic is the chart; its label text is the text alternative. */}
-              <ul aria-label={t('student.exams.chart.caption')} className="flex flex-col divide-y divide-line rounded-lg border border-line">
-                {breakdown.map((m) => (
-                  <li key={m.conceptId} className="flex min-w-0 flex-col gap-2 p-3 sm:flex-row sm:items-center sm:justify-between">
-                    <span className="min-w-0 break-words font-medium text-ink">{conceptTitle(m.conceptId)}</span>
-                    <ReadinessBand band={m.band} />
-                  </li>
-                ))}
-              </ul>
-            </figure>
-          )}
-        </Card>
+    <div className="flex flex-col gap-6">
+      <div>
+        {backLink}
+        <PageHeader title={name} description={formatDate(report.date, locale)} actions={<HelpBubble textKey="kidslearn.exams.help" align="end" />} className="mb-0" />
       </div>
+
+      <Card as="section" raised aria-labelledby="exam-grow" className="flex flex-col gap-4 border-brand-100 bg-gradient-to-b from-brand-50 to-surface">
+        <MascotMessage mood={report.band === 'building' ? 'happy' : 'cheer'} size="lg" speakText={t(`kids.grow.hint.${report.band}` as TKey)}>
+          <h2 id="exam-grow" className="text-xl font-bold text-ink">
+            {t('kids.grow.title')}
+          </h2>
+          <span className="mt-1 block font-normal text-ink-soft">{t(`kids.grow.hint.${report.band}` as TKey)}</span>
+        </MascotMessage>
+        <GrowMeter band={report.band} size="lg" />
+        <p className="text-lg text-ink-soft">{t('kidslearn.exams.note')}</p>
+      </Card>
+
+      <Card as="section" aria-labelledby="exam-next" className="flex flex-col gap-4">
+        <h2 id="exam-next" className="text-2xl font-bold text-ink">
+          {t('kidslearn.exams.next.title')}
+        </h2>
+        <ol className="flex flex-col gap-3">
+          {nextSteps.map((s, i) => (
+            <li key={s} className="flex items-center gap-4 rounded-xl border border-line bg-surface-muted p-3">
+              <span aria-hidden className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-600 text-xl font-bold text-surface">
+                {i + 1}
+              </span>
+              <span className="min-w-0 flex-1 text-xl font-semibold text-ink">{s}</span>
+            </li>
+          ))}
+        </ol>
+        <BigActionButton to="/student/path" icon={<ArrowRight />} fullWidth className="md:w-auto md:self-start">
+          {t('kidslearn.exams.next.go')}
+        </BigActionButton>
+      </Card>
+
+      {breakdown.length > 0 && (
+        <Card as="section" aria-labelledby="exam-topics" className="flex flex-col gap-3">
+          <h2 id="exam-topics" className="text-2xl font-bold text-ink">
+            {t('student.exams.breakdown.title')}
+          </h2>
+          <ul aria-label={t('student.exams.chart.caption')} className="flex flex-col divide-y divide-line">
+            {breakdown.map((m) => (
+              <li key={m.conceptId} className="flex min-w-0 flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between">
+                <span className="min-w-0 break-words text-lg font-semibold text-ink">{conceptTitle(m.conceptId)}</span>
+                <GrowMeter band={m.band} size="sm" />
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
     </div>
   );
 }

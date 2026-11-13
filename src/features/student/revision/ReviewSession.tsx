@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import { CheckCircle2, ArrowRight } from 'lucide-react';
+import { Check, HelpCircle, Layers, RotateCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { Banner, Button, Card, ProgressBar } from '@/components/ui';
+import { BigActionButton, Banner, Button, Card, MascotMessage, SpeakButton } from '@/components/ui';
 import { useLocale } from '@/i18n';
 import { formatDate } from '@/lib';
 import { announce } from '@/lib/a11y';
 import { studentService } from '@/services';
 import { useSessionStore } from '@/store';
 import type { RevisionItem } from '@/types';
-import { RECALLS, RECALL_QUALITY, type Recall } from './scheduling';
+import { DoneScreen, DotProgress } from '../learnKit/KidState';
+import { RECALL_QUALITY, type Recall } from './scheduling';
 
 export interface ReviewSessionProps {
   items: RevisionItem[];
@@ -17,14 +17,19 @@ export interface ReviewSessionProps {
   onExit: () => void;
 }
 
-/** One concept at a time: think, check, rate. Keyboard: Tab to a button, Enter or Space to choose. */
+/** "I remember" and "Not sure yet" map onto the existing recall qualities. */
+const CHOICES: { recall: Recall; key: 'kidslearn.revision.remember' | 'kidslearn.revision.notSure' }[] = [
+  { recall: 'good', key: 'kidslearn.revision.remember' },
+  { recall: 'again', key: 'kidslearn.revision.notSure' },
+];
+
+/** One card at a time: look, flip, say "I remember" or "Not sure yet". Never negative. */
 export function ReviewSession({ items, onExit }: ReviewSessionProps) {
   const { t } = useTranslation();
   const { locale } = useLocale();
   const userId = useSessionStore((s) => s.user?.id) ?? 'guest';
   const [index, setIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
-  const [saved, setSaved] = useState<RevisionItem[]>([]);
   const [saving, setSaving] = useState<Recall | null>(null);
   const [failedRecall, setFailedRecall] = useState<Recall | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -32,10 +37,10 @@ export function ReviewSession({ items, onExit }: ReviewSessionProps) {
   const finished = index >= items.length;
   const item = items[index];
 
-  // Move focus to the new card heading when the step changes (user-initiated, so allowed).
+  // Move focus to the new card heading when the card changes (user-initiated, so allowed).
   useEffect(() => {
     headingRef.current?.focus({ preventScroll: true });
-  }, [index]);
+  }, [index, revealed]);
 
   useEffect(() => {
     if (failedRecall) errorRef.current?.focus();
@@ -46,13 +51,12 @@ export function ReviewSession({ items, onExit }: ReviewSessionProps) {
     setFailedRecall(null);
     try {
       const updated = await studentService.recordReview(userId, item.id, RECALL_QUALITY[recall]);
-      setSaved((r) => [...r, updated]);
       announce(t('student.revision.due', { when: formatDate(updated.dueAt, locale) }));
       setRevealed(false);
       setIndex((i) => i + 1);
     } catch {
       setFailedRecall(recall);
-      announce(t('student.quests.mission.error'), 'assertive');
+      announce(t('kidslearn.error.body'), 'assertive');
     } finally {
       setSaving(null);
     }
@@ -60,58 +64,55 @@ export function ReviewSession({ items, onExit }: ReviewSessionProps) {
 
   if (finished) {
     return (
-      <Card as="section" aria-labelledby="review-done" className="flex flex-col items-center gap-3 text-center">
-        <CheckCircle2 aria-hidden className="h-10 w-10 text-success-700" />
-        <h2 id="review-done" ref={headingRef} tabIndex={-1} className="text-xl font-bold text-ink outline-none">
-          {t('student.revision.done')}
-        </h2>
-        <ul className="w-full text-left text-sm text-ink-soft">
-          {saved.map((s) => (
-            <li key={s.id} className="flex flex-wrap justify-between gap-2 border-b border-line py-2">
-              <span className="font-medium text-ink">{t(`concept.${s.conceptId}`)}</span>
-              <span>{t('student.revision.due', { when: formatDate(s.dueAt, locale) })}</span>
-            </li>
-          ))}
-        </ul>
-        <Button size="lg" onClick={onExit} className="w-full sm:w-auto">
-          {t('student.revision.backToList')}
+      <DoneScreen title={t('student.revision.done')} body={t('kidslearn.revision.doneBody', { count: items.length })} headingRef={headingRef}>
+        <BigActionButton to="/student/path" icon={<Check />}>
+          {t('student.path.title')}
+        </BigActionButton>
+        <Button variant="secondary" size="xl" onClick={onExit}>
+          {t('kidslearn.revision.backToCards')}
         </Button>
-      </Card>
+      </DoneScreen>
     );
   }
 
   const concept = t(`concept.${item.conceptId}`);
-  const percent = (index / items.length) * 100;
+  const left = items.length - index;
+  const prompt = t('kidslearn.revision.prompt', { concept });
 
   return (
-    <Card as="section" aria-labelledby="review-heading" className="flex flex-col gap-5">
-      <div className="flex flex-col gap-2">
-        <p className="text-sm font-medium text-ink-soft">
-          {t('student.revision.session.progress', { current: index + 1, total: items.length })}
-        </p>
-        <ProgressBar value={percent} label={t('student.revision.session.progressLabel')} />
+    <Card as="section" raised aria-labelledby="review-heading" className="flex flex-col gap-6">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <DotProgress current={index + 1} total={items.length} label={t('kidslearn.revision.togo', { count: left })} />
+        <Button variant="ghost" size="lg" onClick={onExit}>
+          {t('kidslearn.revision.stop')}
+        </Button>
       </div>
 
-      <h2 id="review-heading" ref={headingRef} tabIndex={-1} className="text-2xl font-bold text-ink outline-none">
-        {concept}
-      </h2>
-      <p className="text-base text-ink-soft">
-        {t('student.revision.session.prompt', { concept })}
-      </p>
+      {/* The card: front asks, back (after flipping) lets the child check and answer. */}
+      <div key={`${item.id}-${revealed ? 'back' : 'front'}`} className="flex flex-col gap-5 rounded-xl border-2 border-brand-100 bg-gradient-to-b from-brand-50 to-surface p-5 motion-ok:animate-fx-pop-in md:p-8">
+        <div className="flex items-start gap-3">
+          <span aria-hidden className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-brand-100 text-brand-700">
+            {revealed ? <Layers className="h-7 w-7" /> : <HelpCircle className="h-7 w-7" />}
+          </span>
+          <h2 id="review-heading" ref={headingRef} tabIndex={-1} className="min-w-0 flex-1 text-2xl font-bold text-ink outline-none md:text-3xl">
+            {concept}
+          </h2>
+          <SpeakButton text={prompt} size="md" />
+        </div>
+        <p className="text-xl text-ink">{revealed ? t('kidslearn.revision.back') : prompt}</p>
+        {revealed && (
+          <MascotMessage mood="thinking" size="sm" className="md:items-start">
+            <span className="text-base font-semibold text-ink-soft">{t('kidslearn.revision.check')}</span>
+          </MascotMessage>
+        )}
+      </div>
 
       {!revealed ? (
-        <Button size="lg" onClick={() => setRevealed(true)} className="w-full">
-          {t('student.revision.recall.show')}
+        <Button size="xl" onClick={() => setRevealed(true)} leftIcon={<RotateCw aria-hidden className="h-6 w-6" />} className="w-full md:w-auto md:self-start">
+          {t('kidslearn.revision.flip')}
         </Button>
       ) : (
         <div className="flex flex-col gap-4">
-          <p className="rounded-md border border-line bg-surface-muted p-3 text-sm text-ink-soft">
-            {t('student.revision.session.check')}{' '}
-            <Link to="/student/tutor" className="inline-flex min-h-[44px] items-center gap-1 font-semibold text-brand-700 underline outline-none focus-visible:shadow-focus">
-              {t('nav.student.tutor')}
-              <ArrowRight aria-hidden className="h-4 w-4" />
-            </Link>
-          </p>
           {failedRecall && (
             <div ref={errorRef} tabIndex={-1} className="outline-none">
               <Banner
@@ -122,26 +123,31 @@ export function ReviewSession({ items, onExit }: ReviewSessionProps) {
                   </Button>
                 }
               >
-                {t('student.quests.mission.error')}
+                {t('kidslearn.error.body')}
               </Banner>
             </div>
           )}
           <fieldset className="flex flex-col gap-3">
-            <legend className="mb-1 text-base font-semibold text-ink">{t('student.revision.recall.question')}</legend>
-            <div className="grid grid-cols-2 gap-3">
-              {RECALLS.map((r) => (
-                <Button key={r} variant={r === 'good' ? 'primary' : 'secondary'} disabled={saving !== null} loading={saving === r} loadingLabel={t('a11y.loading')} onClick={() => void rate(r)}>
-                  {t(`student.revision.recall.${r}`)}
+            <legend className="mb-1 text-xl font-bold text-ink">{t('kidslearn.revision.question')}</legend>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {CHOICES.map(({ recall, key }) => (
+                <Button
+                  key={recall}
+                  size="xl"
+                  variant={recall === 'good' ? 'primary' : 'secondary'}
+                  disabled={saving !== null}
+                  loading={saving === recall}
+                  loadingLabel={t('a11y.loading')}
+                  onClick={() => void rate(recall)}
+                  leftIcon={recall === 'good' ? <Check aria-hidden className="h-6 w-6" /> : undefined}
+                >
+                  {t(key)}
                 </Button>
               ))}
             </div>
           </fieldset>
         </div>
       )}
-
-      <Button variant="ghost" onClick={onExit} className="self-start">
-        {t('student.revision.session.end')}
-      </Button>
     </Card>
   );
 }
