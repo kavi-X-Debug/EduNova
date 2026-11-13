@@ -4,6 +4,8 @@ import {
   RectangleHorizontal, Ruler, Shapes, Ship, Shirt, Siren, Snail, Speaker, Sprout, Square, Star, Sun, ToggleLeft, Tractor, TrainFront, TreeDeciduous, TreePalm, Umbrella, Utensils, Volume2,
   Wheat, Wind, Wine, Worm, BrickWall, Beef, type LucideIcon,
 } from 'lucide-react';
+import { Sprite } from '../engine/Sprite';
+import { SPRITE_OF } from './sprites';
 import type { Pole } from './magnetLab.generator';
 
 /** Small picture for an item id (tray chips, choice buttons). Lucide icons, decorative; the item's name always sits next to it. */
@@ -30,9 +32,11 @@ const ICONS: Record<string, LucideIcon> = {
   battery: Battery, bulb: Lightbulb, switch: ToggleLeft, magnet: Magnet, ear: Ear,
 };
 
-export function Glyph({ id, className = 'h-6 w-6' }: { id: string; className?: string }) {
+export function Glyph({ id, className = 'h-6 w-6', size = 32 }: { id: string; className?: string; size?: number }) {
   const Icon = ICONS[id] ?? Shapes;
-  return <Icon aria-hidden className={`${className} shrink-0`} />;
+  const icon = <Icon aria-hidden className={`${className} shrink-0`} />;
+  const sprite = SPRITE_OF[id];
+  return sprite ? <Sprite name={sprite} size={size} fallback={icon} /> : icon;
 }
 
 /** Chip / button content: picture + name. */

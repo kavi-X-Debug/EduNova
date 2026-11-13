@@ -157,3 +157,11 @@ Done:
 - i18n: `games.milestone.title/body` (en/si/ta; si/ta in I18N-REVIEW section 11). Docs: ASSETS.md.
 Verified in the Browser pane (vite dev :5122, student@edunova.lk): library hero and cards, intro, a full Number Line Jump and Word Match play, finish with milestone, Pause, Me picker (click and arrow keys), at 1440 and 390; Tamil at 390; no console errors; all 42 images loaded; fallbacks checked by firing an image error on one thumbnail and one avatar; reduced motion checked by setting `data-motion="reduced"` (animation none).
 Not done: per-subject play-throughs beyond Maths and English were not repeated by hand (the motion lives in shared components); the 834px width and Sinhala were not browsed (only Tamil + English); no screen reader pass; the milestone threshold (10 stars) is a placeholder.
+
+## Science game art and motion (agent/gameart-science)
+Done:
+- All six science games (Magnet Lab, Light and Shadows, Sound Detective, Water Cycle Order, Food Chain Builder, Circuit Builder) now use the Flow sprites in their play area, each with its own scene and an animation matching how it is played. Details per game in ASSETS.md.
+- New: `games/engine/Sprite.tsx` (decorative `<Sprite name size className fallback />`), `games/science/ScienceFx.tsx` (scenes), `games/science/sprites.ts` (item id to sprite), one `gx-science-*` keyframes block in `tailwind.config.ts`. `Glyph` in `science/art.tsx` shows the sprite when one exists for the item id, else the old icon.
+- Rules kept: sprites are `aria-hidden` and every name stays real text; transform/opacity/filter-brightness only; idle loops finite and 3 s or slower; everything still under `motion-ok:` (OS reduced motion and `html[data-motion="reduced"]`); no scoring, generator, service, i18n or engine-behaviour changes (existing SVG drawings that carry meaning, `MagnetPair` and `CircuitSvg`, stay).
+- Checked with scripted plays (Edge, Playwright, vite dev :5112, student@edunova.lk): every game at levels 1 to 3, right and wrong answers to the finish, at 1440, 834 and 390, en and si; no console errors or 404s; reduced-motion media emulation; one sprite request blocked at a time (game keeps working, icon fallback or empty box).
+Not done: Tamil pass; no screen reader pass; the food-chain sort and level-3 sound rounds have no sprite for most creatures (icons stay).

@@ -70,3 +70,16 @@ Made with Google Flow (AI-generated). **Check Flow's terms of use before any pub
 - `take-a-break.webp`: the Pause dialog.
 
 `public/avatars/` (PNG, 256 x 256, transparent, about 27 KB each, 5 files): `cat.png`, `dog.png`, `rabbit.png`, `turtle.png`, `bird.png`. The only picture choices on the student Me page (radio group); `ProfileAvatar` shows them wherever a preset animal avatar is shown, with the chosen colour as a thin rim. Fallback: the lucide icon of the same preset id. Older preset ids (fish, rocket, ...) keep their icon.
+
+## Science game sprites: `public/game-sprites/` (agent/gameart-science)
+
+Rendered by `<Sprite name size />` (`games/engine/Sprite.tsx`: `alt=""`, `aria-hidden`, lazy except above the fold, fixed width/height so nothing shifts; if the file fails to load the item's old icon, or an empty box of the same size, stays). Scenes live in `games/science/ScienceFx.tsx`; `games/science/sprites.ts` maps item ids to sprites (so the tray chips and choice buttons of every science game show them too). Motion is `gx-science-*` (see PROGRESS.md), still under reduced motion.
+
+| Game | Sprites | What it shows |
+| --- | --- | --- |
+| Magnet Lab | `magnet`, `paper-clip`, `wood-block` | Stage above the sort: the magnet wiggles; after the answer the paper clip slides to it (wood block stays), then a sparkle if right. Poles round: two magnets slide together (attract) or gently apart (repel). Pickup round: a big wiggling magnet |
+| Light and Shadows | `desk-lamp`, `giraffe`, `glass-sheet` | Lamp with a softly breathing glow, a giraffe and its darkened shadow on the wall (stretches once after the answer). Material rounds add three glass sheets at full, 40% and dark (with the bin names as text) |
+| Sound Detective | `owl-detective`, `drum`, `bell` | Owl tilts its head (statement and "which one" rounds). Drum bounces gently, then hops with three ripple rings when answered; bell swings |
+| Water Cycle Order | `sun`, `rain-cloud`, `water-drop`, `mountain` | Scene with sun, cloud, mountain and a drop; the drop travels up to the cloud and rains back down when the order is right. The six stage chips use sun / cloud / drop |
+| Food Chain Builder | `grass`, `grasshopper`, `frog`, `snake`, `eagle` | Strip of the chain's creatures idling (shuffled while asking); when built right the arrows pulse and each hops in turn. Other creatures keep their icon |
+| Circuit Builder | `battery`, `light-bulb`, `switch` | Under the circuit drawing: battery, switch, bulb with dashed slots for missing parts; the bulb glows softly when lit and is dimmed otherwise; the switch lever clicks when the circuit is complete |

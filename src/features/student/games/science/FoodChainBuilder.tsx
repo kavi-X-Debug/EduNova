@@ -1,6 +1,7 @@
 import { useGt as useT } from '@/features/student/games/useGt';
 import type { GameComponentProps } from '@/types';
 import { useGameSession, type GameSession } from '../engine';
+import { ChainStrip } from './ScienceFx';
 import { SequenceRoundView } from './SequenceRound';
 import { SortRoundView } from './SortRound';
 import { makeFoodRound, ROUNDS_PER_PLAY, type FoodRound } from './foodChainBuilder.generator';
@@ -19,6 +20,7 @@ function RoundView({ session }: { session: GameSession<FoodRound> }) {
       itemKey={(id) => `${P}.item.${id}`}
       explainKey={`${P}.explainChain`}
       stepKey={`${P}.link`}
+      intro={<ChainStrip ids={session.status === 'asking' ? round.shuffled : round.order} status={session.status} />}
     />
   );
 }
