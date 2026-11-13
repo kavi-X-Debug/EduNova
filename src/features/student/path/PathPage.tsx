@@ -141,7 +141,7 @@ export default function PathPage() {
           <h2 id="path-steps-heading" className="mb-3 text-lg font-semibold text-ink">
             {t('student.path.steps.title')}
           </h2>
-          <ol className="flex flex-col gap-3">
+          <ol className="stagger flex flex-col gap-3">
             {steps.map((step, index) => {
               const isSelected = step.id === selected.id;
               const isCurrent = step.id === current?.id;

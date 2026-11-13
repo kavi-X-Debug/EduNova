@@ -97,7 +97,7 @@ export default function DashboardPage() {
     <div>
       <PageHeader title={t('student.dashboard.greeting', { name: firstName })} description={t('student.dashboard.subtitle')} />
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="stagger grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Block
           title={t('student.dashboard.nextStep.title')}
           state={path}
@@ -160,7 +160,7 @@ export default function DashboardPage() {
           className="md:col-span-2 lg:col-span-2"
         >
           {() => (
-            <ul className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <ul className="stagger grid grid-cols-1 gap-4 lg:grid-cols-2">
               {bySubject.map((s) => (
                 <li key={s.subject} className="flex min-w-0 items-start gap-4 rounded-lg border border-line p-3">
                   {/* Decorative arc only; the band below carries the meaning (no numbers). */}

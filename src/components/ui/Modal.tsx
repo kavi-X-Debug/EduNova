@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +21,14 @@ export function Modal({ open, onClose, title, description, children, footer, clo
   const titleId = useId();
   const descId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
+  // Keep the dialog mounted briefly after close so it can fade out (it is inert and hidden from AT meanwhile).
+  const [shown, setShown] = useState(open);
+  if (open && !shown) setShown(true);
+  useEffect(() => {
+    if (open || !shown) return;
+    const id = window.setTimeout(() => setShown(false), 160);
+    return () => window.clearTimeout(id);
+  }, [open, shown]);
 
   // Declared before the trap so inert is lifted before focus is restored.
   useEffect(() => {
@@ -36,10 +44,14 @@ export function Modal({ open, onClose, title, description, children, footer, clo
   }, [open]);
   useFocusTrap(panelRef, open, { onEscape: onClose });
 
-  if (!open) return null;
+  if (!open && !shown) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/50 p-0 md:items-center md:p-6" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+    <div
+      inert={!open || undefined}
+      aria-hidden={!open || undefined}
+      className={`fixed inset-0 z-50 flex items-end justify-center bg-ink/50 p-0 md:items-center md:p-6 ${open ? 'animate-fade-in' : 'pointer-events-none animate-fade-out'}`}
+      onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <div
         ref={panelRef}
         role="dialog"
@@ -47,7 +59,7 @@ export function Modal({ open, onClose, title, description, children, footer, clo
         aria-labelledby={titleId}
         aria-describedby={description ? descId : undefined}
         tabIndex={-1}
-        className="max-h-[90vh] w-full overflow-y-auto rounded-t-lg bg-surface p-6 shadow-raised outline-none md:max-w-lg md:rounded-lg"
+        className={`max-h-[90vh] w-full overflow-y-auto rounded-t-lg bg-surface p-6 shadow-raised outline-none md:max-w-lg md:rounded-lg ${open ? 'animate-sheet-up md:animate-pop' : ''}`}
       >
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>

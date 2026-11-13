@@ -34,3 +34,20 @@
 - Agent H review cleanup: R-07 class-name lookup isolated in loadClassNames() (auditData.ts) with mock-quirk warning + go-live TODO (adminService.listClasses), failure degrades to 'Unknown item'; R-10 no xl: classes in admin; R-12 defaultValues removed; R-13 concatenations replaced by interpolated keys admin.audit.actorTarget, admin.curriculum.meta, admin.curriculum.publish.change, admin.curriculum.subject.unknown (requested from C in REQUESTS). typecheck, lint, build, i18n:check pass.
 - Agent C cleanup (REVIEW R-21/R-12/R-11/R-31): removed 59 unreferenced keys per locale (grep-verified; dynamic prefixes concept/subject/diagnostic/quest/mission/exam.next/wellbeing.prompt/admin.audit.action/band.desc kept); removed dead a11y helpers (useRovingTabindex, useFocusReturn, useAnnounce, visuallyHidden*, exports of captureFocus/getFocusable) and made announce() clear its pending timer. R-21 changed keys for native review: si teacher.wellbeing.title/note/notDiagnosis, ta teacher.wellbeing.note/notDiagnosis (now 'only a gentle prompt, not a conclusion about the student'; no 'disease diagnosis' wording).
 - Agent C: added 14 missing keys (13 requested + classMeta plural) from E/G/H REQUESTS; i18n:check (incl. usage) passes. Review si/ta: student.tutor.unsourced.note, teacher.wellbeing.aboutPrivate, teacher.overview.classMeta.
+
+## Motion (agent/motion)
+
+Plain CSS/Tailwind, no animation library. Only transform and opacity animate (plus colour transitions and the MasteryRing stroke-dashoffset); durations 120-300ms; nothing loops except the skeleton shimmer.
+
+Tokens (tailwind.config.ts):
+- Durations: `duration-fast` 120ms, `duration-base` 200ms, `duration-slow` 300ms. Easings: `ease-standard`, `ease-enter`, `ease-exit`.
+- Keyframes/animations: `animate-fade-in`, `animate-fade-out` (forwards), `animate-slide-up`, `animate-sheet-up`, `animate-pop`, `animate-shimmer`. Enter animations use fill-mode `backwards`, so no transform lingers after they end.
+- Variant `motion-ok:` applies only when reduced motion is NOT requested (OS or `<html data-motion="reduced">`). Use it for any hover/active movement (lift, press scale).
+- `.stagger` (src/styles/index.css): children slide up once, 50ms apart (first 8). Used on the dashboard grid and subject list, the path step list and the quest list.
+
+Where used:
+- Button, ButtonLink, IconButton: colour transitions, press scale (`motion-ok:active:scale`), active colours. Card: `interactive` prop (border, shadow, lift on hover and focus-within; not applied anywhere yet, opt in for card-links). Badge, Input/Select/Textarea (`fieldStyles`): colour/border transitions and hover border. Table rows (`TBody` hover and focus-within), Tabs (colour, hover underline, panel fade-in), links (global `a` colour transition), native `details[open]` content fades in.
+- AppShell: page-enter slide-up keyed by pathname (also AuthLayout card); sidebar active indicator bar (scaleY) and bottom-nav top bar (scaleX).
+- ProgressBar (scaleX from 0 on mount), MasteryRing (arc draws on mount), Skeleton (translateX shimmer replaces pulse), Modal (fade + sheet-up on mobile / pop on desktop; fades out before unmount, inert and aria-hidden while closing, focus trap and #root inert unchanged), Toast (slide-up in, fade-out on dismiss), Tooltip (opacity fade; still opens on focus).
+
+Reduced motion: a global rule in `@layer base` collapses animation/transition durations and delays to 0.01ms for both `@media (prefers-reduced-motion: reduce)` and `:root[data-motion="reduced"]`, so elements land in their end state with no movement; `motion-ok:` movement utilities and the skeleton shimmer do not apply. No hex values outside tailwind.config.ts; no letter-spacing or text transforms.

@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
 
 // PLACEHOLDER TOKENS: docs/DESIGN_BRIEF.md is missing and the Figma MCP was rate-limited
 // during Phase 0. Agent A must reconcile these values with Figma. Names are the contract;
@@ -25,10 +26,39 @@ export default {
         raised: '0 4px 12px rgba(15,23,42,0.10)',
         focus: '0 0 0 2px #FFFFFF, 0 0 0 4px #4338CA',
       },
+      // Motion tokens. Durations stay within 120-300ms; only transform and opacity are animated.
+      transitionDuration: { fast: '120ms', base: '200ms', slow: '300ms' },
+      transitionTimingFunction: {
+        standard: 'cubic-bezier(0.2, 0, 0, 1)',
+        enter: 'cubic-bezier(0, 0, 0.2, 1)',
+        exit: 'cubic-bezier(0.4, 0, 1, 1)',
+      },
+      keyframes: {
+        'fade-in': { from: { opacity: '0' }, to: { opacity: '1' } },
+        'fade-out': { from: { opacity: '1' }, to: { opacity: '0' } },
+        'slide-up': { from: { opacity: '0', transform: 'translateY(8px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+        'sheet-up': { from: { opacity: '0', transform: 'translateY(24px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+        pop: { from: { opacity: '0', transform: 'scale(0.96)' }, to: { opacity: '1', transform: 'scale(1)' } },
+        shimmer: { from: { transform: 'translateX(-100%)' }, to: { transform: 'translateX(100%)' } },
+      },
+      animation: {
+        'fade-in': 'fade-in 200ms cubic-bezier(0, 0, 0.2, 1) backwards',
+        'fade-out': 'fade-out 160ms cubic-bezier(0.4, 0, 1, 1) forwards',
+        'slide-up': 'slide-up 300ms cubic-bezier(0, 0, 0.2, 1) backwards',
+        'sheet-up': 'sheet-up 240ms cubic-bezier(0, 0, 0.2, 1) backwards',
+        pop: 'pop 200ms cubic-bezier(0, 0, 0.2, 1) backwards',
+        shimmer: 'shimmer 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
       fontFamily: {
         sans: ['Inter', 'Noto Sans Sinhala', 'Noto Sans Tamil', 'system-ui', 'sans-serif'],
       },
     },
   },
-  plugins: [],
+  plugins: [
+    // `motion-ok:` applies only when the user has not asked for reduced motion, either through the OS
+    // (prefers-reduced-motion) or the app setting (<html data-motion="reduced">). Use it for any movement.
+    plugin(({ addVariant }) => {
+      addVariant('motion-ok', '@media (prefers-reduced-motion: no-preference) { :root:not([data-motion="reduced"]) & }');
+    }),
+  ],
 } satisfies Config;
