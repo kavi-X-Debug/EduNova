@@ -197,10 +197,10 @@ export function DragDropZone({ items, zones, placements, onPlace, disabled, labe
   return (
     <div ref={rootRef} role="group" aria-label={label} className="flex flex-col gap-5">
       <div>
-        <p className="mb-2 text-base font-bold text-ink-soft">{selectedItem ? t('games.drag.pickZone', { item: selectedItem.text }) : t('games.drag.tray')}</p>
+        <p className="mb-2 text-lg font-bold text-ink-soft">{selectedItem ? t('games.drag.pickZone', { item: selectedItem.text }) : t('games.drag.tray')}</p>
         <ul aria-label={t('games.drag.tray')} className="flex min-h-16 flex-wrap gap-3 rounded-xl border-2 border-dashed border-line-strong bg-surface-muted p-3">
           {tray.map((i) => chip(i, null))}
-          {tray.length === 0 && <li className="self-center text-base text-ink-soft">{t('games.drag.trayEmpty')}</li>}
+          {tray.length === 0 && <li className="self-center text-lg text-ink-soft">{t('games.drag.trayEmpty')}</li>}
         </ul>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
@@ -222,7 +222,7 @@ export function DragDropZone({ items, zones, placements, onPlace, disabled, labe
                 onClick={() => selected && place(selected, z.id)}
                 aria-label={selectedItem ? t('games.drag.putHereNamed', { item: selectedItem.text, zone: z.label }) : t('games.drag.putHere')}
                 className={cn(
-                  'mt-auto min-h-14 rounded-lg border-2 border-dashed px-4 py-2 text-base font-bold',
+                  'mt-auto min-h-14 rounded-lg border-2 border-dashed px-4 py-2 text-lg font-bold',
                   focusRing,
                   selectedItem ? 'border-brand-600 bg-brand-50 text-brand-700 hover:bg-brand-100' : 'border-line text-ink-faint',
                 )}

@@ -5,6 +5,8 @@ export interface RoundContext {
   /** 0-based round number. */
   index: number;
   level: GameLevel;
+  /** The play's seed. Optional (added backward-compatibly): lets a word game draw DIFFERENT items per round from one play-level shuffle. */
+  seed?: string;
 }
 
 /**
@@ -13,7 +15,7 @@ export interface RoundContext {
  * `makeRound` must be PURE (use only the `rng` it is given).
  */
 export function generateRounds<R>(seed: string, level: GameLevel, count: number, makeRound: (rng: Rng, ctx: RoundContext) => R): R[] {
-  return Array.from({ length: count }, (_, index) => makeRound(createRng(`${seed}#${index}`), { index, level }));
+  return Array.from({ length: count }, (_, index) => makeRound(createRng(`${seed}#${index}`), { index, level, seed }));
 }
 
 export interface Choices<T> {
