@@ -23,7 +23,7 @@ const latinKeyOk = allow.latinTokensByKey ?? {};
 
 const placeholders = (s) => [...s.matchAll(/\{\{\s*(\w+)\s*\}\}/g)].map((m) => m[1]).sort().join(',');
 /** Latin words of 2+ letters outside {{placeholders}}. */
-const latinWords = (s) => (s.replace(/\{\{[^}]*\}\}/g, ' ').match(/[A-Za-z][A-Za-z'-]*[A-Za-z]/g) ?? []);
+const latinWords = (s) => (s.replace(/\{\{[^}]*\}\}/g, ' ').match(/[A-Za-z][A-Za-z'-]*[A-Za-z]/g) ?? []).filter((w) => !/^[IVX]+$/.test(w)); // roman numerals (Part II) are not words
 
 const errors = [];
 const base = new Set(Object.keys(data.en));

@@ -25,15 +25,50 @@
     letter-spacing: normal !important;
     text-transform: none !important;
   }
-  /* Respect reduced motion globally. */
+  a {
+    @apply transition-colors duration-fast ease-standard;
+  }
+  /* Native disclosure (details/summary): content fades in when opened. */
+  details[open] > :not(summary) {
+    @apply animate-fade-in;
+  }
+  /* Respect reduced motion globally: OS setting or the in-app <html data-motion="reduced"> setting.
+     Animations and transitions collapse to their end state (nothing moves, nothing fades). */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
     *::after {
       animation-duration: 0.01ms !important;
+      animation-delay: 0s !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+      transition-delay: 0s !important;
       scroll-behavior: auto !important;
     }
   }
+  :root[data-motion='reduced'] *,
+  :root[data-motion='reduced'] *::before,
+  :root[data-motion='reduced'] *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer components {
+  /* Staggered reveal: add `stagger` to a list/grid container; children slide up once, 50ms apart (first 8). */
+  .stagger > * {
+    @apply animate-slide-up;
+    animation-delay: calc(var(--i, 0) * 50ms);
+  }
+  .stagger > :nth-child(2) { --i: 1; }
+  .stagger > :nth-child(3) { --i: 2; }
+  .stagger > :nth-child(4) { --i: 3; }
+  .stagger > :nth-child(5) { --i: 4; }
+  .stagger > :nth-child(6) { --i: 5; }
+  .stagger > :nth-child(7) { --i: 6; }
+  .stagger > :nth-child(n + 8) { --i: 7; }
 }

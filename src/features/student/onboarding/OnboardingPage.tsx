@@ -11,7 +11,8 @@ import type { Locale } from '@/types';
 import { RedirectByRole } from './RedirectByRole';
 
 const LOCALES: Locale[] = ['en', 'si', 'ta'];
-const GRADES = [6, 7, 8, 9, 10, 11];
+// Grade 6 MVP: only Grade 6 has learning paths for now.
+const GRADES = [6];
 const SUBJECTS = ['maths', 'science', 'sinhala', 'english', 'ict'];
 const TOTAL = 3;
 

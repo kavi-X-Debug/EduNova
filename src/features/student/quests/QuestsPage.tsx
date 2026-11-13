@@ -130,7 +130,7 @@ export default function QuestsPage() {
             </div>
           </section>
 
-          <section aria-labelledby="quest-list-heading" className="flex flex-col gap-4">
+          <section aria-labelledby="quest-list-heading" className="stagger flex flex-col gap-4">
             <h2 id="quest-list-heading" className="text-xl font-semibold text-ink">
               {t('student.quests.list.title')}
             </h2>

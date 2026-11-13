@@ -9,6 +9,12 @@ export interface User {
 
 export interface Concept {
   id: string; subject: string; grade: number; titleKey: string; prerequisiteIds: string[];
+  /** School term the concept is taught in (1-3). Optional: reference data only. */
+  term?: number;
+  /** Textbook unit/chapter label, as printed in the source (not translated). */
+  unit?: string;
+  /** Textbook page reference, e.g. "Part 1, pp. 112-134" (not translated). */
+  textbookRef?: string;
 }
 
 /** Mastery is 0-1 per concept. UI shows a band; never a predicted exam mark. */

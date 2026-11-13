@@ -26,15 +26,15 @@ const LAST = [
 const LOCALES: Locale[] = ['si', 'en', 'ta', 'si', 'en'];
 
 export const CLASS_DEFS = [
-  { id: 'class-8a', name: 'Grade 8A', section: 'A', grade: 8 },
-  { id: 'class-9b', name: 'Grade 9B', section: 'B', grade: 9 },
-  { id: 'class-10c', name: 'Grade 10C', section: 'C', grade: 10 },
+  { id: 'class-6a', name: 'Grade 6A', section: 'A', grade: 6 },
+  { id: 'class-6b', name: 'Grade 6B', section: 'B', grade: 6 },
+  { id: 'class-6c', name: 'Grade 6C', section: 'C', grade: 6 },
 ];
 
 export const TEACHERS: User[] = [
-  { id: 'tch-001', name: 'Anura Jayawardena', email: 'teacher@edunova.lk', role: 'teacher', locale: 'si', classIds: ['class-8a', 'class-9b', 'class-10c'] },
-  { id: 'tch-002', name: 'Shanthi Rajaratnam', email: 'shanthi@edunova.lk', role: 'teacher', locale: 'ta', classIds: ['class-9b'] },
-  { id: 'tch-003', name: 'Farah Nazeer', email: 'farah@edunova.lk', role: 'teacher', locale: 'en', classIds: ['class-10c'] },
+  { id: 'tch-001', name: 'Anura Jayawardena', email: 'teacher@edunova.lk', role: 'teacher', locale: 'si', classIds: ['class-6a', 'class-6b', 'class-6c'] },
+  { id: 'tch-002', name: 'Shanthi Rajaratnam', email: 'shanthi@edunova.lk', role: 'teacher', locale: 'ta', classIds: ['class-6b'] },
+  { id: 'tch-003', name: 'Farah Nazeer', email: 'farah@edunova.lk', role: 'teacher', locale: 'en', classIds: ['class-6c'] },
 ];
 
 export const ADMINS: User[] = [
@@ -124,15 +124,15 @@ export function buildClassSummary(
 // ---------- Audit ----------
 const ACTIONS: [string, string][] = [
   ['user.signIn', 'session'],
-  ['curriculum.update', 'cur-03'],
-  ['curriculum.publish', 'cur-04'],
-  ['curriculum.submitForReview', 'cur-09'],
+  ['curriculum.update', 'cur-maths-3'],
+  ['curriculum.publish', 'cur-science-1'],
+  ['curriculum.submitForReview', 'cur-ict-3'],
   ['user.roleChange', 'tch-003'],
-  ['class.create', 'class-10c'],
-  ['export.classReport', 'class-9b'],
+  ['class.create', 'class-6c'],
+  ['export.classReport', 'class-6b'],
   ['settings.localeDefault', 'si'],
   ['user.invite', 'stu-014'],
-  ['curriculum.archive', 'cur-12'],
+  ['curriculum.archive', 'cur-maths-4'],
 ];
 export function buildAuditEvents(): AuditEvent[] {
   const rnd = rngFor('audit');

@@ -1,46 +1,83 @@
 import type { ExamReport, LearningPathStep, Mastery, Quest, ReadinessBand, RevisionItem } from '@/types';
 import { bandFromMastery, makeMastery } from '@/lib/mastery';
-import { CONCEPTS } from './concepts';
+import { CONCEPTS, G6_ORDERED, MVP_GRADE, SUBJECTS } from './concepts';
 import { EXAMS, QUEST_TEMPLATES } from './content';
 import { daysAgo, daysFromNow, rngFor } from './rng';
 
 export const INTERVALS = [1, 3, 7, 14, 30];
 
-/** Concepts relevant to a grade: this grade and earlier, up to 2 grades back. */
-export function conceptsForGrade(grade: number) {
-  return CONCEPTS.filter((c) => c.grade <= grade && c.grade >= grade - 3);
+/** Concepts relevant to a grade. The MVP only has Grade 6. */
+export function conceptsForGrade(grade: number = MVP_GRADE) {
+  return CONCEPTS.filter((c) => c.grade === grade);
 }
 
-export function buildMastery(userId: string, grade = 8): Mastery[] {
+/**
+ * Where a learner is in each subject's teaching order.
+ * `covered`: concepts already finished (all steps done). `started`: steps done in the current concept.
+ * The class (cohort) sets the pace, so classmates are at about the same unit; each learner varies a little.
+ */
+interface SubjectProgress {
+  covered: number;
+  started: number;
+}
+export function progressFor(userId: string, cohort: string = userId): Map<string, SubjectProgress> {
+  const classRnd = rngFor(`pace-${cohort}`);
+  const own = rngFor(`progress-${userId}`);
+  const out = new Map<string, SubjectProgress>();
+  for (const subject of SUBJECTS) {
+    const n = G6_ORDERED.filter((c) => c.subject === subject).length;
+    const pace = 0.35 + classRnd() * 0.25; // class is 35-60% through the year
+    const jitter = Math.floor(own() * 3) - 1; // -1, 0 or +1 concept
+    const covered = Math.max(1, Math.min(n - 1, Math.round(pace * n) + jitter));
+    out.set(subject, { covered, started: Math.floor(own() * 3) });
+  }
+  return out;
+}
+
+/** Mastery exists for finished concepts (and the current one once started). */
+export function buildMastery(userId: string, cohort?: string): Mastery[] {
   const rnd = rngFor(`mastery-${userId}`);
-  const ability = 0.25 + rnd() * 0.6; // per-student baseline
-  return conceptsForGrade(grade).map((c) => {
-    const older = (grade - c.grade) * 0.05; // earlier-grade concepts tend to be firmer
-    const level = Math.min(1, Math.max(0.05, ability + older + (rnd() - 0.5) * 0.4));
-    return makeMastery(c.id, Math.round(level * 100) / 100, daysAgo(Math.floor(rnd() * 20)));
-  });
+  const ability = 0.3 + rnd() * 0.55; // per-student baseline
+  const progress = progressFor(userId, cohort);
+  const out: Mastery[] = [];
+  for (const subject of SUBJECTS) {
+    const { covered, started } = progress.get(subject)!;
+    const list = G6_ORDERED.filter((c) => c.subject === subject);
+    list.forEach((c, i) => {
+      let level: number;
+      if (i < covered) {
+        const settled = ((covered - i) / covered) * 0.1; // earlier units have had more practice
+        level = ability + settled + (rnd() - 0.5) * 0.4;
+      } else if (i === covered && started > 0) {
+        level = ability * 0.6 + (rnd() - 0.5) * 0.2; // just started
+      } else return;
+      const l = Math.min(1, Math.max(0.05, level));
+      out.push(makeMastery(c.id, Math.round(l * 100) / 100, daysAgo(Math.floor(rnd() * 20))));
+    });
+  }
+  return out;
 }
 
-export function buildPath(userId: string, mastery: Mastery[]): LearningPathStep[] {
-  const rnd = rngFor(`path-${userId}`);
-  // Weakest concepts first, but never before their prerequisites are at least developing.
-  const byLevel = new Map(mastery.map((m) => [m.conceptId, m.level]));
-  const ordered = [...mastery]
-    .filter((m) => m.level < 0.82)
-    .sort((a, b) => a.level - b.level)
-    .filter((m) => {
-      const c = CONCEPTS.find((x) => x.id === m.conceptId)!;
-      return c.prerequisiteIds.every((p) => (byLevel.get(p) ?? 1) >= 0.35) || c.prerequisiteIds.length === 0;
-    })
-    .slice(0, 3);
-  const kinds: LearningPathStep['kind'][] = ['lesson', 'practice', 'quiz'];
+/**
+ * The learner's path: every Grade 6 concept's steps in teaching order (subject, term, textbook order).
+ * Finished concepts are done; in the current concept of each subject the first unfinished step is
+ * 'next'; everything after it is locked.
+ */
+export function buildPath(userId: string, cohort?: string): LearningPathStep[] {
+  const progress = progressFor(userId, cohort);
   const steps: LearningPathStep[] = [];
-  ordered.forEach((m) => kinds.forEach((kind) => steps.push({ id: `step-${steps.length + 1}`, conceptId: m.conceptId, kind, status: 'locked', estimatedMinutes: kind === 'lesson' ? 12 : kind === 'practice' ? 15 : 10 })));
-  if (ordered.length) steps.push({ id: `step-${steps.length + 1}`, conceptId: ordered[0].conceptId, kind: 'revision', status: 'locked', estimatedMinutes: 8 });
-  const done = Math.min(steps.length, Math.floor(rnd() * 3));
-  steps.forEach((s, i) => {
-    s.status = i < done ? 'done' : i === done ? 'in_progress' : i === done + 1 ? 'next' : 'locked';
-  });
+  for (const subject of SUBJECTS) {
+    const { covered, started } = progress.get(subject)!;
+    G6_ORDERED.filter((c) => c.subject === subject).forEach((c, i) => {
+      const doneSteps = Math.min(started, c.steps.length - 1);
+      c.steps.forEach((s, j) => {
+        let status: LearningPathStep['status'] = 'locked';
+        if (i < covered) status = 'done';
+        else if (i === covered) status = j < doneSteps ? 'done' : j === doneSteps ? 'next' : 'locked';
+        steps.push({ id: `step-${c.id}-${j + 1}`, conceptId: c.id, kind: s.kind, status, estimatedMinutes: s.estimatedMinutes });
+      });
+    });
+  }
   return steps;
 }
 
