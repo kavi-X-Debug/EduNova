@@ -66,7 +66,7 @@ export function RewardCelebrator() {
         <ul className="mt-3 flex flex-col gap-3">
           {badges.map(({ badge }) => (
             <li key={badge.id} className="flex items-center gap-3">
-              <BadgeImage badgeId={badge.id} rarity={badge.rarity} size="md" />
+              <BadgeImage badgeId={badge.id} rarity={badge.rarity} size="lg" pop />
               <div>
                 <p className="font-semibold text-ink">{t(badge.titleKey)}</p>
                 <p className="text-sm text-ink-soft">{t(badge.descriptionKey)}</p>

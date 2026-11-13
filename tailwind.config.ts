@@ -19,6 +19,15 @@ export default {
         surface: { DEFAULT: '#FFFFFF', muted: '#F8FAFC', sunken: '#F1F5F9' },
         ink: { DEFAULT: '#0F172A', soft: '#475569', faint: '#94A3B8' },
         line: { DEFAULT: '#E2E8F0', strong: '#CBD5E1' },
+        // Badge art tiers (BadgeArt): sky = Everyday, leaf = Growing, sun = Bright, bloom = Shining, lock = not earned yet.
+        // Used as text-/fill-/stroke- classes; gradient stops use stop-color: currentColor.
+        badge: {
+          sky: { 200: '#BAE6FD', 400: '#38BDF8', 600: '#0284C7', 800: '#0C4A6E' },
+          leaf: { 200: '#A7F3D0', 400: '#34D399', 600: '#059669', 800: '#064E3B' },
+          sun: { 200: '#FEF08A', 400: '#FBBF24', 600: '#EA580C', 800: '#7C2D12' },
+          bloom: { 200: '#F5D0FE', 400: '#C084FC', 600: '#9333EA', 800: '#581C87' },
+          lock: { 200: '#F1F5F9', 400: '#E2E8F0', 600: '#CBD5E1', 800: '#94A3B8' },
+        },
       },
       borderRadius: { sm: '6px', md: '10px', lg: '16px', xl: '24px' },
       boxShadow: {
@@ -40,6 +49,11 @@ export default {
         'sheet-up': { from: { opacity: '0', transform: 'translateY(24px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
         pop: { from: { opacity: '0', transform: 'scale(0.96)' }, to: { opacity: '1', transform: 'scale(1)' } },
         shimmer: { from: { transform: 'translateX(-100%)' }, to: { transform: 'translateX(100%)' } },
+        // Badge art. Slow and soft: nothing faster than a ~3s loop, no flashing.
+        'badge-glow': { '0%, 100%': { opacity: '0.25', transform: 'scale(0.97)' }, '50%': { opacity: '0.6', transform: 'scale(1.05)' } },
+        'badge-twinkle': { '0%, 100%': { opacity: '0', transform: 'scale(0.5)' }, '50%': { opacity: '1', transform: 'scale(1)' } },
+        'badge-shine': { from: { transform: 'translateX(-70px)' }, to: { transform: 'translateX(70px)' } },
+        'badge-pop': { '0%': { opacity: '0', transform: 'scale(0.6)' }, '60%': { opacity: '1', transform: 'scale(1.08)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
       },
       animation: {
         'fade-in': 'fade-in 200ms cubic-bezier(0, 0, 0.2, 1) backwards',
@@ -48,6 +62,10 @@ export default {
         'sheet-up': 'sheet-up 240ms cubic-bezier(0, 0, 0.2, 1) backwards',
         pop: 'pop 200ms cubic-bezier(0, 0, 0.2, 1) backwards',
         shimmer: 'shimmer 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'badge-glow': 'badge-glow 4s ease-in-out infinite',
+        'badge-twinkle': 'badge-twinkle 3.6s ease-in-out infinite',
+        'badge-shine': 'badge-shine 900ms cubic-bezier(0.2, 0, 0, 1) 1',
+        'badge-pop': 'badge-pop 600ms cubic-bezier(0, 0, 0.2, 1) backwards',
       },
       fontFamily: {
         sans: ['Inter', 'Noto Sans Sinhala', 'Noto Sans Tamil', 'system-ui', 'sans-serif'],

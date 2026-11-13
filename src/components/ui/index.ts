@@ -25,6 +25,7 @@ export * from './Avatar';
 export * from './ProfileAvatar';
 export * from './avatarPresets';
 export * from './BadgeImage';
+export * from './BadgeArt';
 export * from './Stat';
 export * from './PageHeader';
 export * from './Banner';
