@@ -92,6 +92,24 @@ const gxAnimation = {
   'gx-bob': 'gx-bob 4s ease-in-out 3',
   'gx-hop': 'gx-hop 600ms cubic-bezier(0, 0, 0.2, 1) 1',
 };
+// ---- Maths and Mixed game art motion (gx-maths-*). Same rules as gx-*. ----
+const gxMathsKeyframes = {
+  'gx-maths-hop': { '0%': { transform: 'translateY(0) scale(1, 1)' }, '45%': { transform: 'translateY(-26px) scale(0.96, 1.05)' }, '85%': { transform: 'translateY(0) scale(1.08, 0.92)' }, '100%': { transform: 'translateY(0) scale(1, 1)' } },
+  'gx-maths-wobble': { '0%,100%': { transform: 'rotate(0deg)' }, '25%': { transform: 'rotate(-7deg)' }, '60%': { transform: 'rotate(6deg)' }, '85%': { transform: 'rotate(-2deg)' } },
+  'gx-maths-wave': { '0%,100%': { transform: 'rotate(0deg)' }, '30%': { transform: 'rotate(6deg)' }, '65%': { transform: 'rotate(-5deg)' } },
+  'gx-maths-pulse': { '0%,100%': { transform: 'scale(1)' }, '50%': { transform: 'scale(1.18)' } },
+  'gx-maths-shine': { '0%,100%': { transform: 'translateY(0) scale(1)' }, '50%': { transform: 'translateY(-3px) scale(1.03)' } },
+  'gx-maths-grow': { from: { transform: 'scale(1)' }, to: { transform: 'scale(1.25)' } },
+};
+const gxMathsAnimation = {
+  'gx-maths-hop': 'gx-maths-hop 560ms cubic-bezier(0.3, 0, 0.3, 1) 1',
+  'gx-maths-wobble': 'gx-maths-wobble 650ms ease-in-out 1',
+  'gx-maths-wave': 'gx-maths-wave 3s ease-in-out 2',
+  'gx-maths-pulse': 'gx-maths-pulse 3.2s ease-in-out 3',
+  'gx-maths-shine': 'gx-maths-shine 4s ease-in-out 3',
+  'gx-maths-grow': 'gx-maths-grow 900ms cubic-bezier(0, 0, 0.2, 1) 1 forwards',
+};
+// ---- end Maths and Mixed game art motion ----
 // ---- end Game motion ----
 
 export default {
@@ -149,6 +167,7 @@ export default {
         'badge-pop': { '0%': { opacity: '0', transform: 'scale(0.6)' }, '60%': { opacity: '1', transform: 'scale(1.08)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
         ...fxKeyframes,
         ...gxKeyframes,
+        ...gxMathsKeyframes,
       },
       animation: {
         'fade-in': 'fade-in 200ms cubic-bezier(0, 0, 0.2, 1) backwards',
@@ -163,6 +182,7 @@ export default {
         'badge-pop': 'badge-pop 600ms cubic-bezier(0, 0, 0.2, 1) backwards',
         ...fxAnimation,
         ...gxAnimation,
+        ...gxMathsAnimation,
       },
       fontFamily: {
         sans: ['Inter', 'Noto Sans Sinhala', 'Noto Sans Tamil', 'system-ui', 'sans-serif'],

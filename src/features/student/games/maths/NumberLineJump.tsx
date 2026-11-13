@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { cn } from '@/components/ui';
+import { usePrefersReducedMotion } from '@/lib/a11y';
 import { useGt as useT } from '@/features/student/games/useGt';
 import type { GameComponentProps } from '@/types';
+import { GxSparkles } from '../engine/GameFx';
+import { Sprite } from '../engine/Sprite';
 import { BigChoiceButton, ChoiceGroup, NumberPad, RoundFeedback, TimerBar, useGameSession, type GameSession } from '../engine';
 import { makeNumberLineRound, ROUNDS_PER_PLAY, type NumberLineRound } from './numberLineJump.generator';
 
@@ -35,8 +39,83 @@ function NumberLine({ round, showJumps, label }: { round: NumberLineRound; showJ
           return <path key={i} d={`M ${x(from)} ${y - 8} Q ${mid} ${y - 46} ${x(to)} ${y - 8}`} fill="none" strokeWidth={3} strokeDasharray="6 4" className="stroke-brand-500" />;
         })}
       {showJumps && <circle cx={x(stops[stops.length - 1])} cy={y} r={9} className="fill-success-500 stroke-success-700" strokeWidth={2} />}
-      <circle cx={x(start)} cy={y} r={showJumps ? 6 : 10} className="fill-badge-leaf-400 stroke-badge-leaf-800" strokeWidth={3} />
+      <circle cx={x(start)} cy={y} r={showJumps ? 5 : 7} className="fill-badge-leaf-400 stroke-badge-leaf-800" strokeWidth={3} />
     </svg>
+  );
+}
+
+const HOP_MS = 700;
+const FROG_PX = 56;
+
+/**
+ * The pond scene around the number line (all pictures decorative; the question and the answer are text).
+ * Waiting: the frog sits on its lily pad and bobs. After the answer the frog hops along the real jumps, one arc per
+ * jump with a soft squash on landing. Wrong: a small wobble first, then it still hops to the right place. Right: sparkle and a star.
+ * With reduced motion the frog simply appears at the end. A missing sprite file just disappears.
+ */
+function FrogScene({ round, status, label }: { round: NumberLineRound; status: GameSession<NumberLineRound>['status']; label: string }) {
+  const reduced = usePrefersReducedMotion();
+  const { min, max, start, jumps } = round;
+  const stops = jumps.reduce<number[]>((acc, j) => [...acc, acc[acc.length - 1] + j], [start]);
+  const last = stops.length - 1;
+  const pct = (n: number) => ((18 + (n - min) * 28) / ((max - min) * 28 + 36)) * 100;
+  const [hopStep, setStep] = useState(0);
+  const [hopping, setHopping] = useState(false);
+  const answered = status !== 'asking';
+  const wrong = status === 'wrong';
+  const step = reduced && answered ? last : hopStep;
+
+  useEffect(() => {
+    if (!answered) return;
+    if (reduced) return;
+    const timers: number[] = [];
+    const lead = wrong ? 750 : 250;
+    for (let i = 1; i <= last; i++) {
+      const at = lead + (i - 1) * HOP_MS;
+      timers.push(window.setTimeout(() => { setStep(i); setHopping(true); }, at));
+      timers.push(window.setTimeout(() => setHopping(false), at + 560));
+    }
+    return () => timers.forEach((id) => window.clearTimeout(id));
+  }, [answered, wrong, reduced, last]);
+
+  const arrived = answered && step === last;
+  const frogAt = pct(stops[step]);
+  return (
+    <div className="relative overflow-hidden rounded-2xl border-2 border-brand-100 bg-gradient-to-b from-brand-50 to-success-50 px-2 pb-2 pt-16">
+      <Sprite name="sun" size={48} className="absolute right-2 top-2 motion-ok:animate-gx-maths-shine" />
+      <div className="relative">
+        <NumberLine round={round} showJumps={answered} label={label} />
+        {/* Lily pads: the start, then each landing once the frog has reached it. */}
+        {stops.map((n, i) => (
+          <span
+            key={i}
+            aria-hidden
+            className={cn('pointer-events-none absolute top-[54%] h-0 w-0 transition-opacity duration-300', i === 0 || (answered && i <= step) ? 'opacity-100' : 'opacity-0')}
+            style={{ left: `${pct(n)}%` }}
+          >
+            <Sprite name="lily-pad" size={34} className="absolute -left-[17px] -top-[10px] h-[34px] w-[34px]" />
+          </span>
+        ))}
+        {/* The flag shows only when the frog has landed on the answer. */}
+        <span aria-hidden className={cn('pointer-events-none absolute top-[54%] h-0 w-0 transition-opacity duration-300', arrived ? 'opacity-100' : 'opacity-0')} style={{ left: `${pct(stops[last])}%` }}>
+          <Sprite name="finish-flag" size={40} className="absolute -top-[52px] left-3 h-10 w-10 origin-bottom-left motion-ok:animate-gx-maths-wave" />
+        </span>
+        <span aria-hidden className="pointer-events-none absolute inset-x-0 top-[54%] h-0 motion-ok:transition-transform motion-ok:duration-500 motion-ok:ease-in-out" style={{ transform: `translateX(${frogAt}%)` }}>
+          <span key={step} className={cn('absolute -left-7 h-14 w-14', step > 0 && 'motion-ok:animate-gx-maths-hop')} style={{ top: -(FROG_PX - 4) }}>
+            <span className={cn('absolute inset-0', wrong && answered && step === 0 && 'motion-ok:animate-gx-maths-wobble')}>
+              <Sprite name="frog" size={FROG_PX} className={cn('absolute inset-0 h-full w-full', hopping && 'opacity-0', !answered && 'motion-ok:animate-gx-bob')} />
+              <Sprite name="frog-jump" size={FROG_PX} className={cn('absolute inset-0 h-full w-full', !hopping && 'opacity-0')} />
+            </span>
+            {arrived && status === 'right' && (
+              <>
+                <GxSparkles />
+                <Sprite name="star" size={28} className="absolute -top-6 left-3.5 h-7 w-7 motion-ok:animate-gx-star-pop" />
+              </>
+            )}
+          </span>
+        </span>
+      </div>
+    </div>
   );
 }
 
@@ -60,7 +139,7 @@ function RoundView({ session }: { session: GameSession<NumberLineRound> }) {
           </li>
         ))}
       </ul>
-      <NumberLine round={round} showJumps={!asking} label={lineLabel} />
+      <FrogScene round={round} status={status} label={lineLabel} />
       {session.extraChallenge && asking && <TimerBar key={session.index} seconds={30} onElapsed={() => session.answer(false, why)} />}
       <p className="text-xl font-bold text-ink">{t('games.maths.numberLineJump.question')}</p>
       {round.mode === 'choose' ? (
