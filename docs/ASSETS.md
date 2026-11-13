@@ -46,6 +46,8 @@ Rendered by `BadgeImage` (`src/components/ui/BadgeImage.tsx`) on Badges, Home "M
 ## Games (`/student/games`)
 No new raster art was added. Game thumbnails are a token-coloured SVG (`GameThumb`) with the existing subject icon on top. A game may set `thumbnail.image` (e.g. `public/games/<id>.png`, a NEW subfolder; none exist yet) and it is only used if it loads. New badges `first-game`, `game-five`, `new-subject`, `every-subject` have no Flow PNG yet (the vector medal `BadgeArt` shows; add `public/badges/<id>.png` to override). Sounds are generated with Web Audio (no audio files), off by default.
 
+### ICT and Mixed games (agent/games-ict)
+No raster art. In-game pictures are token-coloured SVG components in `src/features/student/games/ict/ictArt.tsx` (key caps and a mini keyboard, six shapes, eight computer parts, four flowchart symbols, file and folder icons), all decorative (`aria-hidden`) with the meaning in the text beside them. Thumbnails stay the generic `GameThumb` SVG plus the subject icon; none of these games sets `thumbnail.image`.
 ## Sinhala games pictures
 `src/features/student/games/sinhala/pictures.tsx` draws 19 simple original pictures (tree, flower, book, sun, moon, star, cat, bird, house, ball, mango, umbrella, cup, fish, river, mountains, grass, ladder, bell) as inline SVG with Tailwind colour tokens only (no hex, no files, no public/ assets). They are hand-made and plain, not Flow art; they carry a translated `aria-label` (`games.sinhala.pic.*`) where the picture matters.
 ### Science games art (code-drawn, no files)
