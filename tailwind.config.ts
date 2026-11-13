@@ -142,6 +142,29 @@ const gxSinhalaAnimation = {
 };
 // ---- end Sinhala games art motion ----
 
+// ---- ICT game art motion (gx-ict-*). Gentle, finite, transform/opacity only. Gate in markup with `motion-ok:`. ----
+const gxIctKeyframes = {
+  'gx-ict-nod': { '0%,100%': { transform: 'translateY(0) rotate(0deg)' }, '30%': { transform: 'translateY(-3px) rotate(-3deg)' }, '65%': { transform: 'translateY(0) rotate(2deg)' } },
+  'gx-ict-whisker': { '0%,100%': { transform: 'rotate(0deg)' }, '25%': { transform: 'rotate(-3deg)' }, '55%': { transform: 'rotate(2.5deg)' }, '80%': { transform: 'rotate(-1deg)' } },
+  'gx-ict-point': { '0%,100%': { transform: 'translateX(0)' }, '50%': { transform: 'translateX(6px)' } },
+  'gx-ict-wobble': { '0%,100%': { transform: 'rotate(0deg)' }, '25%': { transform: 'rotate(-4deg)' }, '60%': { transform: 'rotate(3deg)' }, '85%': { transform: 'rotate(-1deg)' } },
+  'gx-ict-shut': { '0%': { transform: 'translateY(-6px) scale(1.06)' }, '55%': { transform: 'translateY(1px) scale(0.96)' }, '100%': { transform: 'translateY(0) scale(1)' } },
+  'gx-ict-ring': { '0%': { opacity: '0.7', transform: 'scale(0.7)' }, '100%': { opacity: '0', transform: 'scale(1.35)' } },
+  'gx-ict-pulse': { '0%,100%': { transform: 'scale(1)' }, '50%': { transform: 'scale(1.08)' } },
+  'gx-ict-flow': { '0%': { opacity: '0', transform: 'translateX(-8px)' }, '40%': { opacity: '1' }, '100%': { opacity: '0', transform: 'translateX(8px)' } },
+};
+const gxIctAnimation = {
+  'gx-ict-nod': 'gx-ict-nod 3.6s ease-in-out 2',
+  'gx-ict-whisker': 'gx-ict-whisker 3.2s ease-in-out 2',
+  'gx-ict-point': 'gx-ict-point 1.4s ease-in-out 3',
+  'gx-ict-wobble': 'gx-ict-wobble 1.6s ease-in-out 2',
+  'gx-ict-shut': 'gx-ict-shut 520ms cubic-bezier(0, 0, 0.2, 1) 1',
+  'gx-ict-ring': 'gx-ict-ring 900ms ease-out 1 forwards',
+  'gx-ict-pulse': 'gx-ict-pulse 1.2s ease-in-out 2',
+  'gx-ict-flow': 'gx-ict-flow 1.2s ease-in-out 3',
+};
+// ---- end ICT game art motion ----
+
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   // Hover styles only where a real hover exists (no sticky hover on touch).
@@ -199,6 +222,7 @@ export default {
         ...gxKeyframes,
         ...gxMathsKeyframes,
         ...gxSinhalaKeyframes,
+        ...gxIctKeyframes,
       },
       animation: {
         'fade-in': 'fade-in 200ms cubic-bezier(0, 0, 0.2, 1) backwards',
@@ -215,6 +239,7 @@ export default {
         ...gxAnimation,
         ...gxMathsAnimation,
         ...gxSinhalaAnimation,
+        ...gxIctAnimation,
       },
       fontFamily: {
         sans: ['Inter', 'Noto Sans Sinhala', 'Noto Sans Tamil', 'system-ui', 'sans-serif'],

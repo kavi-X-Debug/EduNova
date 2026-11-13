@@ -5,7 +5,9 @@ import { focusRing } from '@/components/ui/cn';
 import { useGt as useT } from '@/features/student/games/useGt';
 import type { GameComponentProps } from '@/types';
 import { DragDropZone, RoundFeedback, playSound, useGameSession, type GameSession } from '../engine';
+import { Sprite } from '../engine/Sprite';
 import { ShapeIcon } from './ictArt';
+import { MouseTrail } from './ictSprites';
 import { makeMouseRound, ROUNDS_PER_PLAY, type MouseRound, type Shape } from './mouseMaze.generator';
 
 const P = 'games.ict.mouseMaze';
@@ -37,6 +39,7 @@ function RoundView({ session }: { session: GameSession<MouseRound> }) {
 
   return (
     <div className="flex flex-col gap-5">
+      <MouseTrail index={session.index} total={session.total} status={status} />
       <p className="flex items-center gap-3 text-xl font-bold text-ink">
         <MousePointerClick aria-hidden className="h-7 w-7 shrink-0 text-brand-600" />
         <span>{instruction}</span>
@@ -67,7 +70,7 @@ function RoundView({ session }: { session: GameSession<MouseRound> }) {
                   pick(s, e.timeStamp);
                 }}
                 className={cn(
-                  'flex min-h-28 flex-col items-center justify-center gap-2 rounded-xl border-2 bg-surface px-3 py-4 text-lg font-bold text-ink transition duration-fast ease-standard motion-ok:active:scale-[0.97]',
+                  'relative flex min-h-28 flex-col items-center justify-center gap-2 rounded-xl border-2 bg-surface px-3 py-4 text-lg font-bold text-ink transition duration-fast ease-standard motion-ok:active:scale-[0.97]',
                   focusRing,
                   !asking && isTarget ? 'border-success-700 bg-success-50' : 'border-brand-100 hover:border-brand-500 hover:bg-brand-50',
                   !asking && !isTarget && 'opacity-60',
@@ -75,6 +78,7 @@ function RoundView({ session }: { session: GameSession<MouseRound> }) {
               >
                 <ShapeIcon shape={s} className="h-14 w-14" />
                 <span>{name(s)}</span>
+                {!asking && isTarget && <Sprite name="cursor" size={36} className="absolute -bottom-2 -right-2 motion-ok:animate-gx-ict-point" />}
               </button>
             );
           })}

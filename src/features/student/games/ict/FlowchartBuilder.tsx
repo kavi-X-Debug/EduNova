@@ -3,6 +3,7 @@ import { useGt as useT } from '@/features/student/games/useGt';
 import type { GameComponentProps } from '@/types';
 import { BigChoiceButton, ChoiceGroup, RoundFeedback, useGameSession, type GameSession } from '../engine';
 import { FlowSymbolIcon } from './ictArt';
+import { DiamondBuddy, FlowStrip } from './ictSprites';
 import { makeFlowRound, ROUNDS_PER_PLAY, SYMBOLS, type FlowRound, type FlowSymbol } from './flowchartBuilder.generator';
 import { SortBoard } from './SortBoard';
 
@@ -17,6 +18,7 @@ function OrderView({ session, round }: { session: GameSession<FlowRound>; round:
   const answers = Object.fromEntries(round.order.map((n, i) => [String(n), `z${i}`]));
   return (
     <div className="flex flex-col gap-4">
+      <FlowStrip count={round.order.length} status={session.status} />
       <p className="rounded-xl border-2 border-brand-100 bg-brand-50 px-4 py-3 text-xl font-bold text-ink">{t(`${P}.taskIs`, { task: t(`${P}.task.${round.task}.title`) })}</p>
       <p className="text-lg font-bold text-brand-700">{t(`${P}.startHere`)}</p>
       <SortBoard
@@ -41,7 +43,10 @@ function SymbolView({ session, round }: { session: GameSession<FlowRound>; round
   return (
     <div className="flex flex-col gap-4">
       <p className="text-xl font-bold text-ink">{t(`${P}.qSymbol`)}</p>
-      <p className="rounded-xl border-2 border-brand-600 bg-surface px-4 py-4 text-center text-2xl font-bold text-ink">{t(`${P}.item.${round.item}`)}</p>
+      <div className="flex items-center gap-3">
+        <DiamondBuddy status={session.status} />
+        <p className="min-w-0 flex-1 rounded-xl border-2 border-brand-600 bg-surface px-4 py-4 text-center text-2xl font-bold text-ink">{t(`${P}.item.${round.item}`)}</p>
+      </div>
       <ChoiceGroup label={t(`${P}.qSymbol`)} columns={1}>
         {SYMBOLS.map((s) => (
           <BigChoiceButton
