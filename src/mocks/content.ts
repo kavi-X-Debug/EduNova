@@ -139,54 +139,7 @@ export const WELLBEING_EN: Record<string, string> = {
 };
 export const WELLBEING_KEYS = Object.keys(WELLBEING_EN);
 
-// ---------- Tutor knowledge ----------
-export interface TutorTopic {
-  match: RegExp;
-  text: string;
-  sources: { title: string; ref: string }[];
-}
-export const TUTOR_TOPICS: TutorTopic[] = [
-  {
-    match: /fraction|භාග|பின்ன/i,
-    text: 'To add fractions with different denominators, first find a common denominator. For 1/2 + 1/4, change 1/2 to 2/4, then add the numerators: 2/4 + 1/4 = 3/4.',
-    sources: [{ title: 'Grade 6 Mathematics, Unit 3: Fractions', ref: 'curriculum:g6-maths-u3' }, { title: 'EduNova worked examples: adding fractions', ref: 'lib:frac-add-01' }],
-  },
-  {
-    match: /equation|solve|algebra|සමීකරණ|சமன்பாடு/i,
-    text: 'To solve a linear equation, do the same operation on both sides to get x alone. For 2x + 3 = 11: subtract 3 to get 2x = 8, then divide by 2 to get x = 4.',
-    sources: [{ title: 'Grade 8 Mathematics, Unit 5: Linear equations', ref: 'curriculum:g8-maths-u5' }],
-  },
-  {
-    match: /pythag|triangle|hypotenuse/i,
-    text: 'In a right-angled triangle, the square of the hypotenuse equals the sum of the squares of the other two sides: c² = a² + b². With sides 3 and 4, c² = 9 + 16 = 25, so c = 5.',
-    sources: [{ title: 'Grade 9 Mathematics, Unit 2: Pythagoras theorem', ref: 'curriculum:g9-maths-u2' }],
-  },
-  {
-    match: /cell|nucleus|photosynth|plant/i,
-    text: 'The cell is the basic unit of living things. The nucleus controls the cell\'s activities, while in plant cells the chloroplasts capture light for photosynthesis.',
-    sources: [{ title: 'Grade 7 Science, Unit 1: Cells and living things', ref: 'curriculum:g7-science-u1' }],
-  },
-  {
-    match: /force|newton|motion/i,
-    text: 'A force is a push or a pull, measured in newtons (N). A net force on an object changes its speed or direction of motion.',
-    sources: [{ title: 'Grade 8 Science, Unit 4: Forces and motion', ref: 'curriculum:g8-science-u4' }],
-  },
-  {
-    match: /tense|grammar|verb|past/i,
-    text: 'The simple past tense describes finished actions. Regular verbs add -ed (walk to walked); many common verbs are irregular (go to went, see to saw).',
-    sources: [{ title: 'Grade 6 English, Unit 2: Tenses', ref: 'curriculum:g6-english-u2' }],
-  },
-  {
-    match: /flowchart|algorithm|program|code/i,
-    text: 'An algorithm is a clear set of steps to solve a problem. A flowchart draws those steps: ovals for start/end, rectangles for actions, and diamonds for decisions.',
-    sources: [{ title: 'Grade 8 ICT, Unit 3: Algorithms and flowcharts', ref: 'curriculum:g8-ict-u3' }],
-  },
-];
-export const TUTOR_FALLBACK: TutorTopic = {
-  match: /./,
-  text: 'Good question. Let us break it into small steps: first write down what you already know, then what the question asks, then try one step at a time. Tell me which step feels unclear and I will explain it.',
-  sources: [{ title: 'EduNova study skills guide: breaking down problems', ref: 'lib:study-skills-01' }],
-};
+// Tutor knowledge lives in ./tutorContent.ts (answers and source titles are per-locale).
 
 // ---------- Curriculum ----------
 export const CURRICULUM: CurriculumDoc[] = [
@@ -211,6 +164,7 @@ export const CURRICULUM: CurriculumDoc[] = [
 ].map(([id, title, subject, grade, status, d]) => ({
   id: id as string,
   title: title as string,
+  titleKey: `curriculum.doc.${id as string}`,
   subject: subject as string,
   grade: grade as number,
   status: status as CurriculumDoc['status'],

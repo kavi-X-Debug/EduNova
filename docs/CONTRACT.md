@@ -37,3 +37,20 @@ Readiness is a band, never a predicted mark. No public leaderboards. Wellbeing s
 
 ## Definition of Done
 Type-check, lint, build pass; no hex outside tokens; pages match Figma at 1440/834/390; keyboard and focus work; loading, empty, error states; note appended to docs/PROGRESS.md; only own folders edited, other needs go to docs/REQUESTS.md.
+
+## Language and user-visible text from services (en / si / ta)
+Rule: **a service never returns pre-rendered English for display.** Anything the user reads must reach the UI as one of:
+1. an i18n key (plus params), rendered with `t()` in the feature (`titleKey`, `promptKey`, `wellbeingPromptKey`, `nextSteps`, audit `action` codes, concept `titleKey`); or
+2. text already written in the requested language, because the service was given `locale` (free text such as AI answers).
+
+Rules of thumb:
+- Names with structure are returned as parts, e.g. `ClassSummary { grade, section }` -> `classLabel(c, t)`; `CurriculumDoc.titleKey` -> `docTitle(d, t)` (`src/lib/displayNames.ts`). The plain `name`/`title` field is an English fallback for backends that only have one string.
+- Person names are data and are shown as stored.
+- Dates/numbers go through `src/lib/date.ts` (`Intl`, `si-LK`/`ta-LK`), never `toLocaleString()` without a locale.
+- New keys go in en, si and ta in the same change; `npm run i18n:check` fails on untranslated (identical-to-English) si/ta values and leftover English words unless listed in `scripts/i18n-allowlist.json`.
+- Terminology follows `docs/I18N-GLOSSARY.md`; strings awaiting native-speaker review are tracked in `docs/I18N-REVIEW.md`.
+
+### AI tutor and language
+`studentService.askTutor(userId, text, locale)` receives the UI language. The returned `TutorMessage.text` **and every `sources[].title`** must be written in `locale` (`TutorMessage.locale` echoes it; the UI sets `lang` on the bubble). `sources` must never be empty. The mock keeps per-locale answers in `src/mocks/tutorContent.ts`.
+For a real LLM: send `locale` to the server; the server's system prompt must say, for example, "Answer in Sinhala (si) / Tamil (ta) / English (en) as requested, using the Sri Lankan school curriculum terms; keep formulas and numerals as-is; cite the retrieved sources; if no source supports the answer say so and do not invent one." Source titles come from the retrieval index: store a title per locale (fall back to English only if none exists, and then still return it). Questions may be typed in any language regardless of `locale`; reply in `locale`.
+Messages already on screen keep the language they were written in when the user switches language (each bubble carries its own `lang`).

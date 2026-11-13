@@ -50,7 +50,7 @@ export interface RevisionItem {
 }
 
 export interface ClassSummary {
-  id: string; name: string; grade: number; studentCount: number;
+  id: string; name: string; /** class letter, e.g. "A"; with grade it forms a localised label (see lib/displayNames) */ section?: string; grade: number; studentCount: number;
   bandCounts: Record<ReadinessBand, number>; weakConceptIds: string[];
 }
 
@@ -61,7 +61,7 @@ export interface StudentRow {
 }
 
 export interface CurriculumDoc {
-  id: string; title: string; subject: string; grade: number;
+  id: string; /** English fallback; UI shows t(titleKey) when present */ title: string; titleKey?: string; subject: string; grade: number;
   status: 'draft' | 'in_review' | 'published'; updatedAt: ISODate;
 }
 
@@ -72,4 +72,6 @@ export interface AuditEvent {
 /** AI answers must always carry sources. */
 export interface TutorMessage {
   id: string; from: 'student' | 'tutor'; text: string; sources: { title: string; ref: string }[];
+  /** language the text and source titles are written in (set by the service from the requested locale) */
+  locale?: Locale;
 }

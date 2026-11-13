@@ -5,7 +5,7 @@ import {
   BarChartWrapper, Button, Card, EmptyState, ErrorState, Input, LoadingState, PageHeader, ReadinessBand, Select,
   TBody, Td, Th, THead, Table, Tr,
 } from '@/components/ui';
-import { BAND_ORDER, bandRank, formatRelative, useAsync } from '@/lib';
+import { BAND_ORDER, bandRank, classLabel, formatRelative, useAsync } from '@/lib';
 import { useLocale } from '@/i18n';
 import { announce } from '@/lib/a11y';
 import { teacherService } from '@/services';
@@ -102,7 +102,7 @@ export default function ClassPage() {
     </Link>
   );
 
-  const title = data?.summary ? data.summary.name : t('teacher.class.title');
+  const title = data?.summary ? classLabel(data.summary, t) : t('teacher.class.title');
 
   return (
     <div>
@@ -131,8 +131,8 @@ export default function ClassPage() {
                   xKey="band"
                   yKey="count"
                   height={180}
-                  summary={bandSummary(data.summary.name, data.summary.bandCounts, t)}
-                  footer={<figcaption className="mt-2 text-sm text-ink-soft">{bandSummary(data.summary.name, data.summary.bandCounts, t)}</figcaption>}
+                  summary={bandSummary(classLabel(data.summary, t), data.summary.bandCounts, t)}
+                  footer={<figcaption className="mt-2 text-sm text-ink-soft">{bandSummary(classLabel(data.summary, t), data.summary.bandCounts, t)}</figcaption>}
                 />
               </Card>
               <Card as="section" title={t('teacher.class.weak.title')}>

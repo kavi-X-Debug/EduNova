@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useRef, useState } from 'react';
 import { BookOpen } from 'lucide-react';
 import { Button, Card, EmptyState, Modal, PageHeader, Select, Table, TBody, Td, Th, THead, Tr, useToast } from '@/components/ui';
-import { formatDate, useAsync } from '@/lib';
+import { docTitle, formatDate, useAsync } from '@/lib';
 import { adminService } from '@/services';
 import type { CurriculumDoc } from '@/types';
 import { AsyncView } from './AsyncView';
@@ -38,10 +38,10 @@ function CurriculumManager({ initial }: { initial: CurriculumDoc[] }) {
     try {
       const saved = await adminService.updateCurriculumStatus(doc.id, status);
       setDocs((xs) => xs.map((d) => (d.id === doc.id ? saved : d)));
-      toast.show({ tone: 'success', message: t('admin.curriculum.toast.success', { title: doc.title, status: statusLabel(status) }) });
+      toast.show({ tone: 'success', message: t('admin.curriculum.toast.success', { title: docTitle(doc, t), status: statusLabel(status) }) });
     } catch {
       setDocs((xs) => xs.map((d) => (d.id === doc.id ? previous : d)));
-      toast.show({ tone: 'danger', message: t('admin.curriculum.toast.error', { title: doc.title }) });
+      toast.show({ tone: 'danger', message: t('admin.curriculum.toast.error', { title: docTitle(doc, t) }) });
     } finally {
       inFlight.current.delete(doc.id);
       setSavingFlag(doc.id, false);
@@ -58,7 +58,7 @@ function CurriculumManager({ initial }: { initial: CurriculumDoc[] }) {
 
   const picker = (d: CurriculumDoc) => (
     <Select
-      label={t('admin.curriculum.statusFor', { title: d.title })}
+      label={t('admin.curriculum.statusFor', { title: docTitle(d, t) })}
       value={d.status}
       disabled={saving.has(d.id)}
       aria-busy={saving.has(d.id) || undefined}
@@ -87,7 +87,7 @@ function CurriculumManager({ initial }: { initial: CurriculumDoc[] }) {
           <TBody>
             {docs.map((d) => (
               <Tr key={d.id}>
-                <Th scope="row" className="font-medium text-ink">{d.title}</Th>
+                <Th scope="row" className="font-medium text-ink">{docTitle(d, t)}</Th>
                 <Td>{subjectLabel(d.subject)}</Td>
                 <Td>{t('common.grade', { grade: d.grade })}</Td>
                 <Td>
@@ -107,7 +107,7 @@ function CurriculumManager({ initial }: { initial: CurriculumDoc[] }) {
         {docs.map((d) => (
           <li key={d.id}>
             <Card className="flex flex-col gap-2">
-              <p className="font-semibold text-ink">{d.title}</p>
+              <p className="font-semibold text-ink">{docTitle(d, t)}</p>
               <p className="text-sm text-ink-soft">
                 {t('admin.curriculum.meta', { subject: subjectLabel(d.subject), grade: t('common.grade', { grade: d.grade }), date: formatDate(d.updatedAt, locale) })}
               </p>
@@ -124,7 +124,7 @@ function CurriculumManager({ initial }: { initial: CurriculumDoc[] }) {
         open={confirm !== null}
         onClose={() => setConfirm(null)}
         title={t('admin.curriculum.publish.title')}
-        description={confirm ? t('admin.curriculum.publish.body', { title: confirm.doc.title }) : undefined}
+        description={confirm ? t('admin.curriculum.publish.body', { title: docTitle(confirm.doc, t) }) : undefined}
         footer={
           <>
             <Button variant="secondary" onClick={() => setConfirm(null)}>
@@ -143,7 +143,7 @@ function CurriculumManager({ initial }: { initial: CurriculumDoc[] }) {
       >
         {confirm && (
           <p className="text-sm text-ink-soft">
-            {t('admin.curriculum.publish.change', { title: confirm.doc.title, from: statusLabel(confirm.doc.status), to: statusLabel('published') })}
+            {t('admin.curriculum.publish.change', { title: docTitle(confirm.doc, t), from: statusLabel(confirm.doc.status), to: statusLabel('published') })}
           </p>
         )}
       </Modal>

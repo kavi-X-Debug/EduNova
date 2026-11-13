@@ -1,0 +1,23 @@
+{
+  "_comment": "Allowlist for scripts/check-i18n.mjs. identicalKeys: si/ta value may equal English (brand, native language names). latinTokens: Latin words allowed inside si/ta text (acronyms, units, brand). latinTokensByKey: extra Latin words allowed only for one key (e.g. an English-subject term the student must learn). Keep this short; every entry needs a reason.",
+  "identicalKeys": [
+    "app.name",
+    "common.language.en",
+    "common.language.si",
+    "common.language.ta"
+  ],
+  "latinTokens": [
+    "EduNova",
+    "Sahayaka",
+    "AI",
+    "XP",
+    "SI",
+    "ICT",
+    "cm",
+    "Rs"
+  ],
+  "latinTokensByKey": {
+    "diagnostic.q-en6-tense.prompt": ["go"],
+    "diagnostic.q-en8-essay.opt2": ["Topic", "sentence"]
+  }
+}

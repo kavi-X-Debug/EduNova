@@ -1,5 +1,6 @@
 import { adminService, teacherService } from '@/services';
-import type { AuditEvent } from '@/types';
+import { classLabel, docTitle } from '@/lib';
+import type { AuditEvent, ClassSummary } from '@/types';
 import { auditActionLabel, type AdminT } from './shared';
 
 export interface AuditRow {
@@ -14,7 +15,8 @@ export interface AuditRow {
 export interface AuditBundle {
   events: AuditEvent[];
   actors: Map<string, string>;
-  targets: Map<string, string>;
+  /** id -> label renderer, so names (class, curriculum) follow the current language */
+  targets: Map<string, (t: AdminT) => string>;
 }
 
 /**
@@ -26,10 +28,10 @@ export interface AuditBundle {
  * resolved target labels, then replace the body below and delete the mock fallback.
  * Any failure degrades to no names, so affected targets render as "Unknown item".
  */
-async function loadClassNames(): Promise<(readonly [string, string])[]> {
+async function loadClassNames(): Promise<ClassSummary[]> {
   try {
     const classes = await teacherService.listClasses('');
-    return classes.map((c) => [c.id, c.name] as const);
+    return classes;
   } catch {
     return [];
   }
@@ -43,10 +45,10 @@ export async function loadAudit(): Promise<AuditBundle> {
     loadClassNames(),
   ]);
   const actors = new Map(users.map((u) => [u.id, u.name]));
-  const targets = new Map<string, string>([
-    ...users.map((u) => [u.id, u.name] as const),
-    ...docs.map((d) => [d.id, d.title] as const),
-    ...classes,
+  const targets = new Map<string, (t: AdminT) => string>([
+    ...users.map((u) => [u.id, () => u.name] as const),
+    ...docs.map((d) => [d.id, (t: AdminT) => docTitle(d, t)] as const),
+    ...classes.map((c) => [c.id, (t: AdminT) => classLabel(c, t)] as const),
   ]);
   return { events, actors, targets };
 }
@@ -55,7 +57,7 @@ const LOCALES = ['en', 'si', 'ta'];
 
 export function toRows(bundle: AuditBundle, t: AdminT): AuditRow[] {
   return bundle.events.map((e) => {
-    let target = bundle.targets.get(e.target);
+    let target = bundle.targets.get(e.target)?.(t);
     if (!target) {
       if (e.target === 'session') target = t('admin.audit.target.session') as string;
       else if (LOCALES.includes(e.target)) target = t(`common.language.${e.target}`) as string;

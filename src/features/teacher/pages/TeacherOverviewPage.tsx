@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Users } from 'lucide-react';
 import { BarChartWrapper, Card, EmptyState, ErrorState, LoadingState, PageHeader } from '@/components/ui';
-import { useAsync } from '@/lib';
+import { classLabel, useAsync } from '@/lib';
 import { teacherService } from '@/services';
 import { useSessionStore } from '@/store';
 import { bandChartData, bandSummary } from '../bands';
@@ -26,18 +26,18 @@ export default function TeacherOverviewPage() {
       {!loading && !error && data && data.length > 0 && (
         <ul className="grid gap-4 lg:grid-cols-2">
           {data.map((c) => {
-            const summary = bandSummary(c.name, c.bandCounts, t);
+            const summary = bandSummary(classLabel(c, t), c.bandCounts, t);
             return (
               <li key={c.id}>
                 <Card as="article" aria-labelledby={`class-${c.id}`} className="h-full">
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div>
-                      <h2 id={`class-${c.id}`} className="text-lg font-semibold text-ink">{c.name}</h2>
+                      <h2 id={`class-${c.id}`} className="text-lg font-semibold text-ink">{classLabel(c, t)}</h2>
                       <p className="text-sm text-ink-soft">
                         {t('teacher.overview.classMeta', { grade: c.grade, count: c.studentCount })}
                       </p>
                     </div>
-                    <Link to={`classes/${c.id}`} className={linkCls} aria-label={t('teacher.overview.openClassNamed', { name: c.name })}>
+                    <Link to={`classes/${c.id}`} className={linkCls} aria-label={t('teacher.overview.openClassNamed', { name: classLabel(c, t) })}>
                       {t('teacher.overview.openClass')}
                     </Link>
                   </div>

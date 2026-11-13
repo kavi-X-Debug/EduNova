@@ -8,7 +8,8 @@ import { INTERVALS } from './learning';
 import { DAY } from './rng';
 import { clone, orEmpty, simulate } from './config';
 import { CONCEPTS } from './concepts';
-import { CURRICULUM, QUESTIONS, TUTOR_FALLBACK, TUTOR_TOPICS, isCorrect } from './content';
+import { CURRICULUM, QUESTIONS, isCorrect } from './content';
+import { TUTOR_FALLBACK, TUTOR_TOPICS } from './tutorContent';
 import { buildExamReports, buildMastery, buildPath, buildQuests, buildRevisionQueue, conceptsForGrade } from './learning';
 import { ALL_USERS, CLASS_DEFS, TEACHERS, buildAuditEvents, buildClassSummary, buildStudentRows, demoUserFor, findUser } from './people';
 
@@ -100,12 +101,15 @@ export const mockStudentService: StudentService = {
   getLearningPath: (userId) =>
     simulate(() => clone(orEmpty(memo(pathStore, userId, () => buildPath(userId, masteryOf(userId)))))),
 
-  askTutor: (_userId, text) =>
+  askTutor: (_userId, text, locale) =>
     simulate(() => {
-      const topic = TUTOR_TOPICS.find((t) => t.match.test(text)) ?? TUTOR_FALLBACK;
+      // Answer and source titles come back in the requested language (en fallback).
+      const lang = locale in TUTOR_FALLBACK ? locale : 'en';
+      const topic = TUTOR_TOPICS.find((t) => t.match.test(text));
+      const answer = topic ? topic.answers[lang] : TUTOR_FALLBACK[lang];
       // Contract: AI answers ALWAYS carry sources.
-      const sources = topic.sources.length ? topic.sources : TUTOR_FALLBACK.sources;
-      return { id: `tm-${Date.now()}`, from: 'tutor' as const, text: topic.text, sources: clone(sources) };
+      const sources = answer.sources.length ? answer.sources : TUTOR_FALLBACK[lang].sources;
+      return { id: `tm-${Date.now()}`, from: 'tutor' as const, text: answer.text, sources: clone(sources), locale: lang };
     }),
 
   listExamReports: (userId) =>
