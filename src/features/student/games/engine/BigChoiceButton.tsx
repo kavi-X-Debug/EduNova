@@ -43,7 +43,7 @@ export function BigChoiceButton({ children, onClick, state = 'idle', disabled, l
     >
       {state === 'right' && <Check aria-hidden className="h-6 w-6 shrink-0" />}
       {state === 'wrong' && <Heart aria-hidden className="h-6 w-6 shrink-0" />}
-      <span>{children}</span>
+      <span className="min-w-0 break-words">{children}</span>
       {state === 'right' && <span className="sr-only">{t('games.choice.right')}</span>}
       {state === 'wrong' && <span className="sr-only">{t('games.choice.wrong')}</span>}
     </button>

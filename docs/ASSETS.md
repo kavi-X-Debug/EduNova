@@ -48,3 +48,12 @@ No new raster art was added. Game thumbnails are a token-coloured SVG (`GameThum
 
 ### ICT and Mixed games (agent/games-ict)
 No raster art. In-game pictures are token-coloured SVG components in `src/features/student/games/ict/ictArt.tsx` (key caps and a mini keyboard, six shapes, eight computer parts, four flowchart symbols, file and folder icons), all decorative (`aria-hidden`) with the meaning in the text beside them. Thumbnails stay the generic `GameThumb` SVG plus the subject icon; none of these games sets `thumbnail.image`.
+## Sinhala games pictures
+`src/features/student/games/sinhala/pictures.tsx` draws 19 simple original pictures (tree, flower, book, sun, moon, star, cat, bird, house, ball, mango, umbrella, cup, fish, river, mountains, grass, ladder, bell) as inline SVG with Tailwind colour tokens only (no hex, no files, no public/ assets). They are hand-made and plain, not Flow art; they carry a translated `aria-label` (`games.sinhala.pic.*`) where the picture matters.
+### Science games art (code-drawn, no files)
+All pictures in `src/features/student/games/science/art.tsx` are code: token-coloured SVG (`fill-badge-*`, `stroke-ink-*`, no hex) and lucide icons. Nothing is loaded from `public/`, nothing can fail to load.
+- `MagnetPair`: two bar magnets, poles printed as the letters N and S (colour is never the only clue). Magnet Lab.
+- `CircuitSvg`: battery, switch, bulb and wire loop; missing parts are dashed gaps; the bulb glows (rays, not flashing) only after the answer. Electric Circuit Builder. Small battery only; the game shows a safety line.
+- `ShadowScene` (Light and Shadows) and `WaterScene` (Water Cycle Order): small decorative scenes (`aria-hidden`).
+- `Glyph`: one lucide icon per item (nail, drum, deer, ...), always shown with the item's name. Some are approximate (a deer uses the rabbit icon, an elephant a generic shape, most birds the same bird), so the written name is what carries the meaning. These are placeholders until real illustrations exist.
+- Game thumbnails stay the shared `GameThumb` SVG plus the Science subject icon; no `public/games/*.png` was added.
