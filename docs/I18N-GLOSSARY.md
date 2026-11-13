@@ -35,7 +35,7 @@ Core terms used in `src/i18n/locales/*.json`, the tutor mock (`src/mocks/tutorCo
 | Audit log | විගණන සටහන | தணிக்கைப் பதிவு |
 | Numerator / denominator | ලවය / හරය | தொகுதி / பகுதி |
 | Hypotenuse | කර්ණය | செம்பக்கம் |
-| Flowchart / algorithm | ගැලීම් සටහන / ඇල්ගොරිතම | பாய்வுப்படம் / படிமுறை |
+| Flowchart / algorithm | ගැලීම් සටහන / ඇල්ගොරිතම | பாய்ச்சல் கோட்டுப்படம் / படிமுறை |
 | Cell / nucleus | සෛලය / න්‍යෂ්ටිය | கலம் / கருவம் ? |
 
 ## Style rules

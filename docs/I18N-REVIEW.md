@@ -31,3 +31,10 @@ All 7 topic answers plus the fallback, in si and ta, and their source titles (un
 - Native language names in the switcher ("English", "සිංහල", "தமிழ்"), `EduNova Sahayaka`, `AI`, `XP`, `SI`, `cm`.
 - `diagnostic.q-en8-essay.opt2` keeps the English term "(Topic sentence)" because it is the answer to an English-subject question.
 - Digits are Latin in all languages; dates come from `Intl` (`si-LK`, `ta-LK`); verify the month names the browser produces look right on the target devices.
+
+## 6. Grade 6 content added by agent/grade6-mvp (audited, not verified)
+- The 100+ `concept.*`, `diagnostic.*` and `student.path.*` Grade 6 strings were read for consistency; no mixed-in English or placeholder problems were found. Terminology mismatches between agents were unified where cheap (flowchart in Tamil = "பாய்ச்சல் கோட்டுப்படம்", as used by the Grade 6 concept titles).
+- Inconsistency left for a native speaker to decide: Tamil past tense appears as "இறந்த காலம்" (diagnostic, tutor) and "கடந்த காலம்" (`concept.en6-was-it-yesterday`); Sinhala-subject concept titles are the bare lesson title in si but descriptive in ta (e.g. `concept.si6-folk-tale-listening`).
+- Textbook unit names (`unit.*`, 48 keys), curriculum document titles (`curriculum.doc.cur-*`, 16 keys) and tutor source titles/page labels are my translations of printed English titles; the maths and science unit names reuse the `concept.*` wording. Please check book-name conventions ("ගණිතය 6 ශ්‍රේණිය I කොටස", "கணிதம் தரம் 6 பகுதி I") and the Tamil words "திணிவு" (mass), "சுட்டி" (mouse), "காவலி" (insulator).
+- Left in English on purpose (printed book/lesson titles): English-subject unit names ("Unit 3 - Where's Everything?"), the English words inside `concept.en6-*` titles and English-subject exercise options, Sinhala-subject unit names shown in Tamil (already Sinhala).
+- Date fallback (`common.date.*`, `common.relative.*`): used only when the runtime lacks Sinhala ICU data (it did in the Claude desktop browser pane); month abbreviations and "X days ago" phrases need review.
