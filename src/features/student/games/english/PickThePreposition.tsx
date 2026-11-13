@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useGt as useT } from '@/features/student/games/useGt';
 import type { GameComponentProps } from '@/types';
 import { BigChoiceButton, ChoiceGroup, RoundFeedback, TimerBar, useGameSession, type GameSession } from '../engine';
-import { PrepositionScene } from './PrepositionScene';
+import { Sprite } from '../engine/Sprite';
+import { CatBoxScene } from './CatBoxScene';
 import { makePrepositionRound, ROUNDS_PER_PLAY, type PrepositionRound } from './pickThePreposition.generator';
 
 function RoundView({ session }: { session: GameSession<PrepositionRound> }) {
@@ -19,7 +20,11 @@ function RoundView({ session }: { session: GameSession<PrepositionRound> }) {
 
   return (
     <div className="flex flex-col gap-5">
-      {round.scene && <PrepositionScene scene={round.scene} label={t('games.english.pickThePreposition.sceneAlt', { sentence: full })} />}
+      {round.scene ? (
+        <CatBoxScene scene={round.scene} answered={!asking} label={t('games.english.pickThePreposition.sceneAlt', { sentence: full })} />
+      ) : (
+        <Sprite name="cat" size={64} eager className="h-16 w-16 self-start motion-ok:animate-gx-english-hover" />
+      )}
       <p lang="en" className="text-2xl font-bold text-ink">
         {round.before}{' '}
         {asking ? (

@@ -5,12 +5,41 @@ import { focusRing } from '@/components/ui/cn';
 import { useGt as useT } from '@/features/student/games/useGt';
 import type { GameComponentProps } from '@/types';
 import { RoundFeedback, useGameSession, type GameSession } from '../engine';
+import { Sprite } from '../engine/Sprite';
 import { makeSpellingRound, ROUNDS_PER_PLAY, type SpellingRound } from './spellingBee.generator';
 
 const tileCls = cn(
   'flex h-16 min-w-16 items-center justify-center rounded-xl border-2 text-3xl font-bold transition duration-fast ease-standard motion-ok:active:scale-95 motion-reduce:transition-none',
   focusRing,
 );
+
+/**
+ * One honeycomb cell per letter (decorative; the letters are the real text). A cell lights softly when its letter is placed, and the bee
+ * hovers over the latest cell, flying to it with each letter. When the word is right the bee does a happy loop.
+ */
+function HoneyRow({ letters, size, happy }: { letters: string; size: number; happy: boolean }) {
+  const at = Math.max(0, Math.min(letters.length, size) - 1);
+  return (
+    <>
+      {Array.from({ length: size }, (_, i) => {
+        const filled = i < letters.length;
+        return (
+          <span key={i} aria-hidden className="relative flex h-12 w-12 items-center justify-center md:h-16 md:w-16">
+            <span key={filled ? 'on' : 'off'} className={cn('absolute inset-0', filled ? 'motion-ok:animate-gx-english-cell-lit' : 'opacity-30')}>
+              <Sprite name="honeycomb" size={64} className="h-full w-full" />
+            </span>
+            <span className="relative text-2xl font-bold text-ink md:text-3xl">{letters[i] ?? ''}</span>
+            {i === at && (
+              <span key={letters.length} className="pointer-events-none absolute -top-8 left-1/2 -ml-[18px] h-9 w-9 motion-ok:animate-gx-english-flit">
+                <Sprite name="bee" size={36} className={cn('h-9 w-9', happy ? 'motion-ok:animate-gx-english-loop' : 'motion-ok:animate-gx-english-hover')} />
+              </span>
+            )}
+          </span>
+        );
+      })}
+    </>
+  );
+}
 
 function RoundView({ session }: { session: GameSession<SpellingRound> }) {
   const t = useT();
@@ -45,6 +74,7 @@ function RoundView({ session }: { session: GameSession<SpellingRound> }) {
   return (
     <div className="flex flex-col gap-5" onKeyDown={onKeyDown}>
       <div className="flex items-start gap-3 rounded-xl border-2 border-brand-100 bg-brand-50 p-4">
+        <Sprite name="letter-block" size={48} eager className="h-12 w-12" />
         <div className="flex-1">
           <p className="text-lg font-bold text-ink-soft">{t('games.english.spellingBee.clue')}</p>
           <p lang="en" className="text-xl font-bold text-ink">
@@ -57,12 +87,8 @@ function RoundView({ session }: { session: GameSession<SpellingRound> }) {
 
       {round.mode === 'tap' ? (
         <>
-          <div role="group" aria-label={t('games.english.spellingBee.yourWord')} lang="en" className="flex flex-wrap gap-2">
-            {Array.from({ length: size }, (_, i) => (
-              <span key={i} aria-hidden className="flex h-16 min-w-12 items-center justify-center border-b-4 border-brand-500 text-3xl font-bold text-ink">
-                {built[i] ?? ' '}
-              </span>
-            ))}
+          <div role="group" aria-label={t('games.english.spellingBee.yourWord')} lang="en" className="flex flex-wrap gap-1.5 pt-8 md:gap-2">
+            <HoneyRow letters={built} size={size} happy={status === 'right'} />
           </div>
           <p role="status" aria-live="polite" className="sr-only">
             {built ? t('games.english.spellingBee.soFar', { word: built.split('').join(' ') }) : ''}
@@ -91,6 +117,9 @@ function RoundView({ session }: { session: GameSession<SpellingRound> }) {
         </>
       ) : (
         <div className="flex flex-col gap-2">
+          <div aria-hidden lang="en" className="flex flex-wrap gap-1.5 pt-8 md:gap-2">
+            <HoneyRow letters={typed.toLowerCase()} size={size} happy={status === 'right'} />
+          </div>
           <label htmlFor={`spell-${session.index}`} className="text-lg font-bold text-ink">
             {t('games.english.spellingBee.inputLabel')}
           </label>

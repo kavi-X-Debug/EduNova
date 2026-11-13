@@ -165,6 +165,46 @@ const gxIctAnimation = {
 };
 // ---- end ICT game art motion ----
 
+// ---- English games motion (gx-english-*). Gentle, finite, transform/opacity only. Gate in markup with `motion-ok:`. ----
+const gxEnglishKeyframes = {
+  'gx-english-hover': { '0%,100%': { transform: 'translateY(0) rotate(-3deg)' }, '50%': { transform: 'translateY(-5px) rotate(3deg)' } },
+  'gx-english-flit': { '0%': { opacity: '0', transform: 'translate(-48px,-18px) rotate(-14deg)' }, '60%': { opacity: '1', transform: 'translate(5px,2px) rotate(4deg)' }, '100%': { opacity: '1', transform: 'translate(0,0) rotate(0deg)' } },
+  'gx-english-loop': { '0%': { transform: 'translateY(0) rotate(0deg)' }, '35%': { transform: 'translateY(-20px) rotate(-180deg)' }, '70%': { transform: 'translateY(-6px) rotate(-320deg)' }, '100%': { transform: 'translateY(0) rotate(-360deg)' } },
+  'gx-english-cell-lit': { '0%': { opacity: '0.5', transform: 'scale(0.85)' }, '60%': { opacity: '1', transform: 'scale(1.08)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
+  'gx-english-fall': { from: { opacity: '0', transform: 'translateY(-18px) rotate(-5deg)' }, to: { opacity: '1', transform: 'translateY(0) rotate(0deg)' } },
+  'gx-english-snip': { '0%,100%': { transform: 'rotate(0deg)' }, '20%': { transform: 'rotate(-12deg)' }, '40%': { transform: 'rotate(6deg)' }, '60%': { transform: 'rotate(-12deg)' }, '80%': { transform: 'rotate(6deg)' } },
+  'gx-english-glide': { from: { opacity: '0.4', transform: 'translateY(12px) scale(0.96)' }, to: { opacity: '1', transform: 'translateY(0) scale(1)' } },
+  'gx-english-slide-l': { from: { opacity: '0', transform: 'translateX(-30px)' }, to: { opacity: '1', transform: 'translateX(0)' } },
+  'gx-english-slide-r': { from: { opacity: '0', transform: 'translateX(30px)' }, to: { opacity: '1', transform: 'translateX(0)' } },
+  'gx-english-flip': { '0%': { transform: 'perspective(400px) rotateY(0deg)' }, '50%': { transform: 'perspective(400px) rotateY(-70deg) scaleX(0.9)' }, '100%': { transform: 'perspective(400px) rotateY(0deg)' } },
+  'gx-english-ring': { '0%,100%': { transform: 'rotate(0deg)' }, '25%': { transform: 'rotate(-8deg)' }, '50%': { transform: 'rotate(8deg)' }, '75%': { transform: 'rotate(-4deg)' } },
+  'gx-english-turn': { from: { transform: 'rotate(0deg)' }, to: { transform: 'rotate(180deg)' } },
+  'gx-english-snap': {
+    '0%': { opacity: '0', transform: 'translate(34px,-38px) rotate(22deg) scale(1.15)' },
+    '50%': { opacity: '1', transform: 'translate(-2px,1px) rotate(-3deg) scale(1)' },
+    '65%': { opacity: '1', transform: 'translate(0,0) rotate(0deg) scale(1.14)' },
+    '100%': { opacity: '0', transform: 'translate(0,0) rotate(0deg) scale(1)' },
+  },
+  'gx-english-grow': { from: { transform: 'scaleX(0)' }, to: { transform: 'scaleX(1)' } },
+};
+const gxEnglishAnimation = {
+  'gx-english-hover': 'gx-english-hover 3.6s ease-in-out 4',
+  'gx-english-flit': 'gx-english-flit 650ms cubic-bezier(0, 0, 0.2, 1) 1 backwards',
+  'gx-english-loop': 'gx-english-loop 1500ms ease-in-out 1',
+  'gx-english-cell-lit': 'gx-english-cell-lit 500ms cubic-bezier(0, 0, 0.2, 1) 1 backwards',
+  'gx-english-fall': 'gx-english-fall 520ms cubic-bezier(0, 0, 0.2, 1) 1 backwards',
+  'gx-english-snip': 'gx-english-snip 1100ms ease-in-out 1',
+  'gx-english-glide': 'gx-english-glide 380ms cubic-bezier(0, 0, 0.2, 1) 1 backwards',
+  'gx-english-slide-l': 'gx-english-slide-l 480ms cubic-bezier(0, 0, 0.2, 1) 1 backwards',
+  'gx-english-slide-r': 'gx-english-slide-r 480ms cubic-bezier(0, 0, 0.2, 1) 1 backwards',
+  'gx-english-flip': 'gx-english-flip 900ms ease-in-out 1',
+  'gx-english-ring': 'gx-english-ring 900ms ease-in-out 2',
+  'gx-english-turn': 'gx-english-turn 1200ms ease-in-out 1 forwards',
+  'gx-english-snap': 'gx-english-snap 1100ms cubic-bezier(0, 0, 0.2, 1) 1 forwards',
+  'gx-english-grow': 'gx-english-grow 420ms cubic-bezier(0, 0, 0.2, 1) 1 backwards',
+};
+// ---- end English games motion ----
+
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   // Hover styles only where a real hover exists (no sticky hover on touch).
@@ -223,6 +263,7 @@ export default {
         ...gxMathsKeyframes,
         ...gxSinhalaKeyframes,
         ...gxIctKeyframes,
+        ...gxEnglishKeyframes,
       },
       animation: {
         'fade-in': 'fade-in 200ms cubic-bezier(0, 0, 0.2, 1) backwards',
@@ -240,6 +281,7 @@ export default {
         ...gxMathsAnimation,
         ...gxSinhalaAnimation,
         ...gxIctAnimation,
+        ...gxEnglishAnimation,
       },
       fontFamily: {
         sans: ['Inter', 'Noto Sans Sinhala', 'Noto Sans Tamil', 'system-ui', 'sans-serif'],
