@@ -23,11 +23,14 @@ interface State {
   earned: Record<string, string>;
   recallRun: number;
   seen: string[];
+  /** Distinct game subjects played (maths, science, sinhala, english, ict; 'mixed' does not count). */
+  gameSubjects: string[];
 }
 
 const METRIC_KEYS: State['metrics'] = {
   lessons_completed: 0, practice_completed: 0, units_completed: 0, terms_completed: 0, strong_quizzes: 0,
   revision_recall_streak: 0, reviews_completed: 0, tutor_questions: 0, sources_checked: 0, quests_completed: 0, comebacks: 0,
+  games_played: 0, game_subjects: 0,
 };
 
 const dayKey = (d: Date): string => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -62,6 +65,7 @@ function seed(userId: string): State {
     earned: Object.fromEntries(earnedIds.map((id, i) => [id, new Date(Date.now() - (count - i + 1) * DAY).toISOString()])),
     recallRun: 0,
     seen: [],
+    gameSubjects: [],
   };
 }
 
@@ -74,7 +78,7 @@ function load(userId: string): State {
     if (raw) {
       const p = JSON.parse(raw) as Partial<State>;
       const base = seed(userId);
-      s = { ...base, ...p, metrics: { ...METRIC_KEYS, ...p.metrics }, earned: p.earned ?? {}, seen: p.seen ?? [] };
+      s = { ...base, ...p, metrics: { ...METRIC_KEYS, ...p.metrics }, earned: p.earned ?? {}, seen: p.seen ?? [], gameSubjects: p.gameSubjects ?? [] };
     }
   } catch {
     s = null;
@@ -193,6 +197,12 @@ function applyEvent(s: State, e: RewardEvent): number {
     case 'tutor_asked':
       s.metrics.tutor_questions += 1;
       return XP.tutor;
+    case 'game_played': {
+      s.metrics.games_played += 1;
+      if (e.subject !== 'mixed' && !s.gameSubjects.includes(e.subject)) s.gameSubjects.push(e.subject);
+      s.metrics.game_subjects = s.gameSubjects.length;
+      return XP.game;
+    }
     case 'sources_checked':
       if (!once(`source:${e.messageId}`)) return 0;
       s.metrics.sources_checked += 1;

@@ -77,6 +77,12 @@ export function withRewards(base: StudentService, rewards: RewardsService): Stud
       return mission;
     },
 
+    recordGamePlay: async (userId, gameId, input) => {
+      const stat = await base.recordGamePlay(userId, gameId, input);
+      track(userId, async () => ({ type: 'game_played', gameId, subject: input.subject, stars: stat.lastStars }));
+      return stat;
+    },
+
     askTutor: async (userId, text, locale) => {
       const reply = await base.askTutor(userId, text, locale);
       track(userId, async () => ({ type: 'tutor_asked' }));

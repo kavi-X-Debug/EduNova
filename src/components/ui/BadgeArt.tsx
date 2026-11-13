@@ -1,6 +1,6 @@
 import { useId, type ComponentType } from 'react';
 import {
-  Award, Boxes, Brain, CalendarCheck, Flag, Flame, GraduationCap, Layers, Lightbulb, MessageCircleQuestion, Mountain, PenLine, SearchCheck, Sprout, Sunrise, Target,
+  Award, Boxes, Brain, CalendarCheck, Compass, Flag, Flame, Gamepad2, GraduationCap, Layers, Lightbulb, MessageCircleQuestion, Mountain, PenLine, Puzzle, Rocket, SearchCheck, Sprout, Sunrise, Target,
 } from 'lucide-react';
 import { badgeById } from '@/lib/rewards';
 import type { BadgeCategory, BadgeRarity } from '@/types';
@@ -24,6 +24,7 @@ const GLYPHS: Record<string, IconType> = {
   'first-lesson': Sprout, 'practice-pal': PenLine, 'unit-complete': Layers, 'unit-trio': Boxes, 'term-complete': GraduationCap,
   'strong-quiz': Target, 'strong-quiz-3': Award, 'streak-3': Flame, 'streak-7': CalendarCheck, 'first-review': Lightbulb, 'revision-streak': Brain,
   'welcome-back': Sunrise, 'first-question': MessageCircleQuestion, 'source-checker': SearchCheck, 'quest-finisher': Flag, 'quest-trio': Mountain,
+  'first-game': Gamepad2, 'game-five': Puzzle, 'new-subject': Compass, 'every-subject': Rocket,
 };
 
 const r2 = (n: number) => Math.round(n * 100) / 100;

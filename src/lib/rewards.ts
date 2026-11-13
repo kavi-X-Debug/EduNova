@@ -7,7 +7,7 @@ export function levelFromXp(xp: number): number {
   return Math.floor(Math.sqrt(Math.max(0, xp) / 50)) + 1;
 }
 
-export const XP = { lesson: 20, practice: 15, quiz: 30, strongQuizBonus: 20, revision: 15, review: 5, mission: 10, tutor: 5, source: 5 } as const;
+export const XP = { lesson: 20, practice: 15, quiz: 30, strongQuizBonus: 20, revision: 15, review: 5, mission: 10, tutor: 5, source: 5, game: 10 } as const;
 
 /** Badge catalogue. Add a badge here + its i18n keys + a docs/BADGES.md entry (+ optional public/badges/<id>.png). */
 export const BADGES: BadgeDef[] = [
@@ -27,5 +27,9 @@ export const BADGES: BadgeDef[] = [
   { id: 'source-checker', titleKey: tk('rewards.badge.source-checker.title'), descriptionKey: tk('rewards.badge.source-checker.desc'), criteria: { metric: 'sources_checked', target: 1 }, category: 'curiosity', rarity: 'uncommon' },
   { id: 'quest-finisher', titleKey: tk('rewards.badge.quest-finisher.title'), descriptionKey: tk('rewards.badge.quest-finisher.desc'), criteria: { metric: 'quests_completed', target: 1 }, category: 'quests', rarity: 'common' },
   { id: 'quest-trio', titleKey: tk('rewards.badge.quest-trio.title'), descriptionKey: tk('rewards.badge.quest-trio.desc'), criteria: { metric: 'quests_completed', target: 3 }, category: 'quests', rarity: 'rare' },
+  { id: 'first-game', titleKey: tk('rewards.badge.first-game.title'), descriptionKey: tk('rewards.badge.first-game.desc'), criteria: { metric: 'games_played', target: 1 }, category: 'curiosity', rarity: 'common' },
+  { id: 'game-five', titleKey: tk('rewards.badge.game-five.title'), descriptionKey: tk('rewards.badge.game-five.desc'), criteria: { metric: 'games_played', target: 5 }, category: 'habits', rarity: 'uncommon' },
+  { id: 'new-subject', titleKey: tk('rewards.badge.new-subject.title'), descriptionKey: tk('rewards.badge.new-subject.desc'), criteria: { metric: 'game_subjects', target: 2 }, category: 'curiosity', rarity: 'common' },
+  { id: 'every-subject', titleKey: tk('rewards.badge.every-subject.title'), descriptionKey: tk('rewards.badge.every-subject.desc'), criteria: { metric: 'game_subjects', target: 5 }, category: 'curiosity', rarity: 'rare' },
 ];
 export const badgeById = (id: string): BadgeDef | undefined => BADGES.find((b) => b.id === id);

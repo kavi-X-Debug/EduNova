@@ -10,6 +10,7 @@ import { examsRoutes } from '@/features/student/exams/routes';
 import { questsRoutes } from '@/features/student/quests/routes';
 import { revisionRoutes } from '@/features/student/revision/routes';
 import { badgesRoutes } from '@/features/student/badges/routes';
+import { gamesRoutes } from '@/features/student/games/routes';
 import { hubRoutes } from '@/features/student/hubs/routes';
 import { TourHost } from '@/features/student/tour/WelcomeTour';
 import { profileRoutes } from '@/features/profile/routes';
@@ -24,7 +25,7 @@ const studentNav: NavItem[] = [
   { to: '/student', labelKey: 'nav.kids.home', icon: House, end: true },
   { to: '/student/learn', labelKey: 'nav.kids.learn', icon: BookOpen, alsoActiveFor: ['/student/path', '/student/diagnostic', '/student/revision', '/student/exams'] },
   { to: '/student/tutor', labelKey: 'nav.kids.ask', icon: MessageCircleQuestionMark },
-  { to: '/student/play', labelKey: 'nav.kids.play', icon: Gamepad2, alsoActiveFor: ['/student/quests', '/student/badges'] },
+  { to: '/student/play', labelKey: 'nav.kids.play', icon: Gamepad2, alsoActiveFor: ['/student/quests', '/student/badges', '/student/games'] },
   { to: '/student/me', labelKey: 'nav.kids.me', icon: UserRound, alsoActiveFor: ['/student/profile'] },
 ];
 const teacherNav: NavItem[] = [
@@ -60,6 +61,7 @@ export const routes: RouteObject[] = [
             children: [
               ...dashboardRoutes,
               ...hubRoutes,
+              ...gamesRoutes,
               ...diagnosticRoutes,
               ...pathRoutes,
               ...tutorRoutes,

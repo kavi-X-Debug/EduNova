@@ -1,4 +1,4 @@
-import type { Locale, Concept, ExamReport, LearningPathStep, Mastery, Mission, Question, QuizAttempt, Quest, RevisionItem, TutorMessage } from '@/types';
+import type { GamePlayInput, GameStat, Locale, Concept, ExamReport, LearningPathStep, Mastery, Mission, Question, QuizAttempt, Quest, RevisionItem, TutorMessage } from '@/types';
 export interface StudentProfile { grade: number; subjects: string[]; locale: Locale }
 export interface StudentService {
   listConcepts(subject?: string): Promise<Concept[]>;
@@ -16,6 +16,13 @@ export interface StudentService {
   recordReview(userId: string, revisionItemId: string, quality: number): Promise<RevisionItem>;
   /** Marks a learning-path step done and unlocks the next one. Awards XP/badges through the rewards service. */
   completePathStep(userId: string, stepId: string): Promise<LearningPathStep>;
+  /**
+   * Records a finished game. May nudge the mastery BAND of `conceptIds` a little (bounded; never a mark or percent)
+   * and feeds rewards (first game, 5 games, a game in each subject). Returns the updated per-game summary.
+   */
+  recordGamePlay(userId: string, gameId: string, input: GamePlayInput): Promise<GameStat>;
+  /** Games this student has played (private; never compared with other students). */
+  listGameStats(userId: string): Promise<GameStat[]>;
   getProfile(userId: string): Promise<StudentProfile | null>;
   saveProfile(userId: string, profile: StudentProfile): Promise<StudentProfile>;
 }
