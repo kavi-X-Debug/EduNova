@@ -75,6 +75,57 @@ export interface AuditEvent {
   id: string; actorId: string; action: string; target: string; at: ISODate;
 }
 
+// ---------------- Profile (all roles) ----------------
+export interface AvatarChoice {
+  kind: 'initials' | 'preset';
+  /** Preset id (e.g. 'rocket') when kind is 'preset'. Never an uploaded file. */
+  presetId?: string;
+  /** Colour token key (e.g. 'brand', 'success'). Resolved to token classes in the UI. */
+  colour: string;
+}
+export interface NotificationPrefs {
+  reminders: boolean; weeklySummary: boolean; teacherMessages: boolean; productNews: boolean;
+}
+/** Display preferences, stored on this device only (not sent to any service). */
+export interface AccessibilityPrefs { reduceMotion: boolean; largeText: boolean }
+export interface UserProfile {
+  userId: string; displayName: string; avatar: AvatarChoice; notifications: NotificationPrefs;
+}
+export interface PasswordChange { current: string; next: string }
+
+// ---------------- Rewards (students only; private, never ranked) ----------------
+export type BadgeCategory = 'learning' | 'mastery' | 'habits' | 'curiosity' | 'quests';
+export type BadgeRarity = 'common' | 'uncommon' | 'rare' | 'epic';
+/** Counters the reward engine keeps per student; badge criteria compare one counter to a target. */
+export type BadgeMetric =
+  | 'lessons_completed' | 'practice_completed' | 'units_completed' | 'terms_completed'
+  | 'strong_quizzes' | 'best_streak_days' | 'revision_recall_streak' | 'reviews_completed'
+  | 'tutor_questions' | 'sources_checked' | 'quests_completed' | 'comebacks';
+export interface BadgeDef {
+  id: string; titleKey: string; descriptionKey: string;
+  criteria: { metric: BadgeMetric; target: number };
+  category: BadgeCategory; rarity: BadgeRarity;
+}
+export interface BadgeProgress {
+  badge: BadgeDef; earned: boolean; earnedAt?: ISODate; progress: number; target: number;
+}
+export type RewardEvent =
+  | { type: 'path_step_done'; stepId: string; kind: LearningPathStep['kind']; unitComplete: boolean; termComplete: boolean }
+  | { type: 'quiz_submitted'; quizId: string; band: ReadinessBand }
+  | { type: 'review_done'; recalled: boolean }
+  | { type: 'mission_done'; missionId: string; questId?: string; questComplete: boolean; questXp: number }
+  | { type: 'tutor_asked' }
+  | { type: 'sources_checked'; messageId: string };
+export interface RewardSummary {
+  xp: number; level: number; xpIntoLevel: number; xpForNextLevel: number;
+  /** Consecutive days with activity up to today/yesterday; 0 after a break (UI then shows "welcome back"). */
+  currentStreak: number; bestStreak: number; freezes: number; welcomeBack: boolean;
+  badgesEarned: number; badgesTotal: number;
+}
+export interface RewardOutcome {
+  xpGained: number; leveledUp: boolean; level: number; newBadges: BadgeProgress[]; summary: RewardSummary;
+}
+
 /** AI answers must always carry sources. */
 export interface TutorMessage {
   id: string; from: 'student' | 'tutor'; text: string; sources: { title: string; ref: string }[];

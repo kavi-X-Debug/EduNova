@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import {
   AnimatedIllustration,
   Badge,
+  Button,
   Card,
   EmptyState,
   ErrorState,
@@ -18,6 +19,7 @@ import {
 } from '@/components/ui';
 import { useT, type TKey } from '@/i18n';
 import { localiseRef, unitLabel, useAsync } from '@/lib';
+import { announce } from '@/lib/a11y';
 import { i18n } from '@/i18n';
 import type { Locale } from '@/types';
 import { studentService } from '@/services';
@@ -63,6 +65,8 @@ export default function PathPage() {
   const user = useSessionStore((s) => s.user);
   const userId = user?.id ?? '';
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [completingId, setCompletingId] = useState<string | null>(null);
+  const [completeError, setCompleteError] = useState(false);
   const [subjectChoice, setSubjectChoice] = useState<string | null>(null);
   /** Term filter per subject ('' = all terms). Unset means "the term of the current step". */
   const [termBySubject, setTermBySubject] = useState<Record<string, string>>({});
@@ -75,6 +79,22 @@ export default function PathPage() {
     ]);
     return { steps, concepts, mastery };
   }, [userId]);
+
+  /** Marks a step done through the service (which also records XP/badges); announces the result. */
+  const completeStep = async (stepId: string) => {
+    setCompletingId(stepId);
+    setCompleteError(false);
+    try {
+      await studentService.completePathStep(userId, stepId);
+      announce(t('student.path.complete.done'));
+      reload();
+    } catch {
+      setCompleteError(true);
+      announce(t('student.path.complete.error'), 'assertive');
+    } finally {
+      setCompletingId(null);
+    }
+  };
 
   const conceptById = useMemo(() => new Map((data?.concepts ?? []).map((c) => [c.id, c])), [data]);
   const masteryById = useMemo(() => new Map((data?.mastery ?? []).map((m) => [m.conceptId, m])), [data]);
@@ -252,6 +272,15 @@ export default function PathPage() {
 
           {selected.status === 'locked' && (
             <p className="mt-3 rounded-md bg-surface-muted p-3 text-sm text-ink-soft">{t('student.path.locked.hint')}</p>
+          )}
+
+          {(selected.status === 'in_progress' || selected.status === 'next') && (
+            <div className="mt-4">
+              <Button loading={completingId === selected.id} loadingLabel={t('a11y.loading')} onClick={() => void completeStep(selected.id)}>
+                {t('student.path.complete.action')}
+              </Button>
+              {completeError && <p role="alert" className="mt-2 text-sm font-semibold text-danger-700">{t('student.path.complete.error')}</p>}
+            </div>
           )}
 
           {selectedMastery && (

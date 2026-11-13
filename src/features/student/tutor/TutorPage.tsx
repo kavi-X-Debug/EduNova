@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { AlertTriangle, Bot, Send, User as UserIcon } from 'lucide-react';
+import { AlertTriangle, Bot, Check, Send, User as UserIcon } from 'lucide-react';
 import { Banner, Button, Card, ErrorState, PageHeader, SourceList, Textarea, cn, type SourceItem } from '@/components/ui';
 import { tk, useLocale, useT, type TKey } from '@/i18n';
-import { studentService } from '@/services';
+import { rewardsService, studentService } from '@/services';
 import { useSessionStore } from '@/store';
 import type { TutorMessage } from '@/types';
 
@@ -21,6 +21,12 @@ function toSources(m: TutorMessage): SourceItem[] {
 
 function MessageBubble({ message }: { message: TutorMessage }) {
   const t = useT();
+  const userId = useSessionStore((s) => s.user?.id) ?? '';
+  const [checked, setChecked] = useState(false);
+  const markChecked = () => {
+    setChecked(true);
+    void rewardsService.recordEvent(userId, { type: 'sources_checked', messageId: message.id }).catch(() => undefined);
+  };
   const fromTutor = message.from === 'tutor';
   const unsourced = fromTutor && message.sources.length === 0;
   return (
@@ -46,6 +52,11 @@ function MessageBubble({ message }: { message: TutorMessage }) {
           </p>
         )}
         {fromTutor && <SourceList sources={toSources(message)} title={t('student.tutor.sources')} />}
+        {fromTutor && message.sources.length > 0 && (
+          <Button variant="secondary" disabled={checked} onClick={markChecked} leftIcon={checked ? <Check aria-hidden className="h-4 w-4" /> : undefined} className="self-start">
+            {t(checked ? 'student.tutor.sources.checked' : 'student.tutor.sources.check')}
+          </Button>
+        )}
       </article>
       {!fromTutor && (
         <span aria-hidden className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-sunken text-ink-soft">

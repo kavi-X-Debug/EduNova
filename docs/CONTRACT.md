@@ -44,6 +44,16 @@ Readiness is a band, never a predicted mark. No public leaderboards. Wellbeing s
 ## Definition of Done
 Type-check, lint, build pass; no hex outside tokens; pages match Figma at 1440/834/390; keyboard and focus work; loading, empty, error states; note appended to docs/PROGRESS.md; only own folders edited, other needs go to docs/REQUESTS.md.
 
+## Profile and rewards additions
+Types (src/types): `UserProfile`, `AvatarChoice`, `NotificationPrefs`, `AccessibilityPrefs`, `PasswordChange`, `BadgeDef`, `BadgeProgress`, `BadgeCategory`, `BadgeRarity`, `BadgeMetric`, `RewardEvent`, `RewardSummary`, `RewardOutcome`.
+Services (import from `@/services`):
+- `profileService`: `getProfile(userId)`, `updateProfile(userId, patch)`, `changePassword(userId, {current, next})` (MOCK: validates only; rejects `Error('missing'|'weak'|'same')`). Grade/subjects/language for students remain `studentService.getProfile/saveProfile`.
+- `rewardsService` (students only; never lists or compares other students): `getSummary`, `listBadges`, `listRecentBadges(userId, limit?)`, `getBadgeCount(studentId)` (count only, for teachers), `recordEvent(userId, RewardEvent)` returning `RewardOutcome`.
+- `studentService.completePathStep(userId, stepId)` (new). Completion flows (`completePathStep`, `submitQuiz`, `recordReview`, `completeMission`, `askTutor`) record reward events in the background via `withRewards` in `src/services/rewardHooks.ts`; a real backend should award server-side and return/push `RewardOutcome`. `onRewardOutcome(listener)` is how the UI hears about new badges.
+Badge catalogue: `BADGES` in `src/lib/rewards.ts`; artwork `public/badges/<id>.png` is optional (see docs/BADGES.md).
+Local display prefs (reduce motion, larger text): `useA11yPrefsStore` in `src/store`; `usePrefersReducedMotion()` honours them.
+Educational safety for rewards: no leaderboards or rankings, rewards visible only to the student (teacher sees a count), no loss-aversion or streak-shame wording, wellbeing never tied to rewards, mastery remains a band.
+
 ## Language and user-visible text from services (en / si / ta)
 Rule: **a service never returns pre-rendered English for display.** Anything the user reads must reach the UI as one of:
 1. an i18n key (plus params), rendered with `t()` in the feature (`titleKey`, `promptKey`, `wellbeingPromptKey`, `nextSteps`, audit `action` codes, concept `titleKey`); or

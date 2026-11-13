@@ -14,6 +14,8 @@ export interface StudentService {
   getRevisionQueue(userId: string): Promise<RevisionItem[]>;
   /** quality 0-5 (>=3 = recalled). Reschedules by spaced interval; returns the updated item. */
   recordReview(userId: string, revisionItemId: string, quality: number): Promise<RevisionItem>;
+  /** Marks a learning-path step done and unlocks the next one. Awards XP/badges through the rewards service. */
+  completePathStep(userId: string, stepId: string): Promise<LearningPathStep>;
   getProfile(userId: string): Promise<StudentProfile | null>;
   saveProfile(userId: string, profile: StudentProfile): Promise<StudentProfile>;
 }
