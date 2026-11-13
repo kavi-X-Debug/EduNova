@@ -1,273 +1,250 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { Hand, MessageCircle, RefreshCw } from 'lucide-react';
+import { Award, CircleCheck, Circle, Play, RefreshCw, Rocket } from 'lucide-react';
 import {
-  AnimatedIllustration,
-  Badge,
+  BadgeImage,
+  BigActionButton,
+  ButtonLink,
+  Button,
   Card,
-  EmptyState,
-  ErrorState,
+  HelpBubble,
   LoadingState,
-  MasteryRing,
-  PageHeader,
-  ProgressBar,
-  ReadinessBand,
+  Mascot,
+  MascotMessage,
   cn,
 } from '@/components/ui';
-import { averageLevel, bandFromLevel, useAsync, type AsyncState } from '@/lib';
-import { studentService } from '@/services';
+import { useTranslation } from 'react-i18next';
+import { useAsync } from '@/lib';
+import { rewardsService, studentService } from '@/services';
 import { useSessionStore } from '@/store';
-import type { ReadinessBand as ReadinessBandName } from '@/types';
+import type { LearningPathStep } from '@/types';
 import { countReadyNow } from './revisionDue';
-import { RewardsCard } from '../badges/RewardsCard';
+import { resolveTodaysPlan } from './todaysPlan';
 
-/** Ring arc is quantised to the band so it cannot encode a precise score. */
-const BAND_ARC: Record<ReadinessBandName, number> = { building: 0.25, developing: 0.5, secure: 0.75, strong: 1 };
-
-const linkBtn = (primary: boolean) =>
-  cn(
-    'inline-flex min-h-[44px] items-center justify-center rounded-md border px-4 py-2 text-sm font-semibold outline-none transition-colors duration-fast ease-standard focus-visible:shadow-focus',
-    primary ? 'fx-shine border-transparent bg-brand-600 text-surface hover:bg-brand-700' : 'border-line-strong bg-surface text-ink hover:bg-surface-sunken',
-  );
-
-interface BlockProps<T> {
-  title: string;
-  state: AsyncState<T>;
-  isEmpty: (d: T) => boolean;
-  emptyText: string;
-  emptyAction?: ReactNode;
-  errorText: string;
-  className?: string;
-  /** Card lifts and glows on hover/focus (use when the card holds a link). */
-  interactive?: boolean;
-  spotlight?: boolean;
-  children: (d: T) => ReactNode;
-}
-
-/** One dashboard card with its own loading, empty and error states. */
-function Block<T>({ title, state, isEmpty, emptyText, emptyAction, errorText, className, interactive, spotlight, children }: BlockProps<T>) {
-  const { t } = useTranslation();
-  let content: ReactNode;
-  if (state.loading && state.data === undefined) content = <LoadingState label={t('a11y.loading')} lines={3} />;
-  else if (state.error) content = <ErrorState description={errorText} onRetry={state.reload} retryLabel={t('common.action.retry')} className="p-4" />;
-  else if (state.data === undefined || isEmpty(state.data)) {
-    content = <EmptyState title={emptyText} action={emptyAction} className="p-4" />;
-  } else content = children(state.data);
-  return (
-    <Card as="section" interactive={interactive} spotlight={spotlight} className={className} aria-label={title} title={title}>
-      {content}
-    </Card>
-  );
-}
-
+/** Home for a Grade 6 child: one big "Today's plan" card, one Start button, two small peeks. */
 export default function DashboardPage() {
   const { t } = useTranslation();
   const user = useSessionStore((s) => s.user);
   const userId = user?.id ?? '';
+  const firstName = (user?.name ?? '').trim().split(/\s+/)[0] ?? '';
 
-  const [now] = useState(() => Date.now());
   const path = useAsync(() => studentService.getLearningPath(userId), [userId]);
-  const mastery = useAsync(async () => {
-    const [m, c] = await Promise.all([studentService.getMastery(userId), studentService.listConcepts()]);
-    return { m, c };
-  }, [userId]);
-  const revision = useAsync(() => studentService.getRevisionQueue(userId), [userId]);
-  const quests = useAsync(() => studentService.listQuests(userId), [userId]);
-  const exams = useAsync(() => studentService.listExamReports(userId), [userId]);
-
-  const bySubject = useMemo(() => {
-    if (!mastery.data) return [];
-    const { m, c } = mastery.data;
-    const subjects = new Map<string, number[]>();
-    for (const item of m) {
-      const subject = c.find((x) => x.id === item.conceptId)?.subject;
-      if (subject) subjects.set(subject, [...(subjects.get(subject) ?? []), item.level]);
-    }
-    return Array.from(subjects, ([subject, levels]) => {
-      const level = averageLevel(levels.map((level) => ({ level })));
-      return { subject, level, count: levels.length, band: bandFromLevel(level) };
-    });
-  }, [mastery.data]);
-
-  const firstName = (user?.name ?? '').split(' ')[0];
-  const next = path.data?.find((s) => s.status === 'in_progress') ?? path.data?.find((s) => s.status === 'next');
-  const nextSubject = next && mastery.data?.c.find((x) => x.id === next.conceptId)?.subject;
-  const done = path.data?.filter((s) => s.status === 'done').length ?? 0;
-  const dueCount = countReadyNow(revision.data ?? [], now);
-  const activeQuest = quests.data?.find((q) => q.status === 'open');
-  const latestExam = exams.data && [...exams.data].sort((a, b) => b.date.localeCompare(a.date))[0];
+  const [now] = useState(() => Date.now());
+  const plan = useMemo(() => (path.data ? resolveTodaysPlan(userId, path.data) : undefined), [path.data, userId]);
 
   return (
-    <div>
-      <PageHeader
-        title={
-          <>
-            {t('student.dashboard.greeting', { name: firstName })}
-            {/* Decorative: waves once on arrival; static under reduced motion. */}
-            <Hand aria-hidden className="ms-2 inline-block h-6 w-6 origin-[70%_80%] align-[-2px] text-accent-500 motion-ok:animate-fx-wave md:h-7 md:w-7" />
-          </>
-        }
-        description={t('student.dashboard.subtitle')}
-      />
+    <div className="flex flex-col gap-6">
+      <Card as="section" raised aria-labelledby="home-plan-title" className="relative overflow-hidden border-brand-100 bg-gradient-to-b from-brand-50 to-surface">
+        {path.loading && !path.data ? (
+          <LoadingState label={t('a11y.loading')} lines={4} />
+        ) : path.error ? (
+          <PlanError onRetry={path.reload} />
+        ) : !plan || (plan.steps.length === 0 && !path.data?.some((s) => s.status === 'done')) ? (
+          <PlanEmpty />
+        ) : (
+          <PlanBody plan={plan} firstName={firstName} />
+        )}
+      </Card>
 
-      <div className="stagger grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Block
-          title={t('student.dashboard.nextStep.title')}
-          state={path}
-          isEmpty={(d) => d.length === 0 || !next}
-          emptyText={t('student.dashboard.empty')}
-          emptyAction={<Link to="/student/diagnostic" className={linkBtn(true)}>{t('student.diagnostic.start')}</Link>}
-          errorText={t('student.dashboard.error')}
-          className="md:col-span-2 lg:col-span-2"
-          interactive
-          spotlight
-        >
-          {(steps) =>
-            next && (
-              <div className="flex flex-col gap-4 md:flex-row md:items-center">
-                <AnimatedIllustration name="learning-path" alt={t('student.dashboard.nextStep.alt')} float className="aspect-[4/3] h-auto w-full max-w-xs shrink-0 md:w-48" />
-                <div className="flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    {nextSubject && <Badge tone="neutral">{t(`subject.${nextSubject}`)}</Badge>}
-                    <Badge tone="brand">{t(`student.path.step.${next.kind}`)}</Badge>
-                    <span className="text-sm text-ink-soft">{t('student.path.estimate', { minutes: next.estimatedMinutes })}</span>
-                  </div>
-                  <p className="mt-2 text-xl font-semibold text-ink">{t(`concept.${next.conceptId}`)}</p>
-                  <p className="mt-3 text-sm text-ink-soft">{t('student.path.progress.summary', { done, total: steps.length })}</p>
-                  <ProgressBar className="mt-2" value={(done / steps.length) * 100} label={t('student.dashboard.progress.title')} />
-                  <Link to="/student/path" className={cn(linkBtn(true), 'mt-4')}>
-                    {t('student.dashboard.nextStep.start')}
-                  </Link>
-                </div>
-              </div>
-            )
-          }
-        </Block>
-
-        <Block
-          title={t('student.dashboard.revisionDue.title')}
-          state={revision}
-          isEmpty={() => false}
-          emptyText={t('student.revision.empty')}
-          errorText={t('student.revision.error')}
-          interactive
-        >
-          {() => (
-            <div className="flex flex-col items-start gap-3">
-              <p className="flex items-center gap-2 text-lg font-semibold text-ink">
-                <RefreshCw aria-hidden className="fx-icon h-5 w-5 text-brand-600" />
-                {dueCount > 0 ? t('student.dashboard.revisionDue.count', { count: dueCount }) : t('student.revision.empty')}
-              </p>
-              {dueCount > 0 && (
-                <Link to="/student/revision" className={linkBtn(true)}>
-                  {t('student.revision.start')}
-                </Link>
-              )}
-            </div>
-          )}
-        </Block>
-
-        <Block
-          title={t('student.dashboard.mastery.title')}
-          state={mastery}
-          isEmpty={() => bySubject.length === 0}
-          emptyText={t('student.dashboard.mastery.empty')}
-          emptyAction={<Link to="/student/diagnostic" className={linkBtn(true)}>{t('student.diagnostic.start')}</Link>}
-          errorText={t('student.dashboard.error')}
-          className="md:col-span-2 lg:col-span-2"
-        >
-          {() => (
-            <ul className="stagger grid grid-cols-1 gap-4 lg:grid-cols-2">
-              {bySubject.map((s) => (
-                <li key={s.subject} className="flex min-w-0 items-start gap-4 rounded-lg border border-line p-3">
-                  {/* Decorative arc only; the band below carries the meaning (no numbers). */}
-                  <div aria-hidden className="shrink-0">
-                    <MasteryRing value={BAND_ARC[s.band]} label={t(`subject.${s.subject}`)}>
-                      <span />
-                    </MasteryRing>
-                  </div>
-                  <div className="min-w-0 break-words">
-                    <p className="font-semibold text-ink">{t(`subject.${s.subject}`)}</p>
-                    <p className="text-xs text-ink-soft">{t('student.dashboard.mastery.topics', { count: s.count })}</p>
-                    <ReadinessBand band={s.band} className="mt-1 max-w-full [&_span]:break-words" />
-                    <p className="mt-1 text-xs text-ink-soft">{t(`student.exams.band.${s.band}.desc`)}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </Block>
-
-        <Block
-          title={t('student.dashboard.quest.title')}
-          state={quests}
-          isEmpty={() => !activeQuest}
-          emptyText={t('student.dashboard.quest.empty')}
-          errorText={t('student.quests.error')}
-          interactive
-        >
-          {() =>
-            activeQuest && (
-              <div>
-                <p className="font-semibold text-ink">{t(activeQuest.titleKey)}</p>
-                <p className="mt-1 text-sm text-ink-soft">
-                  {t('student.dashboard.quest.progress', {
-                    done: activeQuest.missions.filter((m) => m.done).length,
-                    total: activeQuest.missions.length,
-                  })}
-                </p>
-                <ProgressBar
-                  className="mt-2"
-                  tone="success"
-                  value={(activeQuest.missions.filter((m) => m.done).length / Math.max(1, activeQuest.missions.length)) * 100}
-                  label={t(activeQuest.titleKey)}
-                />
-                <p className="mt-3 text-xs text-ink-soft">{t('student.quests.private')}</p>
-                <Link to="/student/quests" className={cn(linkBtn(false), 'mt-3')}>
-                  {t('student.dashboard.quest.view')}
-                </Link>
-              </div>
-            )
-          }
-        </Block>
-
-        <Block
-          title={t('student.dashboard.exam.title')}
-          state={exams}
-          isEmpty={(d) => d.length === 0}
-          emptyText={t('student.exams.empty')}
-          errorText={t('student.exams.error')}
-          interactive
-        >
-          {() =>
-            latestExam && (
-              <div>
-                <ReadinessBand band={latestExam.band} />
-                <p className="mt-2 text-sm text-ink-soft">{t(`student.exams.band.${latestExam.band}.desc`)}</p>
-                <p className="mt-2 text-xs text-ink-soft">{t('student.exams.readiness.note')}</p>
-                <Link to={`/student/exams/${latestExam.examId}`} className={cn(linkBtn(false), 'mt-3')}>
-                  {t('student.dashboard.exam.view')}
-                </Link>
-              </div>
-            )
-          }
-        </Block>
-
-        <Card as="section" interactive aria-label={t('student.dashboard.tutor.title')} title={t('student.dashboard.tutor.title')}>
-          <div className="flex flex-col items-start gap-3">
-            <p className="flex items-start gap-2 text-sm text-ink-soft">
-              <MessageCircle aria-hidden className="fx-icon mt-0.5 h-5 w-5 shrink-0 text-brand-600" />
-              {t('student.dashboard.tutor.body')}
-            </p>
-            <Link to="/student/tutor" className={linkBtn(true)}>
-              {t('student.dashboard.tutor.cta')}
-            </Link>
-          </div>
-        </Card>
-
-        <RewardsCard className="md:col-span-2 lg:col-span-3" />
+      <div className="stagger grid gap-4 md:grid-cols-2">
+        <QuickReview now={now} userId={userId} />
+        <BadgesPeek userId={userId} />
       </div>
     </div>
+  );
+}
+
+function PlanBody({ plan, firstName }: { plan: ReturnType<typeof resolveTodaysPlan>; firstName: string }) {
+  const { t } = useTranslation();
+  // No steps left in the plan but the child has finished things before: that is the "done" state too.
+  const { steps, next, minutesLeft } = plan;
+  const allDone = plan.allDone || steps.length === 0;
+  const greeting = allDone
+    ? t('kids.home.done.title')
+    : minutesLeft > 0
+      ? t('kids.home.greetingMinutes', { name: firstName, count: next?.estimatedMinutes ?? minutesLeft })
+      : t('kids.home.greeting', { name: firstName });
+  return (
+    <div className="flex flex-col gap-5">
+      <div className="flex items-start justify-between gap-3">
+        <h1 id="home-plan-title" className="text-2xl font-bold text-ink md:text-3xl">
+          {t('kids.home.title')}
+        </h1>
+        <HelpBubble textKey="kids.home.help" align="end" />
+      </div>
+
+      <MascotMessage mood={allDone ? 'cheer' : 'happy'} size="lg" speakText={greeting}>
+        {greeting}
+      </MascotMessage>
+      {allDone && <p className="text-lg text-ink-soft">{t('kids.home.done.body')}</p>}
+
+      {steps.length > 0 && (
+        <ol aria-label={t('kids.home.plan.list')} className="stagger flex flex-col gap-3">
+          {steps.map((s) => (
+            <PlanRow key={s.id} step={s} />
+          ))}
+        </ol>
+      )}
+
+      {!allDone && minutesLeft > 0 && <p className="text-lg font-semibold text-ink-soft">{t('kids.home.plan.time', { count: minutesLeft })}</p>}
+
+      {!allDone && next ? (
+        <BigActionButton to="/student/path" icon={<Play />} fullWidth className="md:w-auto md:self-start">
+          {next.status === 'in_progress' ? t('kids.home.continue') : t('kids.home.start')}
+        </BigActionButton>
+      ) : (
+        <BigActionButton to="/student/path" icon={<Rocket />} fullWidth className="md:w-auto md:self-start">
+          {t('kids.home.done.more')}
+        </BigActionButton>
+      )}
+      {allDone && (
+        <ButtonLink to="/student/play" variant="secondary" size="xl" fullWidth className="md:w-auto md:self-start">
+          {t('kids.home.done.play')}
+        </ButtonLink>
+      )}
+    </div>
+  );
+}
+
+function PlanRow({ step }: { step: LearningPathStep }) {
+  const { t } = useTranslation();
+  const done = step.status === 'done';
+  const Icon = done ? CircleCheck : Circle;
+  return (
+    <li className={cn('flex items-center gap-3 rounded-lg border bg-surface p-3 md:p-4', done ? 'border-success-500' : 'border-line')}>
+      <Icon aria-hidden className={cn('h-8 w-8 shrink-0', done ? 'text-success-700' : 'text-ink-faint')} />
+      <span className="sr-only">{done ? t('kids.home.plan.done') : t('kids.home.plan.todo')}: </span>
+      <span className={cn('min-w-0 flex-1 text-lg font-semibold', done ? 'text-ink-soft' : 'text-ink')}>
+        {t(`kids.home.plan.step.${step.kind}`, { topic: t(`concept.${step.conceptId}`) })}
+        {!done && <span className="mt-0.5 block text-base font-normal text-ink-soft md:hidden">{t('kids.home.plan.time', { count: step.estimatedMinutes })}</span>}
+      </span>
+      {!done && <span className="hidden shrink-0 text-base text-ink-soft md:block">{t('kids.home.plan.time', { count: step.estimatedMinutes })}</span>}
+    </li>
+  );
+}
+
+function PlanEmpty() {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-col gap-5">
+      <h1 id="home-plan-title" className="text-2xl font-bold text-ink md:text-3xl">
+        {t('kids.home.title')}
+      </h1>
+      <MascotMessage mood="thinking" size="lg" speakText={t('kids.home.empty.body')}>
+        <span className="block text-xl font-bold">{t('kids.home.empty.title')}</span>
+        <span className="mt-1 block font-normal text-ink-soft">{t('kids.home.empty.body')}</span>
+      </MascotMessage>
+      <BigActionButton to="/student/diagnostic" icon={<Play />} fullWidth className="md:w-auto md:self-start">
+        {t('kids.learn.warmup.title')}
+      </BigActionButton>
+    </div>
+  );
+}
+
+function PlanError({ onRetry }: { onRetry: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <div role="alert" className="flex flex-col gap-5">
+      <h1 id="home-plan-title" className="text-2xl font-bold text-ink md:text-3xl">
+        {t('kids.home.title')}
+      </h1>
+      <MascotMessage mood="oops" size="lg">
+        <span className="block text-xl font-bold">{t('kids.home.error.title')}</span>
+        <span className="mt-1 block font-normal text-ink-soft">{t('kids.home.error.body')}</span>
+      </MascotMessage>
+      <Button size="xl" onClick={onRetry} className="self-start">
+        {t('common.action.retry')}
+      </Button>
+    </div>
+  );
+}
+
+/** Small card: how many things are ready to remember again, with one button when there are some. */
+function QuickReview({ userId, now }: { userId: string; now: number }) {
+  const { t } = useTranslation();
+  const revision = useAsync(() => studentService.getRevisionQueue(userId), [userId]);
+  const due = countReadyNow(revision.data ?? [], now);
+  let body: ReactNode;
+  if (revision.loading && !revision.data) body = <LoadingState label={t('a11y.loading')} lines={2} />;
+  else if (revision.error) {
+    body = (
+      <div role="alert" className="flex items-center gap-3">
+        <Mascot mood="oops" size="sm" />
+        <Button variant="secondary" onClick={revision.reload}>
+          {t('common.action.retry')}
+        </Button>
+      </div>
+    );
+  } else {
+    body = (
+      <div className="flex flex-col items-start gap-3">
+        <p className="text-lg text-ink">{due > 0 ? t('kids.home.review.some', { count: due }) : t('kids.home.review.none')}</p>
+        {due > 0 && (
+          <ButtonLink to="/student/revision" variant="secondary" size="lg" leftIcon={<RefreshCw aria-hidden className="h-5 w-5" />}>
+            {t('kids.learn.revision.title')}
+          </ButtonLink>
+        )}
+      </div>
+    );
+  }
+  return (
+    <Card as="section" aria-labelledby="home-review-title" interactive>
+      <h2 id="home-review-title" className="mb-3 flex items-center gap-2 text-xl font-bold text-ink">
+        <RefreshCw aria-hidden className="fx-icon h-6 w-6 text-brand-600" />
+        {t('kids.home.review.title')}
+      </h2>
+      {body}
+    </Card>
+  );
+}
+
+/** Small card: the last few badges (pictures with names), and a link to all of them. */
+function BadgesPeek({ userId }: { userId: string }) {
+  const { t } = useTranslation();
+  const recent = useAsync(() => rewardsService.listRecentBadges(userId, 3), [userId]);
+  let body: ReactNode;
+  if (recent.loading && !recent.data) body = <LoadingState label={t('a11y.loading')} lines={2} />;
+  else if (recent.error) {
+    body = (
+      <div role="alert" className="flex items-center gap-3">
+        <Mascot mood="oops" size="sm" />
+        <Button variant="secondary" onClick={recent.reload}>
+          {t('common.action.retry')}
+        </Button>
+      </div>
+    );
+  } else {
+    const badges = recent.data ?? [];
+    body = (
+      <div className="flex flex-col items-start gap-3">
+        {badges.length === 0 ? (
+          <p className="text-lg text-ink">{t('kids.home.badges.none')}</p>
+        ) : (
+          <ul className="flex flex-wrap gap-4">
+            {badges.map(({ badge }) => (
+              <li key={badge.id} className="flex w-24 flex-col items-center gap-1 text-center">
+                <BadgeImage badgeId={badge.id} rarity={badge.rarity} size="md" />
+                <span className="text-sm font-semibold text-ink">{t(badge.titleKey)}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+        <Link
+          to="/student/badges"
+          className="inline-flex min-h-[48px] items-center rounded-md px-1 text-base font-semibold text-brand-700 underline underline-offset-4 outline-none focus-visible:shadow-focus"
+        >
+          {t('kids.home.badges.all')}
+        </Link>
+      </div>
+    );
+  }
+  return (
+    <Card as="section" aria-labelledby="home-badges-title" interactive>
+      <h2 id="home-badges-title" className="mb-3 flex items-center gap-2 text-xl font-bold text-ink">
+        <Award aria-hidden className="fx-icon h-6 w-6 text-accent-600" />
+        {t('kids.badges.title')}
+      </h2>
+      {body}
+    </Card>
   );
 }

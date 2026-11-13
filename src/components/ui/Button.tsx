@@ -3,7 +3,7 @@ import { Loader2 } from 'lucide-react';
 import { cn, focusRing, touchTarget } from './cn';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
-export type ButtonSize = 'md' | 'lg';
+export type ButtonSize = 'md' | 'lg' | 'xl';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -37,7 +37,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition duration-fast ease-standard motion-ok:active:scale-[0.98] motion-reduce:transition-none disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100',
         touchTarget,
         focusRing,
-        size === 'lg' ? 'px-6 py-3 text-base' : 'px-4 py-2 text-sm',
+        size === 'xl' ? 'min-h-[56px] px-7 py-3.5 text-lg' : size === 'lg' ? 'px-6 py-3 text-base' : 'px-4 py-2 text-sm',
         variants[variant],
         fullWidth && 'w-full',
         className,

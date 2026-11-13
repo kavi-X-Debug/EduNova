@@ -38,3 +38,13 @@ All 7 topic answers plus the fallback, in si and ta, and their source titles (un
 - Textbook unit names (`unit.*`, 48 keys), curriculum document titles (`curriculum.doc.cur-*`, 16 keys) and tutor source titles/page labels are my translations of printed English titles; the maths and science unit names reuse the `concept.*` wording. Please check book-name conventions ("ගණිතය 6 ශ්‍රේණිය I කොටස", "கணிதம் தரம் 6 பகுதி I") and the Tamil words "திணிவு" (mass), "சுட்டி" (mouse), "காவலி" (insulator).
 - Left in English on purpose (printed book/lesson titles): English-subject unit names ("Unit 3 - Where's Everything?"), the English words inside `concept.en6-*` titles and English-subject exercise options, Sinhala-subject unit names shown in Tamil (already Sinhala).
 - Date fallback (`common.date.*`, `common.relative.*`): used only when the runtime lacks Sinhala ICU data (it did in the Claude desktop browser pane); month abbreviations and "X days ago" phrases need review.
+
+## 7. Kids UX foundation strings (agent/kids-foundation): please review all `kids.*` and `nav.kids.*` (si, ta)
+Written at a child reading level (short sentences) and to be read by a Grade 6 child; nothing verified by a native speaker.
+- Nav (one short word each): si "මුල් පිටුව / ඉගෙනුම / අහන්න / සෙල්ලම් / මම", ta "முகப்பு / கற்க / கேள் / விளையாடு / நான்". Check "මම" / "நான்" read naturally as a tab name ("Me") and "அடுத்து" etc. as button text.
+- Mascot name written phonetically: si "නෝවා", ta "நோவா" (Nova).
+- `kids.grow.*` readiness words as plants: si "පැළය / දළුව / ශාකය / ගහ", ta "நாற்று / முளை / செடி / மரம்"; heading "How strong am I?" si "මම කොච්චර ශක්තිමත්ද?", ta "நான் எவ்வளவு வலுவாக இருக்கிறேன்?" (safety: must not sound like a mark or a judgement).
+- Jargon renames: "Warm-up quiz" si "සූදානම් ප්‍රශ්න", ta "தயார் வினாடி வினா"; "Remember it again" si "නැවත මතක් කරමු", ta "மீண்டும் நினைவுபடுத்து"; "Test results" si "පරීක්ෂණ ප්‍රතිඵල", ta "தேர்வு முடிவுகள்"; "My learning trail" si "මගේ ඉගෙනුම් මාවත", ta "என் கற்றல் பாதை"; "Adventures" si "අභියෝග" (same word as quest in the glossary; there is no friendlier word yet), ta "சாகசங்கள்".
+- Home (`kids.home.*`): greeting with plural minutes, plan step sentences with the topic standing alone ("{{topic}} ඉගෙන ගමු", "{{topic}} கற்போம்"), "Great job today!" done state, error "Oops, something went wrong".
+- Tour (`kids.tour.*`) and "Show me around" (`kids.me.tour.*`): the word for "tour" si "සංචාරය", ta "சுற்றுப்பயணம்".
+- Read-aloud: `kids.speak.*`. Note the product never claims si/ta read-aloud; the button appears only when the device has a voice.

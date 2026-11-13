@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent, type ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Check, LogOut } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +18,8 @@ const GRADES = [6, 7, 8, 9, 10, 11];
 const SUBJECTS = ['maths', 'science', 'sinhala', 'english', 'ict'];
 const choiceBtn = 'flex min-h-11 min-w-11 items-center justify-center rounded-md border-2 p-1 outline-none focus-visible:shadow-focus';
 
-export default function ProfilePage() {
+/** `intro` is shown under the title (the student Me page puts "Show me around" there). */
+export default function ProfilePage({ intro }: { intro?: ReactNode } = {}) {
   const { t } = useTranslation();
   const user = useSessionStore((s) => s.user);
   const userId = user?.id ?? '';
@@ -31,6 +32,7 @@ export default function ProfilePage() {
   return (
     <div>
       <PageHeader title={t('profile.title')} description={t('profile.subtitle')} />
+      {intro}
       {loading && !data && <LoadingState label={t('a11y.loading')} lines={5} />}
       {error && <ErrorState description={t('profile.error')} onRetry={reload} retryLabel={t('common.action.retry')} />}
       {data && user && <ProfileSections user={user} profile={data.profile} student={data.student} />}
