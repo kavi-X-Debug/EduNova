@@ -183,7 +183,7 @@ export function DragDropZone({ items, zones, placements, onPlace, disabled, labe
                 onClick={() => selected && place(selected, z.id)}
                 aria-label={selectedItem ? t('games.drag.putHereNamed', { item: selectedItem.text, zone: z.label }) : t('games.drag.putHere')}
                 className={cn(
-                  'mt-auto min-h-12 rounded-lg border-2 border-dashed px-4 py-2 text-base font-bold',
+                  'mt-auto min-h-14 rounded-lg border-2 border-dashed px-4 py-2 text-base font-bold',
                   focusRing,
                   selectedItem ? 'border-brand-600 bg-brand-50 text-brand-700 hover:bg-brand-100' : 'border-line text-ink-faint',
                 )}
