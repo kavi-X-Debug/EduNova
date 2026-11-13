@@ -2,6 +2,7 @@ import { useGt as useT } from '@/features/student/games/useGt';
 import type { GameComponentProps } from '@/types';
 import { useGameSession, type GameSession } from '../engine';
 import { CircuitSvg, Named, type CircuitProps } from './art';
+import { CircuitSprites } from './ScienceFx';
 import { ChoiceRoundView } from './ChoiceRound';
 import { makeCircuitRound, ROUNDS_PER_PLAY, type CircuitRound, type Fault, type Part } from './circuitBuilder.generator';
 import { SortRoundView } from './SortRound';
@@ -22,6 +23,15 @@ function circuitFor(opts: { missing?: Part; fault?: Fault; solved?: boolean }): 
   };
 }
 
+function CircuitPicture({ c, lit, label }: { c: Omit<CircuitProps, 'label'>; lit: boolean; label: string }) {
+  return (
+    <div className="flex w-full flex-col items-center gap-3">
+      <CircuitSvg {...c} lit={lit} label={label} />
+      <CircuitSprites battery={c.battery} bulb={c.bulb} sw={c.sw} lit={lit} />
+    </div>
+  );
+}
+
 function RoundBody({ session }: { session: GameSession<CircuitRound> }) {
   const t = useT();
   const { round } = session;
@@ -33,7 +43,7 @@ function RoundBody({ session }: { session: GameSession<CircuitRound> }) {
       <ChoiceRoundView
         session={session}
         question={t(`${P}.missingQuestion`)}
-        picture={<CircuitSvg {...c} lit={done} label={t(`${done ? `${P}.labelSolved` : `${P}.labelMissing`}`)} />}
+        picture={<CircuitPicture c={c} lit={done} label={t(`${done ? `${P}.labelSolved` : `${P}.labelMissing`}`)} />}
         options={round.options.map((p) => ({ id: p, content: <Named id={p} text={t(`${P}.part.${p}`)} /> }))}
         answerId={round.missing}
         explanation={t(`${P}.explainMissing.${round.missing}`)}
@@ -46,7 +56,7 @@ function RoundBody({ session }: { session: GameSession<CircuitRound> }) {
     <ChoiceRoundView
       session={session}
       question={t(`${P}.lightQuestion`)}
-      picture={<CircuitSvg {...c} lit={done && round.lights} label={t(`${P}.label.${round.fault}`)} />}
+      picture={<CircuitPicture c={c} lit={done && round.lights} label={t(`${P}.label.${round.fault}`)} />}
       options={[
         { id: 'yes', content: t(`${P}.yes`) },
         { id: 'no', content: t(`${P}.no`) },

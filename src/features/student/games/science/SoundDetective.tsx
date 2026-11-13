@@ -1,8 +1,9 @@
 import { useGt as useT } from '@/features/student/games/useGt';
 import type { GameComponentProps } from '@/types';
 import { useGameSession, type GameSession } from '../engine';
-import { Glyph, Named } from './art';
+import { Named } from './art';
 import { ChoiceRoundView } from './ChoiceRound';
+import { OwlPicture, SoundItemPicture } from './ScienceFx';
 import { makeSoundRound, ROUNDS_PER_PLAY, type SoundRound } from './soundDetective.generator';
 
 const P = 'games.science.soundDetective';
@@ -15,7 +16,7 @@ function RoundView({ session }: { session: GameSession<SoundRound> }) {
       <ChoiceRoundView
         session={session}
         question={t(`${P}.statement.${round.id}`)}
-        picture={<Glyph id="ear" className="h-16 w-16 text-brand-600" />}
+        picture={<OwlPicture />}
         options={[
           { id: 'true', content: t(`${P}.true`) },
           { id: 'false', content: t(`${P}.false`) },
@@ -33,7 +34,7 @@ function RoundView({ session }: { session: GameSession<SoundRound> }) {
         question={t(`${P}.${round.pair[0]}Or${round.pair[1] === 'soft' ? 'Soft' : 'Low'}`, { item: name })}
         picture={
           <div className="flex items-center gap-4 rounded-xl border-2 border-brand-100 bg-brand-50 px-6 py-4 text-ink">
-            <Glyph id={round.item} className="h-14 w-14 text-brand-600" />
+            <SoundItemPicture item={round.item} status={session.status} />
             <span className="text-2xl font-bold">{name}</span>
           </div>
         }
@@ -47,6 +48,7 @@ function RoundView({ session }: { session: GameSession<SoundRound> }) {
     <ChoiceRoundView
       session={session}
       question={t(`${P}.ask.${round.ask}`)}
+      picture={<OwlPicture size={80} />}
       options={round.options.map((id) => ({ id, content: <Named id={id} text={t(`${P}.item.${id}`)} /> }))}
       answerId={round.answer}
       explanation={t(`${P}.explainOne.${round.ask}`, { item: t(`${P}.item.${round.answer}`) })}

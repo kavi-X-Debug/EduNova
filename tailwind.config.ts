@@ -205,6 +205,40 @@ const gxEnglishAnimation = {
 };
 // ---- end English games motion ----
 
+// ---- Science game motion (gx-science-*). Gentle, finite, transform/opacity only. Gate in markup with `motion-ok:`. ----
+const gxScienceKeyframes = {
+  'gx-science-wiggle': { '0%,100%': { transform: 'rotate(0deg)' }, '25%': { transform: 'rotate(-6deg)' }, '75%': { transform: 'rotate(6deg)' } },
+  'gx-science-slide': { from: { transform: 'translateX(0)' }, to: { transform: 'translateX(var(--gx-dx, 0px))' } },
+  'gx-science-breathe': { '0%,100%': { opacity: '0.45', transform: 'scale(0.96)' }, '50%': { opacity: '0.85', transform: 'scale(1.06)' } },
+  'gx-science-tilt': { '0%,100%': { transform: 'rotate(0deg)' }, '30%': { transform: 'rotate(-8deg)' }, '65%': { transform: 'rotate(6deg)' } },
+  'gx-science-ripple': { '0%': { opacity: '0.6', transform: 'scale(0.5)' }, '100%': { opacity: '0', transform: 'scale(1.7)' } },
+  'gx-science-swing': { '0%,100%': { transform: 'rotate(0deg)' }, '25%': { transform: 'rotate(-10deg)' }, '75%': { transform: 'rotate(10deg)' } },
+  'gx-science-stretch': { from: { transform: 'scaleY(1)' }, to: { transform: 'scaleY(1.22)' } },
+  'gx-science-travel': {
+    '0%': { transform: 'translate(0, 0)' },
+    '30%': { transform: 'translate(0, -78px)' },
+    '65%': { transform: 'translate(170px, -78px)' },
+    '100%': { transform: 'translate(170px, 0)' },
+  },
+  'gx-science-lit': { from: { opacity: '0', transform: 'scale(0.9)' }, to: { opacity: '0.75', transform: 'scale(1)' } },
+  'gx-science-click': { '0%': { transform: 'rotate(0deg)' }, '40%': { transform: 'rotate(-9deg)' }, '100%': { transform: 'rotate(0deg)' } },
+  'gx-science-arrow': { '0%,100%': { opacity: '0.55', transform: 'scale(1)' }, '50%': { opacity: '1', transform: 'scale(1.15)' } },
+};
+const gxScienceAnimation = {
+  'gx-science-wiggle': 'gx-science-wiggle 4s ease-in-out 2',
+  'gx-science-slide': 'gx-science-slide 1200ms ease-in-out 1 forwards',
+  'gx-science-breathe': 'gx-science-breathe 4s ease-in-out 3',
+  'gx-science-tilt': 'gx-science-tilt 4s ease-in-out 2',
+  'gx-science-ripple': 'gx-science-ripple 1500ms ease-out 2 backwards',
+  'gx-science-swing': 'gx-science-swing 3s ease-in-out 2',
+  'gx-science-stretch': 'gx-science-stretch 1200ms ease-in-out 1 forwards',
+  'gx-science-travel': 'gx-science-travel 4500ms ease-in-out 1 forwards',
+  'gx-science-lit': 'gx-science-lit 900ms ease-out 1 forwards',
+  'gx-science-click': 'gx-science-click 500ms ease-out 1',
+  'gx-science-arrow': 'gx-science-arrow 1800ms ease-in-out 3',
+};
+// ---- end Science game motion ----
+
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   // Hover styles only where a real hover exists (no sticky hover on touch).
@@ -264,6 +298,7 @@ export default {
         ...gxSinhalaKeyframes,
         ...gxIctKeyframes,
         ...gxEnglishKeyframes,
+        ...gxScienceKeyframes,
       },
       animation: {
         'fade-in': 'fade-in 200ms cubic-bezier(0, 0, 0.2, 1) backwards',
@@ -282,6 +317,7 @@ export default {
         ...gxSinhalaAnimation,
         ...gxIctAnimation,
         ...gxEnglishAnimation,
+        ...gxScienceAnimation,
       },
       fontFamily: {
         sans: ['Inter', 'Noto Sans Sinhala', 'Noto Sans Tamil', 'system-ui', 'sans-serif'],

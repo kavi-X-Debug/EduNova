@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from 'react';
+import { useState, type CSSProperties, type ReactNode } from 'react';
 import { cn } from '@/components/ui';
 
 export interface SpriteProps {
@@ -12,16 +12,19 @@ export interface SpriteProps {
   eager?: boolean;
   /** Called once if the picture is missing, so a game can fall back to something else. */
   onMissing?: () => void;
+  /** Drawn instead of the picture if the file fails to load (e.g. the old icon). */
+  fallback?: ReactNode;
 }
 
 /**
  * A decorative Google Flow sprite (public/game-sprites/<name>.png, transparent, 256 px). Never carries meaning:
- * alt is empty, hidden from screen readers, not draggable, no pointer events. A missing file just turns invisible
- * (same size, so no layout shift) and calls `onMissing`; the game never depends on the picture.
- * Put motion classes (gated with `motion-ok:`) on `className`.
+ * alt is empty, hidden from screen readers, not draggable, no pointer events. If the file is missing it draws
+ * `fallback` when given, otherwise stays invisible at the same size (no layout shift), and calls `onMissing`;
+ * the game never depends on the picture. Put motion classes (gated with `motion-ok:`) on `className`.
  */
-export function Sprite({ name, size = 64, className, style, eager, onMissing }: SpriteProps) {
+export function Sprite({ name, size = 64, className, style, eager, onMissing, fallback }: SpriteProps) {
   const [broken, setBroken] = useState(false);
+  if (broken && fallback) return <>{fallback}</>;
   return (
     <img
       src={`/game-sprites/${name}.png`}
