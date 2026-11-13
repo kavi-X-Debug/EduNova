@@ -1,0 +1,101 @@
+[
+  {
+    "kind": "textbook",
+    "title": "Mathematics Grade 6 Part I (English medium)",
+    "url": "http://www.edupub.gov.lk/Administrator/English/6/maths%20G-6%20P-I%20E/maths%20G-6%20E%20P-I.pdf",
+    "file": "sources/maths-g6-part1-en.pdf",
+    "bytes": 11606868,
+    "sha256": "42b88a18349ecde2d6db95ce562676f7f2d1327652582e336c58a33a63a0b69e",
+    "edition": "2015 rationalised syllabus; sixth print 2019 (ISBN 978-955-25-0076-3)",
+    "medium": "English",
+    "notes": "Educational Publications Department, listed on edupub.gov.lk as 'Mathematics Part I - New Syllabus'. Lessons 1-11 plus Revision Exercise 1, glossary and lesson-sequence table (pp. 156-158). PDF has 169 pages; printed page = PDF page - 10. The contents pages are images. The HTTPS site timed out, so the file was fetched over plain HTTP from the official domain."
+  },
+  {
+    "kind": "textbook",
+    "title": "Mathematics Grade 6 Part II (English medium)",
+    "url": "http://www.edupub.gov.lk/Administrator/English/6/maths%20G-6%20P-II%20E/maths%20G-6%20P-II%20E.pdf",
+    "file": "sources/maths-g6-part2-en.pdf",
+    "bytes": 2140350,
+    "sha256": "0a6cca22bb7eb52d3ed23d3ef23ffbf1c87c2040e1b795c8bbf0b6be214ac340",
+    "edition": "2015 rationalised syllabus; first print 2014, sixth print 2019 (ISBN 978-955-25-0077-0)",
+    "medium": "English",
+    "notes": "Lessons 12-25 plus Revision Exercises 2 and 3, glossary and lesson sequence. 179 pages; printed page = PDF page - 12."
+  },
+  {
+    "kind": "teachers_guide",
+    "title": "Mathematics Grade 6 Teacher's Guide (Implemented from year 2015), NIE Department of Mathematics",
+    "url": "https://e-thaksalawa.moe.gov.lk/lcms/pluginfile.php/44793/mod_resource/content/2/EG6_Mat_tim.pdf",
+    "file": "sources/tim-g6-maths-en.pdf",
+    "bytes": 2535371,
+    "sha256": "96aa7e5c8b7a81b71e21dc2e922f32101632602b134779e6b6eb7ca505dad1c9",
+    "edition": "First print 2015",
+    "medium": "English",
+    "notes": "Published by NIE but downloaded from the Ministry of Education's e-thaksalawa site (moe.gov.lk), because nie.lk sits behind a Cloudflare bot challenge that curl cannot pass. Chapter 1 (pp. 1-17) is the full 2015 syllabus with competencies, competency levels, content, learning outcomes and periods. Chapter 2 (p. 18) is the lesson sequence. Chapter 3 (pp. 19-120) has lesson plans with assessment criteria. Linked from the e-thaksalawa 'Mathematics - Grade - 06' course (course id 288, resource 42092)."
+  },
+  {
+    "kind": "syllabus",
+    "title": "Mathematics Syllabus - Grade 6 (2007), NIE Department of Mathematics",
+    "url": "https://e-thaksalawa.moe.gov.lk/lcms/pluginfile.php/44792/mod_resource/content/3/EG6_mat_Syl.pdf",
+    "file": "sources/syllabus-g6-maths-en.pdf",
+    "bytes": 63255,
+    "sha256": "116fbbd284721484d56978c5674d948abce0289badad9141afbfebe5b5708a98",
+    "edition": "2007 (superseded)",
+    "medium": "English",
+    "notes": "OLDER EDITION, kept only for reference. Replaced by the 2015 syllabus printed in the Teacher's Guide, chapter 1. Not used to build the path."
+  },
+  {
+    "kind": "textbook",
+    "title": "ගණිතය 6 ශ්‍රේණිය I කොටස (Mathematics Grade 6 Part I, Sinhala medium)",
+    "url": "http://www.edupub.gov.lk/Administrator/Sinhala/6/maths%20g6%20pI%20S/maths%20g6%20p-I%20S.pdf",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "2015 syllabus (listed as 'නව විෂය නිර්දේශය')",
+    "medium": "Sinhala",
+    "notes": "Link only, not downloaded (per brief)."
+  },
+  {
+    "kind": "textbook",
+    "title": "ගණිතය 6 ශ්‍රේණිය II කොටස (Mathematics Grade 6 Part II, Sinhala medium)",
+    "url": "http://www.edupub.gov.lk/Administrator/Sinhala/6/maths%20g-6%20p-II/maths%20g-6%20P-II%20S.pdf",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "2015 syllabus",
+    "medium": "Sinhala",
+    "notes": "Link only, not downloaded."
+  },
+  {
+    "kind": "textbook",
+    "title": "கணிதம் I - Grade 6 (Mathematics Part I, Tamil medium)",
+    "url": "http://www.edupub.gov.lk/Administrator/Tamil/6/maths%20g-6%20p-I%20T/maths%20g-6%20p-I%20T.pdf",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "2016 'new syllabus' label on edupub (same 2015 rationalised syllabus)",
+    "medium": "Tamil",
+    "notes": "Link only, not downloaded."
+  },
+  {
+    "kind": "textbook",
+    "title": "கணிதம் II - Grade 6 (Mathematics Part II, Tamil medium)",
+    "url": "http://www.edupub.gov.lk/Administrator/Tamil/6/maths%20g-6%20p-II%20T/maths%20g-6%20p-II%20T.pdf",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "2016 label on edupub",
+    "medium": "Tamil",
+    "notes": "Link only, not downloaded."
+  },
+  {
+    "kind": "other",
+    "title": "Mathematics Grade 6 (NIE Channel NIE upload, Oct 2025): possibly a reform-era module",
+    "url": "https://channelnie.nie.ac.lk/wp-content/uploads/2025/10/Mathematics-Grade-6.pdf",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "unknown (2025 upload)",
+    "medium": "unknown",
+    "notes": "Found through web search. It is on NIE's nie.ac.lk domain, which is not one of the domains the brief allows, and the server returned HTTP 522 when checked, so it was not downloaded and its contents are unverified. It may be a draft or final module for the Grade 6 reform."
+  }
+]

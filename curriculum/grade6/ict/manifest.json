@@ -1,0 +1,101 @@
+[
+  {
+    "kind": "textbook",
+    "title": "Information and Communication Technology - Reading Book, Grade 6 (English medium)",
+    "url": "http://www.edupub.gov.lk/Administrator/English/6/ICT%20G-6%20E%20PB/ICT%20G-6%20E%20PB.pdf",
+    "file": "sources/ict-g6-en-reading-book.pdf",
+    "bytes": 9045899,
+    "sha256": "2e2781e8b0021bdef280e02c7536374df2d8757ec1413fc1c2cf5def896cf2d6",
+    "edition": "EPD, first print 2018, second print 2019 (ISBN 978-955-25-0088-6); listed on edupub as 'New Syllabus' = the 2018 ICT syllabus, NOT the 2026/2027 reform",
+    "medium": "English",
+    "notes": "edupub book id 1787 (Textbooks Download > English > Grade 6). 6 chapters, pp. 1-78 (PDF page = book page + 9). Only Grade 6 ICT textbook on edupub; no reformed (2026) ICT module is published there as of 2026-11-13."
+  },
+  {
+    "kind": "textbook",
+    "title": "Information and Communication Technology - Workbook, Grade 6 (English medium)",
+    "url": "http://www.edupub.gov.lk/Administrator/English/6/ICT%20WB%20E%20G-6/ICT%20WB%20G-6%20E.pdf",
+    "file": "sources/ict-g6-en-workbook.pdf",
+    "bytes": 6691758,
+    "sha256": "56e6ac3809f529463eae57689c06c5c69c767ebe36c989c2f587fd73408ebb31",
+    "edition": "EPD, first print 2018, second print 2019 (ISBN 978-955-25-0090-9)",
+    "medium": "English",
+    "notes": "edupub book id 1788. Companion to the Reading Book; activities numbered by chapter (1.1-6.2), pp. 1-55 (PDF page = book page + 8)."
+  },
+  {
+    "kind": "teachers_guide",
+    "title": "Information and Communication Technology Teachers' Guide, Grade 6 (Effective from 2018)",
+    "url": "https://nie.lk/pdffiles/tg/eGr06TG%20ICT.pdf",
+    "file": "sources/nie-g6-ict-teachers-guide-en-2018.pdf",
+    "bytes": 4994767,
+    "sha256": "7605433ddf087d9aa6bc299a35b0410f714518b9d51dfbc3d6c0fc851a27a8da",
+    "edition": "NIE Department of Information Technology, first print 2018",
+    "medium": "English",
+    "notes": "Found via nie.lk/seletguide (English medium, Grade 6) as 'Information Communication Technology -ICT (2018)'. Contains the Grade 6 syllabus (pp. 1-4), term/period plan (p. xi) and per-competency-level guidance (pp. 6-71). PDF page = printed page + 11."
+  },
+  {
+    "kind": "syllabus",
+    "title": "Grade 6 ICT syllabus (contained in the Teachers' Guide)",
+    "url": "https://nie.lk/pdffiles/tg/eGr06TG%20ICT.pdf",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "2018",
+    "medium": "English",
+    "notes": "No separate ICT syllabus is listed on nie.lk/selesyll for Grade 6 (that list only has music/dance syllabi). The syllabus is pp. 1-4 of the Teachers' Guide above; not downloaded separately."
+  },
+  {
+    "kind": "other",
+    "title": "Sinhala-medium Grade 6 ICT Reading Book (link only)",
+    "url": "http://www.edupub.gov.lk/Administrator/Sinhala/6/ict%20G-6S%20PB/ict%20pb%20g-6%20S.pdf",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "edupub 'නව විෂය නිර්දේශය' (book id 1563)",
+    "medium": "Sinhala",
+    "notes": "Recorded only, not downloaded."
+  },
+  {
+    "kind": "other",
+    "title": "Sinhala-medium Grade 6 ICT Workbook (link only)",
+    "url": "http://www.edupub.gov.lk/Administrator/Sinhala/6/ict%20wb%20g-6%20S/ict%20WB%20g-6%20S.pdf",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "edupub book id 1620",
+    "medium": "Sinhala",
+    "notes": "Recorded only, not downloaded."
+  },
+  {
+    "kind": "other",
+    "title": "Tamil-medium Grade 6 ICT Reading Book (link only)",
+    "url": "http://www.edupub.gov.lk/Administrator/Tamil/6/ICT%20PB%20T%20G-6/book.pdf",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "edupub '2018 புதிய பாடத்திட்டம்' (book id 1141)",
+    "medium": "Tamil",
+    "notes": "Recorded only, not downloaded."
+  },
+  {
+    "kind": "other",
+    "title": "Tamil-medium Grade 6 ICT Workbook (link only)",
+    "url": "http://www.edupub.gov.lk/Administrator/Tamil/6/ict%20WB%20G-6%20T/book.pdf",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "edupub book id 1138",
+    "medium": "Tamil",
+    "notes": "Recorded only, not downloaded."
+  },
+  {
+    "kind": "other",
+    "title": "NIE Sinhala- and Tamil-medium Teachers' Guide selectors",
+    "url": "https://nie.lk/seletguide2.aspx",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": null,
+    "medium": "Sinhala / Tamil",
+    "notes": "Sinhala guides: https://nie.lk/seletguide2.aspx ; Tamil guides: https://nie.lk/seletguide3.aspx. The Grade 6 ICT entries there were not resolved (form post with non-ASCII button text failed); not downloaded."
+  }
+]

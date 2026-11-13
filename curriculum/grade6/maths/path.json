@@ -1,0 +1,864 @@
+{
+  "subject": "maths",
+  "grade": 6,
+  "edition": "EPD Grade 6 Mathematics Part I and Part II (English medium), 2015 rationalised syllabus, sixth print 2019; NIE Grade 6 Mathematics Teacher's Guide, first print 2015",
+  "concepts": [
+    {
+      "id": "m6-circles",
+      "title_en": "Circles",
+      "term": 1,
+      "unit": "1. Circles",
+      "prerequisiteIds": [],
+      "outcomes": [
+        "Pick out everyday objects that have a circular shape",
+        "Trace circles with round objects and tell inside, on and outside a circle apart",
+        "Make simple designs from circles drawn with coins, bangles and similar items (no compasses)"
+      ],
+      "textbookRef": "Part 1, pp. 1-7",
+      "guideRef": "Competency 24, level 24.1; Teacher's Guide (2015) pp. 20-22; 3 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-place-value",
+      "title_en": "Place Value",
+      "term": 1,
+      "unit": "2. Place Value",
+      "prerequisiteIds": [],
+      "outcomes": [
+        "State the place value of each digit in a whole number",
+        "Read numbers up to the billions period",
+        "Write large numbers in words and in figures using standard grouping",
+        "Solve word problems that involve reading and writing large numbers"
+      ],
+      "textbookRef": "Part 1, pp. 8-21",
+      "guideRef": "Competency 1, level 1.1; Teacher's Guide (2015) pp. 23-26; 6 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 25
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-whole-number-operations",
+      "title_en": "Mathematical Operations on Whole Numbers",
+      "term": 1,
+      "unit": "3. Mathematical Operations on Whole Numbers",
+      "prerequisiteIds": [
+        "m6-place-value"
+      ],
+      "outcomes": [
+        "Add and subtract whole numbers (answers stay whole numbers)",
+        "Multiply and divide whole numbers by 10, 100 and 1000",
+        "Multiply and divide whole numbers by two-digit numbers",
+        "Solve everyday problems using the four operations"
+      ],
+      "textbookRef": "Part 1, pp. 22-38",
+      "guideRef": "Competency 1, levels 1.4, 1.5; Teacher's Guide (2015) pp. 27-33; 10 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 35
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 30
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-time",
+      "title_en": "Time",
+      "term": 1,
+      "unit": "4. Time",
+      "prerequisiteIds": [
+        "m6-whole-number-operations"
+      ],
+      "outcomes": [
+        "Know seconds, minutes, hours and days and how they convert",
+        "Find time taken from a start and finish time",
+        "Add and subtract times given in mixed units",
+        "Switch between 12-hour and 24-hour clock times",
+        "Write dates in the standard yyyy.mm.dd form and plan a daily timetable"
+      ],
+      "textbookRef": "Part 1, pp. 39-61",
+      "guideRef": "Competency 12, levels 12.1, 12.2; Teacher's Guide (2015) pp. 34-38; 6 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 25
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-number-line",
+      "title_en": "Number Line",
+      "term": 1,
+      "unit": "5. Number Line",
+      "prerequisiteIds": [
+        "m6-place-value"
+      ],
+      "outcomes": [
+        "Mark whole numbers on a number line",
+        "Recognise negative numbers and integers in real situations",
+        "Place integers on a number line",
+        "Compare and order integers with >, < and =",
+        "Find an integer that lies between two given integers"
+      ],
+      "textbookRef": "Part 1, pp. 62-75",
+      "guideRef": "Competency 1, levels 1.2, 1.3; Teacher's Guide (2015) pp. 39-42; 11 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 40
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 30
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-estimation-rounding",
+      "title_en": "Estimation and Rounding Off",
+      "term": 1,
+      "unit": "6. Estimation and Rounding Off",
+      "prerequisiteIds": [
+        "m6-place-value",
+        "m6-number-line"
+      ],
+      "outcomes": [
+        "Explain what estimating a count means",
+        "Estimate how many objects are in a countable collection",
+        "Round numbers below 100 to the nearest ten using the rounding rule"
+      ],
+      "textbookRef": "Part 1, pp. 76-84",
+      "guideRef": "Competency 1, levels 1.8, 1.9; Teacher's Guide (2015) pp. 43-46; 8 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 30
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 25
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-angles",
+      "title_en": "Angles",
+      "term": 1,
+      "unit": "7. Angles",
+      "prerequisiteIds": [],
+      "outcomes": [
+        "Recognise an angle in simple examples",
+        "Classify angles as acute, right, obtuse, straight or reflex by comparing with a right angle",
+        "Spot each type of angle in the surroundings"
+      ],
+      "textbookRef": "Part 1, pp. 85-95",
+      "guideRef": "Competency 21, level 21.1; Teacher's Guide (2015) pp. 47-49; 4 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-directions",
+      "title_en": "Directions",
+      "term": 1,
+      "unit": "8. Directions",
+      "prerequisiteIds": [
+        "m6-angles"
+      ],
+      "outcomes": [
+        "Name the eight compass directions",
+        "Describe where a place is from another place using the eight directions",
+        "Recognise horizontal and vertical relative to the ground",
+        "Use direction awareness in daily activities"
+      ],
+      "textbookRef": "Part 1, pp. 96-107",
+      "guideRef": "Competency 13, level 13.1; Teacher's Guide (2015) pp. 50-55; 5 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-fractions",
+      "title_en": "Fractions",
+      "term": 2,
+      "unit": "9. Fractions",
+      "prerequisiteIds": [
+        "m6-whole-number-operations"
+      ],
+      "outcomes": [
+        "See a fraction as part of a whole or part of a group; identify unit and proper fractions",
+        "Find fractions equivalent to a given fraction",
+        "Compare unit fractions and fractions with equal or related denominators",
+        "Add and subtract fractions with equal or related denominators (proper-fraction answers) and simplify"
+      ],
+      "textbookRef": "Part 1, pp. 112-134",
+      "guideRef": "Competency 3, levels 3.1, 3.2, 3.3, 3.4; Teacher's Guide (2015) pp. 56-59; 12 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 40
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 30
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-selection",
+      "title_en": "Selection (Grouping Collections)",
+      "term": 2,
+      "unit": "10. Selection",
+      "prerequisiteIds": [],
+      "outcomes": [
+        "Sort a collection into groups by a shared property",
+        "State the property used to sort",
+        "Give each group a name based on its property"
+      ],
+      "textbookRef": "Part 1, pp. 135-139",
+      "guideRef": "Competency 30, level 30.1; Teacher's Guide (2015) pp. 60-62; 4 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-factors-multiples",
+      "title_en": "Factors and Multiples",
+      "term": 2,
+      "unit": "11. Factors and Multiples",
+      "prerequisiteIds": [
+        "m6-whole-number-operations"
+      ],
+      "outcomes": [
+        "Find factors and multiples using the 10 x 10 multiplication table",
+        "Find factors and multiples beyond the table by multiplying and dividing",
+        "Test divisibility by 2, 5 and 10 from the last digit",
+        "Solve problems involving factors, multiples and divisibility"
+      ],
+      "textbookRef": "Part 1, pp. 140-155",
+      "guideRef": "Competency 1, levels 1.6, 1.7; Teacher's Guide (2015) pp. 63-66; 9 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 30
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 30
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-rectilinear-figures",
+      "title_en": "Rectilinear Plane Figures",
+      "term": 2,
+      "unit": "12. Rectilinear Plane Figures",
+      "prerequisiteIds": [
+        "m6-angles"
+      ],
+      "outcomes": [
+        "Describe key features of rectangles, squares, triangles, parallelograms and trapeziums",
+        "Draw these shapes on a square grid",
+        "Find these shapes in the environment"
+      ],
+      "textbookRef": "Part 2, pp. 1-9",
+      "guideRef": "Competency 23, level 23.1; Teacher's Guide (2015) pp. 67-70; 4 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-decimals",
+      "title_en": "Decimals",
+      "term": 2,
+      "unit": "13. Decimals",
+      "prerequisiteIds": [
+        "m6-place-value",
+        "m6-fractions"
+      ],
+      "outcomes": [
+        "Recognise decimal numbers (tenths and hundredths)",
+        "Compare and order decimals up to two decimal places",
+        "Add and subtract decimals up to two decimal places and solve related problems"
+      ],
+      "textbookRef": "Part 2, pp. 10-25",
+      "guideRef": "Competency 3, levels 3.5, 3.6; Teacher's Guide (2015) pp. 71-74; 6 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 25
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-number-types-patterns",
+      "title_en": "Types of Numbers and Number Patterns",
+      "term": 2,
+      "unit": "14. Types of Numbers and Number Patterns",
+      "prerequisiteIds": [
+        "m6-factors-multiples"
+      ],
+      "outcomes": [
+        "Sort whole numbers into odd and even and predict odd/even results of sums, differences and products",
+        "Tell prime numbers from composite numbers",
+        "Recognise square numbers and triangular numbers",
+        "Continue simple number patterns, including square and triangular patterns"
+      ],
+      "textbookRef": "Part 2, pp. 26-39",
+      "guideRef": "Competency 2, levels 2.1, 2.2; Teacher's Guide (2015) pp. 75-78; 10 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 35
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 30
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-length",
+      "title_en": "Length",
+      "term": 2,
+      "unit": "15. Length",
+      "prerequisiteIds": [
+        "m6-whole-number-operations"
+      ],
+      "outcomes": [
+        "Treat height, distance, breadth, depth and thickness as kinds of length",
+        "Choose mm, cm, m or km and a suitable instrument to measure a length",
+        "Convert between mm, cm, m and km and estimate lengths",
+        "Find the perimeter of a rectilinear figure from its side lengths"
+      ],
+      "textbookRef": "Part 2, pp. 40-60",
+      "guideRef": "Competency 7, levels 7.1, 7.2; Teacher's Guide (2015) pp. 79-82; 8 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 30
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 25
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-liquid-measurements",
+      "title_en": "Liquid Measurements",
+      "term": 2,
+      "unit": "16. Liquid Measurements",
+      "prerequisiteIds": [
+        "m6-whole-number-operations"
+      ],
+      "outcomes": [
+        "Use millilitres and litres for liquid amounts and convert between them",
+        "Estimate liquid amounts",
+        "Add and subtract volumes given in ml and l"
+      ],
+      "textbookRef": "Part 2, pp. 61-72",
+      "guideRef": "Competency 11, level 11.1; Teacher's Guide (2015) pp. 83-87; 4 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-solids",
+      "title_en": "Solids",
+      "term": 2,
+      "unit": "17. Solids",
+      "prerequisiteIds": [
+        "m6-rectilinear-figures"
+      ],
+      "outcomes": [
+        "Build a cube, cuboid and regular tetrahedron from nets",
+        "Count the faces, edges and vertices of these solids and name the face shapes",
+        "Design different nets and build compound solids"
+      ],
+      "textbookRef": "Part 2, pp. 73-85",
+      "guideRef": "Competency 22, level 22.1; Teacher's Guide (2015) pp. 88-91; 8 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 30
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 25
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-algebraic-symbols",
+      "title_en": "Algebraic Symbols",
+      "term": 3,
+      "unit": "18. Algebraic Symbols",
+      "prerequisiteIds": [
+        "m6-whole-number-operations"
+      ],
+      "outcomes": [
+        "Read the meaning of standard symbols",
+        "Tell known terms, unknown constants and variables apart",
+        "Use a letter to stand for an unknown constant or a variable"
+      ],
+      "textbookRef": "Part 2, pp. 90-94",
+      "guideRef": "Competency 14, level 14.1; Teacher's Guide (2015) pp. 92-95; 4 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-algebraic-expressions",
+      "title_en": "Constructing Algebraic Expressions and Substitution",
+      "term": 3,
+      "unit": "19. Constructing Algebraic Expressions and Substitution",
+      "prerequisiteIds": [
+        "m6-algebraic-symbols"
+      ],
+      "outcomes": [
+        "Write simple expressions in one unknown using addition or subtraction",
+        "Find the value of such an expression by substituting a whole number"
+      ],
+      "textbookRef": "Part 2, pp. 95-100",
+      "guideRef": "Competency 14, level 14.2; Teacher's Guide (2015) pp. 96-98; 4 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-mass",
+      "title_en": "Mass",
+      "term": 3,
+      "unit": "20. Mass",
+      "prerequisiteIds": [
+        "m6-whole-number-operations"
+      ],
+      "outcomes": [
+        "Understand mass as the amount of matter in an object",
+        "Choose grams or kilograms and convert between them",
+        "Add and subtract masses in g and kg in everyday situations"
+      ],
+      "textbookRef": "Part 2, pp. 101-113",
+      "guideRef": "Competency 9, level 9.1; Teacher's Guide (2015) pp. 99-102; 5 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-ratio",
+      "title_en": "Ratio",
+      "term": 3,
+      "unit": "21. Ratio",
+      "prerequisiteIds": [
+        "m6-fractions",
+        "m6-factors-multiples"
+      ],
+      "outcomes": [
+        "Describe a ratio between two quantities",
+        "Find equivalent ratios and write a ratio in simplest form",
+        "Use simple rates in buying, selling and other practical situations"
+      ],
+      "textbookRef": "Part 2, pp. 114-125",
+      "guideRef": "Competency 4, level 4.1; Teacher's Guide (2015) pp. 103-105; 6 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 25
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-data-collection",
+      "title_en": "Data Collection and Representation",
+      "term": 3,
+      "unit": "22. Data Collection and Representation",
+      "prerequisiteIds": [
+        "m6-selection"
+      ],
+      "outcomes": [
+        "Collect data with tally marks (up to five groups, fewer than 100 items)",
+        "Show data in a table",
+        "Draw picture graphs, including when one picture stands for several items"
+      ],
+      "textbookRef": "Part 2, pp. 126-137",
+      "guideRef": "Competency 28, level 28.1; Teacher's Guide (2015) pp. 106-108; 6 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 25
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-data-interpretation",
+      "title_en": "Data Interpretation",
+      "term": 3,
+      "unit": "23. Data Interpretation",
+      "prerequisiteIds": [
+        "m6-data-collection"
+      ],
+      "outcomes": [
+        "Read and answer questions from data in tables",
+        "Read and answer questions from picture graphs"
+      ],
+      "textbookRef": "Part 2, pp. 138-146",
+      "guideRef": "Competency 29, level 29.1; Teacher's Guide (2015) pp. 109-112; 5 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-indices",
+      "title_en": "Indices",
+      "term": 3,
+      "unit": "24. Indices",
+      "prerequisiteIds": [
+        "m6-whole-number-operations",
+        "m6-number-types-patterns"
+      ],
+      "outcomes": [
+        "Use index (power) notation",
+        "Write a number below 100 as a power of a whole number where possible",
+        "Expand a power and find its value"
+      ],
+      "textbookRef": "Part 2, pp. 147-152",
+      "guideRef": "Competency 6, level 6.1; Teacher's Guide (2015) pp. 113-116; 4 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-area",
+      "title_en": "Area",
+      "term": 3,
+      "unit": "25. Area",
+      "prerequisiteIds": [
+        "m6-rectilinear-figures",
+        "m6-length"
+      ],
+      "outcomes": [
+        "Understand area as the space a surface covers and measure it with arbitrary units",
+        "Use square centimetres as a unit of area",
+        "Find areas of squares and rectangles on a 1 cm grid",
+        "Make shapes of a given area from 1 cm squares"
+      ],
+      "textbookRef": "Part 2, pp. 153-160",
+      "guideRef": "Competency 8, level 8.1; Teacher's Guide (2015) pp. 117-120; 5 periods",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    }
+  ]
+}

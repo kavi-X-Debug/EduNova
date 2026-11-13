@@ -1,0 +1,68 @@
+[
+  {
+    "kind": "textbook",
+    "title": "සිංහල භාෂාව හා සාහිත්‍යය - 6 ශ්‍රේණිය (Sinhala Language and Literature, Grade 6), single volume",
+    "url": "http://www.edupub.gov.lk/Administrator/Sinhala/6/sinhala%20lan%20g-6/sinhala%20lan%20G-6.pdf",
+    "file": "sources/g6_sinhala_textbook.pdf",
+    "bytes": 10353115,
+    "sha256": "5c9852f6d64d5974316a08f9879edb07f92e05e9bf215146417e94144e779ecb",
+    "edition": "Educational Publications Department; 1st print 2014, reprinted 2015-2019 (6th print 2019); ISBN 978-955-25-0254-5; server file Last-Modified 2019-09-20",
+    "medium": "Sinhala",
+    "notes": "edupub lists it as 'සිංහල භාෂාව හා සාහිත්‍යය - නව විෂය නිර්දේශය' (bookId 1260). The book has one part only: 21 units, 143 printed pages (PDF page = book page + 10). The text uses a legacy FM-Abhaya-style font, so PDF text extraction gives ASCII-mapped glyphs. For this analysis it was converted to Unicode with an approximate converter; a few rare glyphs may be wrong."
+  },
+  {
+    "kind": "teachers_guide",
+    "title": "සිංහල භාෂාව හා සාහිත්‍යය - 6 ශ්‍රේණිය - ගුරු මාර්ගෝපදේශය (Teacher's Guide, Grade 6), includes the Grade 6 syllabus",
+    "url": "https://nie.lk/pdffiles/tg/s6tim131.pdf",
+    "file": "sources/g6_sinhala_teachers_guide_2015.pdf",
+    "bytes": 552983,
+    "sha256": "4d5b471435655ebf8e14dd919bcd63bbba535ea7d3a4b95007bafe60e281357a",
+    "edition": "National Institute of Education, Department of Sinhala; 1st edition 2015 (syllabus implemented from 2015)",
+    "medium": "Sinhala",
+    "notes": "Linked from nie.lk/seletguide2 (Sinhala medium) > Grade 6 > 'සිංහල භාෂාව (2015)'. 60 PDF pages. The syllabus grid (competencies, competency levels, content, learning outcomes, periods) is on PDF pp. 16-27. Lesson guidance for each competency level is on PDF pp. 29-60, one page per level. Legacy font, as with the textbook."
+  },
+  {
+    "kind": "syllabus",
+    "title": "Grade 6 Sinhala Language and Literature syllabus (2015)",
+    "url": "https://nie.lk/pdffiles/tg/s6tim131.pdf",
+    "file": "sources/g6_sinhala_teachers_guide_2015.pdf",
+    "bytes": 552983,
+    "sha256": "4d5b471435655ebf8e14dd919bcd63bbba535ea7d3a4b95007bafe60e281357a",
+    "edition": "NIE 2015",
+    "medium": "Sinhala",
+    "notes": "No separate syllabus PDF was found or needed: the full syllabus is printed inside the teacher's guide (same file as above)."
+  },
+  {
+    "kind": "other",
+    "title": "දෙවන බස සිංහල - 6 ශ්‍රේණිය (Second Language Sinhala, Grade 6) textbook for Tamil-medium students",
+    "url": "http://www.edupub.gov.lk/Administrator/Tamil/6/secod%20la%20g-6%20S/second%20la%20g-6%20S.pdf",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "EPD, listed as '2016 නව විෂය නිර්දේශය' (bookId 1649)",
+    "medium": "Tamil medium (Sinhala as second language)",
+    "notes": "Recorded as a link only. This is a different subject (Sinhala as a second language), not a translation of the mother-tongue Sinhala course. Sinhala as a first language has no English-medium version."
+  },
+  {
+    "kind": "other",
+    "title": "දෙවන බස සිංහල - 6 ශ්‍රේණිය ගුරු මාර්ගෝපදේශය (Second Language Sinhala, Grade 6, Teacher's Guide)",
+    "url": "https://nie.lk/pdffiles/tg/s6tim112.pdf",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "NIE 2015",
+    "medium": "Sinhala / Tamil-medium schools",
+    "notes": "Recorded as a link only."
+  },
+  {
+    "kind": "other",
+    "title": "Grade 6 reform modules (2026), status note",
+    "url": "https://www.adaderana.lk/news.php?nid=117112",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "n/a",
+    "medium": "n/a",
+    "notes": "In January 2026 Cabinet postponed the Grade 6 reform to 2027, and in 2026 Grade 6 is taught with the previous syllabus and textbooks (news link, not a .gov.lk source). As of Nov 2026, edupub.gov.lk and nie.lk list no reformed Grade 6 Sinhala module. Only first-term Grade 6 modules were printed, and those are not published on official sites for Sinhala. If the reform starts in 2027, this path must be rebuilt from the new module."
+  }
+]

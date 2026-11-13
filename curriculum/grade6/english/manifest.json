@@ -1,0 +1,57 @@
+[
+  {
+    "kind": "textbook",
+    "title": "English Pupil's Book, Grade 6 (edupub listing: \"English Pupils Book - New Syllabus\", bookId 1254)",
+    "url": "http://www.edupub.gov.lk/Administrator/English/6/english%20PB%20G-6/english%20PB%20G-6.pdf",
+    "file": "sources/english-g6-pupils-book.pdf",
+    "bytes": 3656762,
+    "sha256": "708a11ca5a0e77a886f645151875a8a00c9e6d6564a77eae520201608d58764c",
+    "edition": "First print 2014, reprinted to Sixth Print 2019 (ISBN 978-955-25-0072-5); 2015 rationalised syllabus",
+    "medium": "English (the single English-language textbook used in all media; not listed separately under Sinhala or Tamil on edupub)",
+    "notes": "136 PDF pages; 11 units on printed pp. 1-122 (front matter i-xiv incl. competency-level grid and 'Book at a Glance'). Text-extractable. Reached via edupub BooksDownload.php -> language English, Grade 6 -> SelectChapter.php. edupub HTTPS timed out; plain HTTP worked."
+  },
+  {
+    "kind": "other",
+    "title": "English Workbook, Grade 6 (edupub listing: \"English Workbook - New Syllabus\", bookId 1285)",
+    "url": "http://www.edupub.gov.lk/Administrator/English/6/english%20wb%20G-6/A94779_ENGLISH%20WORKBOOK%20-%20GRADE%2006.pdf",
+    "file": "sources/english-g6-workbook.pdf",
+    "bytes": 10545087,
+    "sha256": "87e654c513fb3e006f67a250c9af7e286e121cc1e031d5a1d2bf578c5bed9afd",
+    "edition": "Sixth Print 2019 (ISBN 978-955-25-0073-2); same 2015 syllabus as the Pupil's Book",
+    "medium": "English",
+    "notes": "Official EPD pupil's workbook (~84 pages). Scanned/image-only PDF: no text layer, and no OCR/rendering tool was available, so its internal structure was not analysed."
+  },
+  {
+    "kind": "teachers_guide",
+    "title": "English Language Teachers' Guide, Grade 06 (To be implemented from 2015)",
+    "url": "https://nie.lk/pdffiles/tg/e6tim107.pdf",
+    "file": "sources/english-g6-teachers-guide.pdf",
+    "bytes": 369674,
+    "sha256": "37c59289a8806441acee2869550bc9026086cb5d0c0ce3587e14e06f77da717e",
+    "edition": "First Edition 2014, NIE Department of English (listed on nie.lk as 'English (2015)')",
+    "medium": "English",
+    "notes": "68 PDF pages. Contains the full Grade 6 syllabus (8 competencies, 47 competency levels, subject content, learning outcomes, periods) on pp. xiii-xl, then per-competency guidance on pp. 1-26 (periods, outcomes, lesson-plan and assessment notes, further reading). No separate Grade 6 English syllabus is listed on nie.lk/selesyll; the syllabus lives inside this guide. Found via nie.lk/seletguide -> Grade 6. First curl attempts got HTTP 503 (Cloudflare/rate limit); a later retry succeeded."
+  },
+  {
+    "kind": "other",
+    "title": "Channel NIE - Grade 6 English Medium page (2026 reform modules)",
+    "url": "https://channelnie.nie.ac.lk/grade-6-em/",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "2026 education reform (Grade 6 modules), first edition 2025",
+    "medium": "English",
+    "notes": "Link only, not downloaded: NIE's nie.ac.lk domain is outside the brief's allowed list (nie.lk / *.gov.lk), and the page returned Cloudflare 522 (origin timeout) when checked. News reports from January 2026 say distribution of the reformed Grade 6 English module was suspended and one lesson withdrawn, and that the Grade 6 reform was deferred to 2027. Status of a reissued English module is unverified."
+  },
+  {
+    "kind": "other",
+    "title": "Literature in English, Grade 6 Term 1 Module 1 Teachers' Guide (Channel NIE)",
+    "url": "https://channelnie.nie.ac.lk/wp-content/uploads/2025/12/Gr-6-TIM-1-NIE-Web.pdf",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "First Edition 2025 (reform module)",
+    "medium": "English",
+    "notes": "Link only, not downloaded. Belongs to a separate reform-era subject (Literature in English), not the English Language subject; recorded for completeness."
+  }
+]

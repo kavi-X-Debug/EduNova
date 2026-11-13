@@ -1,0 +1,215 @@
+{
+  "subject": "ict",
+  "grade": 6,
+  "edition": "EPD Grade 6 ICT Reading Book + Workbook (English medium, 1st print 2018, 2nd print 2019) and NIE Grade 6 ICT Teachers' Guide (effective from 2018). Pre-reform materials: the 2026 reform modules for Grade 6 were deferred to 2027 and no reformed ICT module is published on edupub.gov.lk or nie.lk.",
+  "concepts": [
+    {
+      "id": "ict6-computer-basics",
+      "title_en": "What a Computer Is and Its Parts",
+      "term": 1,
+      "unit": "Chapter 1: Importance of Computers (1.1-1.2)",
+      "prerequisiteIds": [],
+      "outcomes": [
+        "Describe the input-process-output cycle of a computer",
+        "Compare a computer with a person on speed, accuracy, reliability, consistency, storage, cost and decision-making",
+        "Name everyday devices that contain embedded computers",
+        "Sort hardware into input, output, processing, memory, storage and communication devices"
+      ],
+      "textbookRef": "Reading Book pp. 1-7; Workbook Activity 1.1 (p. 1)",
+      "guideRef": "Competency 1, levels 1.1 and 1.2 (Teachers' Guide pp. 6-15); 3 periods",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 25 },
+        { "kind": "practice", "estimatedMinutes": 20 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "ict6-software-and-uses",
+      "title_en": "Software and Uses of Computers",
+      "term": 1,
+      "unit": "Chapter 1: Importance of Computers (1.3-1.4)",
+      "prerequisiteIds": ["ict6-computer-basics"],
+      "outcomes": [
+        "Tell hardware apart from software and explain why a computer needs software",
+        "Give examples of common software such as games, media players and drawing programs",
+        "Describe how computers help in schools, banks, hospitals, factories and farming"
+      ],
+      "textbookRef": "Reading Book pp. 8-13; Workbook Activities 1.2-1.4 (pp. 2-8)",
+      "guideRef": "Competency 1, levels 1.3 and 1.4 (Teachers' Guide pp. 16-23); 2 periods",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "ict6-safe-lab-use",
+      "title_en": "Using the Computer Laboratory Safely",
+      "term": 1,
+      "unit": "Chapter 2: Use the Computer Laboratory Safely",
+      "prerequisiteIds": ["ict6-computer-basics"],
+      "outcomes": [
+        "Follow good practices in the computer lab (no food or drink, keep it clean and tidy)",
+        "Start up and shut down a computer in the correct order",
+        "Use computers ethically and sit with a healthy posture",
+        "Explain safe disposal of electronic waste",
+        "Explain why passwords protect a computer from unauthorised use"
+      ],
+      "textbookRef": "Reading Book pp. 14-26; Workbook Activities 2.1-2.7 (pp. 9-17)",
+      "guideRef": "Competency 2, levels 2.1 and 2.2 (Teachers' Guide pp. 24-28); 2 periods",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "ict6-os-file-handling",
+      "title_en": "Operating System and File Management",
+      "term": 1,
+      "unit": "Chapter 3: Operating System and File Management",
+      "prerequisiteIds": ["ict6-software-and-uses", "ict6-safe-lab-use"],
+      "outcomes": [
+        "Explain that the operating system links the user, the hardware and other software",
+        "Use desktop icons to open programs, files and folders",
+        "Minimise, maximise, resize, switch between and close windows",
+        "Create, save, open, edit and close a file and organise files in folders"
+      ],
+      "textbookRef": "Reading Book pp. 27-40; Workbook Activities 3.1-3.5 (pp. 18-27)",
+      "guideRef": "Competency 3, level 3.1 (Teachers' Guide pp. 29-34); 2 periods",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 25 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "ict6-mouse-keyboard-drawing",
+      "title_en": "Application Software: Mouse, Keyboard and Drawing",
+      "term": 2,
+      "unit": "Chapter 4: Application Software Using Mouse and Keyboard (4.1-4.3, drawing and typing)",
+      "prerequisiteIds": ["ict6-os-file-handling"],
+      "outcomes": [
+        "Name types of application software and match tasks to them",
+        "Click, double-click, right-click and drag with the mouse",
+        "Identify letter, number and special keys and type with correct finger placement",
+        "Draw a simple picture with drawing software"
+      ],
+      "textbookRef": "Reading Book pp. 41-50; Workbook Activities 4.1-4.6 (pp. 28-42)",
+      "guideRef": "Competency 4, level 4.1 (Teachers' Guide pp. 35-44); 5 periods (1 in Term 1, 4 in Term 2)",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 25 },
+        { "kind": "practice", "estimatedMinutes": 30 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "ict6-audio-video",
+      "title_en": "Audio and Video Software",
+      "term": 2,
+      "unit": "Chapter 4: Application Software (4.3, audio-visual editing)",
+      "prerequisiteIds": ["ict6-mouse-keyboard-drawing"],
+      "outcomes": [
+        "Name examples of audio-editing and video-editing software",
+        "Record and save a short audio clip",
+        "Put together a short video clip from images or recordings",
+        "Follow ethical rules when recording and editing other people"
+      ],
+      "textbookRef": "Reading Book pp. 51-54; Workbook Activities 4.7-4.8 (pp. 43-45)",
+      "guideRef": "Competency 4, level 4.2 (Teachers' Guide pp. 45-51); 2 periods",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 25 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "ict6-problem-solving-algorithms",
+      "title_en": "Problem Solving and Algorithms",
+      "term": 2,
+      "unit": "Chapter 5: Algorithm & Flow Charts (5.1-5.2)",
+      "prerequisiteIds": ["ict6-computer-basics"],
+      "outcomes": [
+        "Break an everyday problem into an ordered series of steps",
+        "Explain what an algorithm is",
+        "Write a simple step-by-step algorithm for a daily task"
+      ],
+      "textbookRef": "Reading Book pp. 55-58; Workbook Activities 5.1-5.2 (pp. 46-47)",
+      "guideRef": "Competency 5, level 5.1 (Teachers' Guide pp. 52-53); 2 periods",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "ict6-flowcharts",
+      "title_en": "Flowcharts",
+      "term": 2,
+      "unit": "Chapter 5: Algorithm & Flow Charts (5.3)",
+      "prerequisiteIds": ["ict6-problem-solving-algorithms"],
+      "outcomes": [
+        "Recognise the start/stop, input/output and process symbols",
+        "Draw a flowchart for a simple sequential everyday process",
+        "Turn a written algorithm into a flowchart"
+      ],
+      "textbookRef": "Reading Book pp. 59-63; Workbook Activities 5.3-5.4 (pp. 48-51)",
+      "guideRef": "Competency 5, level 5.2 (Teachers' Guide pp. 54-56); 3 periods (2 in Term 2, 1 in Term 3)",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 20 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "ict6-internet-search",
+      "title_en": "Using the Internet and Search Engines",
+      "term": 3,
+      "unit": "Chapter 6: Using the Internet for Collecting Information and Communication (6.1-6.4)",
+      "prerequisiteIds": ["ict6-os-file-handling", "ict6-mouse-keyboard-drawing"],
+      "outcomes": [
+        "Describe the Internet as a worldwide network of shared information",
+        "Use a web browser's address bar and navigation buttons",
+        "Find information on educational websites",
+        "Name several search engines and use keywords to search a topic effectively"
+      ],
+      "textbookRef": "Reading Book pp. 64-73; Workbook Activity 6.1 (pp. 52-53)",
+      "guideRef": "Competency 6, levels 6.1 and 6.2 (Teachers' Guide pp. 57-67); 8 periods",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 25 },
+        { "kind": "practice", "estimatedMinutes": 30 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "ict6-online-safety",
+      "title_en": "Using the Internet Safely",
+      "term": 3,
+      "unit": "Chapter 6: Using the Internet for Collecting Information and Communication (6.5)",
+      "prerequisiteIds": ["ict6-internet-search", "ict6-safe-lab-use"],
+      "outcomes": [
+        "Keep usernames and passwords private and choose strong passwords",
+        "Use e-mail safely and recognise suspicious messages",
+        "Explain basic precautions for online transactions",
+        "Ask a trusted adult for guidance when using the Internet"
+      ],
+      "textbookRef": "Reading Book pp. 74-78; Workbook Activity 6.2 (pp. 54-55)",
+      "guideRef": "Competency 6, level 6.3 (Teachers' Guide pp. 68-71); 1 period",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 15 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    }
+  ]
+}

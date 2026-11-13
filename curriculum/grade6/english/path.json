@@ -1,0 +1,241 @@
+{
+  "subject": "english",
+  "grade": 6,
+  "edition": "EPD English Pupil's Book Grade 6 (2015 syllabus, Sixth Print 2019) + NIE English Language Teachers' Guide Grade 06 (First Edition 2014, implemented from 2015)",
+  "concepts": [
+    {
+      "id": "en6-hello",
+      "title_en": "Hello: meeting friends and introducing myself",
+      "term": 1,
+      "unit": "Unit 1 - Hello",
+      "prerequisiteIds": [],
+      "outcomes": [
+        "Greet, thank and introduce yourself with name, age, school, hobbies and family details",
+        "Use am / is / are in positive, question and negative sentences in the present tense",
+        "Pick the expression that fits a social situation (greeting, thanking, apologising)",
+        "Hear and say short and long vowel sounds in simple words"
+      ],
+      "textbookRef": "Pupil's Book, pp. 1-10",
+      "guideRef": "C.L. 1.1, 1.2, 3.2, 5.2, 5.3, 6.1 (be-verbs present), 7.1, 8.1, 8.2; TG syllabus pp. xiii-xxiv, guide pp. 1-2, 14, 21",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "en6-leisure",
+      "title_en": "Leisure: what people are doing now",
+      "term": 1,
+      "unit": "Unit 2 - Leisure",
+      "prerequisiteIds": ["en6-hello"],
+      "outcomes": [
+        "Describe actions happening now with the present continuous tense",
+        "Describe a picture of people at play in simple sentences",
+        "Rearrange jumbled words into correct sentences",
+        "Use question words to ask about activities and use language suited to places like a sports meet or home"
+      ],
+      "textbookRef": "Pupil's Book, pp. 11-21",
+      "guideRef": "C.L. 1.1, 1.2, 5.1, 5.2, 6.1 (present continuous), 8.12, 8.13; TG pp. xxiv-xxviii, 14, 26",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 20 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "en6-where-is-everything",
+      "title_en": "Where's everything? Position, directions and plurals",
+      "term": 1,
+      "unit": "Unit 3 - Where's Everything?",
+      "prerequisiteIds": ["en6-hello"],
+      "outcomes": [
+        "Say where things are using in, on, under, between, near, in front of and behind",
+        "Ask for and follow simple directions and spoken instructions",
+        "Follow picture-based steps to make something",
+        "Form plural nouns with -s, -es, -en and vowel change"
+      ],
+      "textbookRef": "Pupil's Book, pp. 22-31",
+      "guideRef": "C.L. 3.1, 3.2, 3.3, 4.5, 5.1, 5.2, 6.1, 6.6, 6.7, 7.1, 7.2, 8.3, 8.5, 8.8, 8.9, 8.12, 8.13; TG pp. 6-10, 14-15, 21-26",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 20 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "en6-what-can-you-see",
+      "title_en": "What can you see? Determiners and describing things",
+      "term": 1,
+      "unit": "Unit 4 - What Can You See?",
+      "prerequisiteIds": ["en6-where-is-everything"],
+      "outcomes": [
+        "Choose this, that, these, those, a, an and some correctly",
+        "Use adjectives of colour, size, quality and origin to describe objects and rooms",
+        "Compare two pictures and say what is different",
+        "Listen for specific details in a short spoken text"
+      ],
+      "textbookRef": "Pupil's Book, pp. 32-38",
+      "guideRef": "C.L. 3.1, 3.3, 5.2, 5.6, 6.1, 6.2, 6.4, 6.6, 6.7, 6.8, 7.1, 7.4; TG pp. xxvi-xxxiii, 14-15",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 15 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "en6-aunt-minolis-kitchen",
+      "title_en": "Aunt Minoli's kitchen: instructions, punctuation and 'and'",
+      "term": 2,
+      "unit": "Unit 5 - Aunt Minoli's Kitchen",
+      "prerequisiteIds": ["en6-hello", "en6-what-can-you-see"],
+      "outcomes": [
+        "Put the steps of a simple recipe in order and match them to pictures",
+        "Write short instructions for a simple process",
+        "Use capital letters, full stops and question marks correctly",
+        "Join nouns, adjectives and sentences with 'and'"
+      ],
+      "textbookRef": "Pupil's Book, pp. 39-48",
+      "guideRef": "C.L. 1.2, 2.1, 2.2, 2.3, 5.1, 5.2, 6.8, 7.4; TG pp. xv, 3-5, 11-13, 15, 18-20",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 20 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "en6-what-we-do",
+      "title_en": "What we do: daily routines and the simple present",
+      "term": 2,
+      "unit": "Unit 6 - What We Do",
+      "prerequisiteIds": ["en6-leisure"],
+      "outcomes": [
+        "Talk and write about daily routines and habits using the simple present tense",
+        "Ask classmates questions with what, when, where, who, why, how and which, and report the answers",
+        "Speak briefly about a favourite sport, food or TV programme",
+        "Write simple step-by-step instructions (for example making a mask)"
+      ],
+      "textbookRef": "Pupil's Book, pp. 49-62",
+      "guideRef": "C.L. 3.2, 5.2, 5.6, 6.1 (simple present), 7.1, 7.4, 8.4, 8.10, 8.12; TG pp. 11-15, 18-26",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 25 },
+        { "kind": "practice", "estimatedMinutes": 20 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "en6-a-fine-day",
+      "title_en": "A fine day: weather, time words and a poem",
+      "term": 2,
+      "unit": "Unit 7 - A Fine Day",
+      "prerequisiteIds": ["en6-where-is-everything", "en6-what-we-do"],
+      "outcomes": [
+        "Name weather conditions and match them to symbols",
+        "Use on, in and at with days, months and times",
+        "Read a short story for its main idea and details",
+        "Read a short poem aloud with rhythm and say what it is about"
+      ],
+      "textbookRef": "Pupil's Book, pp. 63-70",
+      "guideRef": "C.L. 1.1, 1.2, 3.3, 5.1, 5.2, 5.5, 5.6, 6.1, 6.2, 6.6, 6.7, 8.6, 8.7, 8.12, 8.13; TG pp. 1-2, 6-7, 11-15",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 15 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "en6-visit-to-the-zoo",
+      "title_en": "A visit to the zoo: can, may, possession and a folk story",
+      "term": 2,
+      "unit": "Unit 8 - A Visit to the Zoo",
+      "prerequisiteIds": ["en6-what-we-do"],
+      "outcomes": [
+        "Use 'can' for ability and 'can' / 'may' to ask for permission",
+        "Show possession with my, your and 's",
+        "Read a simple folk story and identify its characters and message",
+        "Use a simple map to complete directions and sort words by vowel sound",
+        "Find opposites (antonyms) for common words"
+      ],
+      "textbookRef": "Pupil's Book, pp. 71-83",
+      "guideRef": "C.L. 1.1, 1.2, 4.3, 5.1, 5.2, 5.5, 6.3, 8.6; TG pp. 8-15, 21-26",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 20 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "en6-sugar-or-sand",
+      "title_en": "Sugar or sand: pronouns, adverbs and gender words",
+      "term": 3,
+      "unit": "Unit 9 - Sugar or Sand",
+      "prerequisiteIds": ["en6-what-can-you-see", "en6-visit-to-the-zoo"],
+      "outcomes": [
+        "Read and complete a short humorous folk tale",
+        "Replace nouns with the right subject or object pronoun",
+        "Form adverbs and use them to describe actions",
+        "Use masculine and feminine forms of nouns",
+        "Tell apart words with similar sounds (for example /p/ and /f/)"
+      ],
+      "textbookRef": "Pupil's Book, pp. 84-99",
+      "guideRef": "C.L. 1.1, 1.2, 3.2, 4.1, 4.4, 5.2, 5.3, 5.4, 5.5, 6.2, 6.9; TG pp. 1-2, 8-15",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 25 },
+        { "kind": "practice", "estimatedMinutes": 20 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "en6-was-it-yesterday",
+      "title_en": "Was it yesterday? Talking about the past",
+      "term": 3,
+      "unit": "Unit 10 - Was It Yesterday?",
+      "prerequisiteIds": ["en6-hello", "en6-what-we-do"],
+      "outcomes": [
+        "Use was / were and the simple past of regular and common irregular verbs",
+        "Tell the class what you did yesterday or last weekend",
+        "Read a passage and transfer key facts into a table",
+        "Recite a short poem and listen for specific words"
+      ],
+      "textbookRef": "Pupil's Book, pp. 100-110",
+      "guideRef": "C.L. 3.3, 4.2, 4.3, 4.4, 5.2, 5.6, 6.1 (be-verbs past, simple past), 7.1, 7.2, 8.11; TG pp. xxiv-xxviii, 6-15, 18-26",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 25 },
+        { "kind": "practice", "estimatedMinutes": 20 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "en6-eco-friends",
+      "title_en": "Eco friends: hobbies, animals and caring for nature",
+      "term": 3,
+      "unit": "Unit 11 - Eco Friends",
+      "prerequisiteIds": ["en6-sugar-or-sand", "en6-was-it-yesterday"],
+      "outcomes": [
+        "Write a short paragraph about free-time activities",
+        "Find information about an animal and write a simple description",
+        "Listen to a short news item and complete a grid",
+        "Name young ones of animals and match words with their meanings and opposites",
+        "Use simple expressions about protecting the environment"
+      ],
+      "textbookRef": "Pupil's Book, pp. 111-122",
+      "guideRef": "C.L. 3.1, 3.3, 4.2, 4.3, 5.2, 5.6, 7.1, 7.2, 7.3, 7.5, 7.6, 8.4, 8.11; TG pp. 6-10, 11-13, 18-26",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 20 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 15 }
+      ]
+    }
+  ]
+}

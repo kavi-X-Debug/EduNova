@@ -1,0 +1,280 @@
+{
+  "subject": "science",
+  "grade": 6,
+  "edition": "EPD Science Grade 6 textbook (English medium, 1st print 2014, 6th print 2019; 2015 NIE syllabus) + NIE Science Grade 6 Teachers' Guide, 1st ed. 2015",
+  "concepts": [
+    {
+      "id": "s6-living-characteristics",
+      "title_en": "Characteristics of Living Things",
+      "term": 1,
+      "unit": "1. Wonders of the Living World (1.1 Characteristics of Organisms)",
+      "prerequisiteIds": [],
+      "outcomes": [
+        "Tell living things from non-living things and give examples of each",
+        "Describe the life characteristics: growth, reproduction, movement, respiration, nutrition and response",
+        "Plan a simple activity that shows a characteristic of life, such as plant growth",
+        "Record observations of organisms in a table and display the data"
+      ],
+      "textbookRef": "pp. 1-12",
+      "guideRef": "Competency 1, level 1.1; TG pp. 2-3; syllabus p. xiii",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "s6-classifying-organisms",
+      "title_en": "Classifying Organisms: Plants, Animals and Microorganisms",
+      "term": 1,
+      "unit": "1. Wonders of the Living World (1.2 Differences between Plants and Animals)",
+      "prerequisiteIds": ["s6-living-characteristics"],
+      "outcomes": [
+        "Group organisms as plants, animals or microorganisms",
+        "Explain how plants and animals differ in locomotion, nutrition and growth",
+        "Use a simple dichotomous key to identify organisms",
+        "Show care for living things and value the diversity of life"
+      ],
+      "textbookRef": "pp. 13-20",
+      "guideRef": "Competency 1, level 1.2; TG pp. 2-3; syllabus p. xiii",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "s6-things-around-us",
+      "title_en": "Things Around Us: Matter, Energy and States of Matter",
+      "term": 1,
+      "unit": "2. Things Around Us",
+      "prerequisiteIds": [],
+      "outcomes": [
+        "Distinguish matter from energy with everyday examples",
+        "Compare solids, liquids and gases by their shape and volume",
+        "Test solids for hardness, malleability, ductility, elasticity, brittleness and texture",
+        "Link material properties to how the materials are used"
+      ],
+      "textbookRef": "pp. 21-34",
+      "guideRef": "Competency 2, levels 2.1-2.3; TG pp. 4-5; syllabus p. xiv",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "s6-water-resource",
+      "title_en": "Water as a Natural Resource",
+      "term": 1,
+      "unit": "3. Water as a Natural Resource",
+      "prerequisiteIds": ["s6-things-around-us"],
+      "outcomes": [
+        "Name the three states of water",
+        "Describe ground water, rain and surface water as water sources",
+        "Classify water as fresh, brackish or sea water, and compare salt content by experiment",
+        "Explain why water is vital and why it is a limited resource to conserve"
+      ],
+      "textbookRef": "pp. 35-48",
+      "guideRef": "Competency 2, levels 2.4-2.6; TG pp. 6-7; syllabus p. xv",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "s6-energy-sources",
+      "title_en": "Energy in Day-to-Day Life",
+      "term": 2,
+      "unit": "4. Energy in Day to Day Life",
+      "prerequisiteIds": ["s6-things-around-us"],
+      "outcomes": [
+        "Describe energy as the ability to do work",
+        "Identify the Sun as the main source of energy",
+        "Describe uses of biomass, fossil fuel, wind, hydro, wave, tidal, geothermal and nuclear energy",
+        "Recognise that some sources run out, and value using energy sustainably"
+      ],
+      "textbookRef": "pp. 49-66",
+      "guideRef": "Competency 3, levels 3.1-3.3; TG p. 8; syllabus p. xvi",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "s6-light-vision",
+      "title_en": "Light and Vision",
+      "term": 2,
+      "unit": "5. Light and Vision",
+      "prerequisiteIds": ["s6-energy-sources"],
+      "outcomes": [
+        "State what is needed for us to see an object",
+        "Classify objects as luminous or non-luminous, and materials as transparent, translucent or opaque",
+        "Distinguish a light ray from a light beam, and show that light travels in straight lines",
+        "Describe everyday, medical and plant-growth uses of light"
+      ],
+      "textbookRef": "pp. 67-86",
+      "guideRef": "Competency 3, levels 3.4-3.7; TG pp. 9-10; syllabus p. xvii",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "s6-sound-hearing",
+      "title_en": "Sound and Hearing",
+      "term": 2,
+      "unit": "6. Sound and Hearing",
+      "prerequisiteIds": ["s6-energy-sources"],
+      "outcomes": [
+        "Identify sound as what we sense with our ears",
+        "Classify sounds in the environment as natural or artificial",
+        "Tell music from noise",
+        "Make a simple instrument that produces sound by vibration"
+      ],
+      "textbookRef": "pp. 87-98",
+      "guideRef": "Competency 3, levels 3.8-3.9; TG pp. 11-12; syllabus p. xviii",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 15 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "s6-magnets",
+      "title_en": "Magnets",
+      "term": 2,
+      "unit": "7. Magnets",
+      "prerequisiteIds": ["s6-things-around-us"],
+      "outcomes": [
+        "Show that magnets attract certain materials only",
+        "Identify the poles of a magnet, including by using a compass",
+        "State that like poles repel and unlike poles attract",
+        "Use repulsion to tell a magnet from a piece of magnetic material"
+      ],
+      "textbookRef": "pp. 99-109",
+      "guideRef": "Competency 3, levels 3.10-3.11; TG pp. 13-14; syllabus p. xviii",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 15 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "s6-generating-electricity",
+      "title_en": "Electricity in Daily Life and How It Is Generated",
+      "term": 3,
+      "unit": "8. Electricity for a Comfortable Life (8.1-8.2)",
+      "prerequisiteIds": ["s6-energy-sources", "s6-magnets"],
+      "outcomes": [
+        "List everyday uses of electricity",
+        "Name devices and power stations that generate electricity",
+        "Describe chemical cells and solar cells as sources of electricity",
+        "Carry out a simple activity that generates electricity"
+      ],
+      "textbookRef": "pp. 110-116",
+      "guideRef": "Competency 3, level 3.12; TG pp. 15-16; syllabus p. xix",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "s6-electric-circuits",
+      "title_en": "Electric Circuits, Conductors and Electronic Components",
+      "term": 3,
+      "unit": "8. Electricity for a Comfortable Life (8.3-8.6)",
+      "prerequisiteIds": ["s6-generating-electricity", "s6-things-around-us"],
+      "outcomes": [
+        "Connect a simple circuit with a cell, switch, bulb, wires and an ammeter",
+        "Draw circuit diagrams using standard symbols",
+        "Sort materials into conductors and insulators by testing them",
+        "Describe what diodes, LEDs, resistors and LDRs do, and use electricity safely and economically"
+      ],
+      "textbookRef": "pp. 117-132",
+      "guideRef": "Competency 3, levels 3.13-3.14; TG pp. 15-16; syllabus p. xix",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 25 },
+        { "kind": "practice", "estimatedMinutes": 20 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "s6-heat-effects",
+      "title_en": "Heat and Its Effects",
+      "term": 3,
+      "unit": "9. Heat and Its Effects",
+      "prerequisiteIds": ["s6-things-around-us", "s6-energy-sources", "s6-generating-electricity"],
+      "outcomes": [
+        "List ways heat is generated: fuel, electricity, sunlight and friction",
+        "Measure temperature correctly with a thermometer",
+        "Demonstrate the effects of heat: temperature rise, expansion, change of state and change of colour",
+        "Relate the effects of heat to the environment, and handle heat safely"
+      ],
+      "textbookRef": "pp. 133-147",
+      "guideRef": "Competency 3, levels 3.15-3.17; TG pp. 16-17; syllabus p. xx",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 15 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "s6-food-interactions",
+      "title_en": "Food Related Interactions",
+      "term": 3,
+      "unit": "10. Food Related Interactions",
+      "prerequisiteIds": ["s6-classifying-organisms", "s6-energy-sources"],
+      "outcomes": [
+        "Classify animals as herbivores, carnivores or omnivores by what they eat",
+        "Explain that all animals depend directly or indirectly on plants for food",
+        "Build food chains from observations, and link them into food webs",
+        "Pick out food chains within a food web, and value the balance of nature"
+      ],
+      "textbookRef": "pp. 148-158",
+      "guideRef": "Competency 4, levels 4.1-4.2; TG p. 18; syllabus p. xxi",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    },
+    {
+      "id": "s6-weather-climate",
+      "title_en": "Weather and Climate",
+      "term": 3,
+      "unit": "11. Weather and Climate",
+      "prerequisiteIds": ["s6-water-resource", "s6-heat-effects"],
+      "outcomes": [
+        "Distinguish weather from climate",
+        "Name rain, wind, temperature and humidity as factors that determine weather",
+        "Use simple home-made or standard instruments to observe and record weather over time",
+        "Describe floods, cyclones, droughts and landslides linked to climatic changes"
+      ],
+      "textbookRef": "pp. 159-175",
+      "guideRef": "Competency 4, levels 4.3-4.4; TG pp. 19-20; syllabus p. xxii",
+      "steps": [
+        { "kind": "lesson", "estimatedMinutes": 20 },
+        { "kind": "practice", "estimatedMinutes": 15 },
+        { "kind": "quiz", "estimatedMinutes": 10 },
+        { "kind": "revision", "estimatedMinutes": 10 }
+      ]
+    }
+  ]
+}

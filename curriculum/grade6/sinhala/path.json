@@ -1,0 +1,1112 @@
+{
+  "subject": "sinhala",
+  "grade": 6,
+  "edition": "EPD Grade 6 'Sinhala Bhashava ha Sahithyaya' textbook (1st print 2014, 6th print 2019; edupub file dated 2019-09-20), syllabus from 2015; NIE Teacher's Guide 1st ed. 2015. Pre-reform materials, which are the official ones for 2026 because the Grade 6 reform was put back to 2027.",
+  "concepts": [
+    {
+      "id": "si6-folk-tale-listening",
+      "title_en": "Folk tale: How Nari Naide was fooled (listening and responding)",
+      "title_si": "නරි නයිදේ රැවටිච්චු",
+      "term": 1,
+      "unit": "1. නරි නයිදේ රැවටිච්චු (Nari Naide Ravatichchu)",
+      "prerequisiteIds": [],
+      "outcomes": [
+        "Explain what folk lore is and name its main forms (folk tales, proverbs, folk poems)",
+        "Listen to a folk tale and retell the main events in order",
+        "Answer questions about a story heard and give a personal response",
+        "Notice that the story uses older spoken words and explain their meaning"
+      ],
+      "textbookRef": "pp. 1-6",
+      "guideRef": "Competency 1.0, level 1.1 (5 periods); TG lesson guidance PDF p. 29; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-poem-appreciation",
+      "title_en": "Poem: Udaya Siri (listening to and enjoying children's poetry)",
+      "title_si": "උදය සිරි",
+      "term": 1,
+      "unit": "2. උදය සිරි (Udaya Siri)",
+      "prerequisiteIds": [
+        "si6-folk-tale-listening"
+      ],
+      "outcomes": [
+        "Listen attentively to a set of verses and say what they are about",
+        "Identify the theme of a poem and explain it simply",
+        "Point out rhyme and rhythm and how they make a poem easy to recite",
+        "Show interest in reading and reciting other poems"
+      ],
+      "textbookRef": "pp. 7-8",
+      "guideRef": "Competency 1.0, level 1.3 (5 periods); TG lesson guidance PDF p. 31; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-writing-poems",
+      "title_en": "Let's write poems (simple verse composition)",
+      "title_si": "අපි කවි ලියමු",
+      "term": 1,
+      "unit": "2. උදය සිරි - අපි කවි ලියමු",
+      "prerequisiteIds": [
+        "si6-poem-appreciation"
+      ],
+      "outcomes": [
+        "Choose a suitable theme for a short poem",
+        "Match words so that lines rhyme and keep a steady rhythm",
+        "Use simple figures of speech such as comparisons",
+        "Write and recite a short original poem"
+      ],
+      "textbookRef": "pp. 9-10",
+      "guideRef": "Competency 12.0, level 12.1 (4 periods); TG lesson guidance PDF p. 58; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 5
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-vedda-life",
+      "title_en": "Sri Lanka's Vedda people: life, beliefs and language",
+      "title_si": "චුචෙං චුලඟෙං යමු කිරි නෑනෝ",
+      "term": 1,
+      "unit": "3. චුචෙං චුලඟෙං යමු කිරි නෑනෝ",
+      "prerequisiteIds": [
+        "si6-folk-tale-listening"
+      ],
+      "outcomes": [
+        "Name the Veddas as the indigenous people of Sri Lanka",
+        "Describe main features of traditional Vedda life and beliefs from the reading",
+        "Recognise a few Vedda-language words and what they mean",
+        "Show respect for cultures different from one's own"
+      ],
+      "textbookRef": "pp. 11-18",
+      "guideRef": "Competency 9.0, level 9.4 (5 periods); TG lesson guidance PDF p. 53; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-topical-speech",
+      "title_en": "Speaking on a topic clearly and politely",
+      "title_si": "මාතෘකානුකූල කතා",
+      "term": 1,
+      "unit": "3. චුචෙං චුලඟෙං යමු කිරි නෑනෝ - මාතෘකානුකූල කතා",
+      "prerequisiteIds": [
+        "si6-folk-tale-listening"
+      ],
+      "outcomes": [
+        "Plan a short talk with a beginning, middle and end",
+        "Speak clearly with good voice control and without hesitation",
+        "Adjust language to the listener (parents, relatives, friends, clergy) and stay courteous",
+        "Hold the attention of an audience"
+      ],
+      "textbookRef": "p. 19",
+      "guideRef": "Competency 1.0, levels 1.6 and 1.2 (5 + 5 periods); TG lesson guidance PDF p. 30, 33; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-greeting-cards",
+      "title_en": "Greeting cards",
+      "title_si": "සුබ පැතුම් පත්",
+      "term": 1,
+      "unit": "3. චුචෙං චුලඟෙං යමු කිරි නෑනෝ - සුබ පැතුම් පත්",
+      "prerequisiteIds": [
+        "si6-topical-speech"
+      ],
+      "outcomes": [
+        "List the basic features of a greeting card (sender, receiver, short heartfelt message)",
+        "Choose wording that suits the relationship with the receiver",
+        "Design and write a creative greeting card"
+      ],
+      "textbookRef": "pp. 19-20",
+      "guideRef": "Competency 7.0, level 7.2 (4 periods); TG lesson guidance PDF p. 47; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 5
+        }
+      ]
+    },
+    {
+      "id": "si6-personal-letters",
+      "title_en": "Personal letters",
+      "title_si": "පෞද්ගලික ලිපි",
+      "term": 1,
+      "unit": "3. චුචෙං චුලඟෙං යමු කිරි නෑනෝ - පෞද්ගලික ලිපි",
+      "prerequisiteIds": [
+        "si6-greeting-cards"
+      ],
+      "outcomes": [
+        "Recognise the layout of a personal letter (address and date, greeting, body, closing)",
+        "Write a personal letter that follows that layout",
+        "Choose a tone that suits the person written to"
+      ],
+      "textbookRef": "pp. 21-23",
+      "guideRef": "Competency 7.0, level 7.1 (4 periods); TG lesson guidance PDF p. 46; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 5
+        }
+      ]
+    },
+    {
+      "id": "si6-alphabet-pili",
+      "title_en": "The Sinhala alphabet and vowel signs (pili)",
+      "title_si": "අක්ෂරමාලාව හා පිලි",
+      "term": 1,
+      "unit": "4. අක්ෂරමාලාව හා පිලි",
+      "prerequisiteIds": [],
+      "outcomes": [
+        "Write the Sinhala alphabet in the correct order",
+        "Group letters into vowels and consonants",
+        "Name the vowel signs (pili) and use them correctly",
+        "Form letters with the correct shape and size"
+      ],
+      "textbookRef": "pp. 24-28",
+      "guideRef": "Competency 3.0, level 3.1 (5 periods); TG lesson guidance PDF p. 37; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-nouns",
+      "title_en": "Nouns and their forms (number, case: subject/non-subject, gender)",
+      "title_si": "නාම පද හා එහි ප්‍රභේද",
+      "term": 1,
+      "unit": "5. නාම පද හා එහි ප්‍රභේද",
+      "prerequisiteIds": [
+        "si6-alphabet-pili"
+      ],
+      "outcomes": [
+        "Identify nouns in sentences",
+        "Change nouns between singular and plural",
+        "Tell subject (ukta) forms from non-subject (anukta) forms",
+        "Classify nouns by gender and use them correctly in sentences"
+      ],
+      "textbookRef": "pp. 29-41",
+      "guideRef": "Competency 6.0, level 6.1 (5 periods); TG lesson guidance PDF p. 43; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-good-customs-poem",
+      "title_en": "Poem on good customs (values through reading)",
+      "title_si": "සිරිත් හොඳ දැන ගෙන",
+      "term": 1,
+      "unit": "6. සිරිත් හොඳ දැන ගෙන",
+      "prerequisiteIds": [
+        "si6-poem-appreciation"
+      ],
+      "outcomes": [
+        "Read verses about good habits and explain what each recommends",
+        "Discuss why good customs are worth keeping",
+        "Relate the values in the poem to daily life"
+      ],
+      "textbookRef": "pp. 42-44",
+      "guideRef": "Competency 9.0, level 9.2 (4 periods); TG lesson guidance PDF p. 51; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 5
+        }
+      ]
+    },
+    {
+      "id": "si6-reading-aloud",
+      "title_en": "Reading aloud: The Elephant Danger (Kumaratunga Munidasa)",
+      "title_si": "අලි උවදුර",
+      "term": 1,
+      "unit": "7. අලි උවදුර",
+      "prerequisiteIds": [
+        "si6-alphabet-pili"
+      ],
+      "outcomes": [
+        "Read a passage aloud with clear and correct pronunciation",
+        "Control voice and pause at punctuation while reading",
+        "Read with understanding and answer questions on the passage",
+        "Practise difficult sounds with pronunciation drills"
+      ],
+      "textbookRef": "pp. 45-49",
+      "guideRef": "Competency 2.0, level 2.1 (5 periods); TG lesson guidance PDF p. 34; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-vocabulary-adjectives",
+      "title_en": "Vocabulary: synonyms, antonyms and adjectives",
+      "title_si": "විශේෂණ පද",
+      "term": 1,
+      "unit": "7. අලි උවදුර - විශේෂණ පද (also 16. - විශේෂණ පද, p. 105)",
+      "prerequisiteIds": [
+        "si6-nouns"
+      ],
+      "outcomes": [
+        "Identify synonyms, antonyms and adjectives",
+        "Add suitable adjectives to nouns",
+        "Use synonyms, antonyms and adjectives correctly in writing"
+      ],
+      "textbookRef": "p. 50; p. 105",
+      "guideRef": "Competency 5.0, level 5.1 (6 periods); TG lesson guidance PDF p. 41; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-jataka-styled-reading",
+      "title_en": "Nalapana Jataka: reading in different styles",
+      "title_si": "නලපාන ජාතකය",
+      "term": 2,
+      "unit": "8. නලපාන ජාතකය",
+      "prerequisiteIds": [
+        "si6-reading-aloud"
+      ],
+      "outcomes": [
+        "Recognise different writing styles (classical prose, drama)",
+        "Read a Jataka story in an appropriate, listenable style",
+        "Read a drama extract in character",
+        "Appreciate how the reading style brings out the flavour of a text"
+      ],
+      "textbookRef": "pp. 51-58",
+      "guideRef": "Competency 2.0, level 2.2 (5 periods); TG lesson guidance PDF p. 35; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-spelling-aspirates-nasals",
+      "title_en": "Spelling: aspirated letters, prenasalised letters and na/na, la/la",
+      "title_si": "මහාප්‍රාණ අක්ෂර හා සඤ්ඤක අක්ෂර",
+      "term": 2,
+      "unit": "8. නලපාන ජාතකය - මහාප්‍රාණ අක්ෂර, සඤ්ඤක අක්ෂර",
+      "prerequisiteIds": [
+        "si6-alphabet-pili"
+      ],
+      "outcomes": [
+        "Tell unaspirated (alpaprana) from aspirated (mahaprana) letters and use them correctly",
+        "Use prenasalised (sannaka) letters correctly in words",
+        "Choose correctly between letters that sound the same (na/na, la/la)"
+      ],
+      "textbookRef": "pp. 59-61",
+      "guideRef": "Competency 3.0, level 3.3 (6 periods); TG lesson guidance PDF p. 38; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-verbs",
+      "title_en": "Verbs and their forms; word classes and word division",
+      "title_si": "ක්‍රියා පද හා එහි ප්‍රභේද",
+      "term": 2,
+      "unit": "9. ක්‍රියා පද හා එහි ප්‍රභේද",
+      "prerequisiteIds": [
+        "si6-nouns"
+      ],
+      "outcomes": [
+        "Name the three word classes: nouns, verbs and particles (nipata)",
+        "Separate words correctly when writing",
+        "Classify verbs by number, person, gender and tense",
+        "Use verb forms correctly in practical writing"
+      ],
+      "textbookRef": "pp. 62-71",
+      "guideRef": "Competency 6.0, level 6.2 (6 periods); Competency 4.0, level 4.2 (4 periods); TG lesson guidance PDF p. 40, 44; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 25
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-sentence-building",
+      "title_en": "Building sentences (subject-verb agreement)",
+      "title_si": "වාක්‍ය නිර්මාණය",
+      "term": 2,
+      "unit": "10. වාක්‍ය නිර්මාණය",
+      "prerequisiteIds": [
+        "si6-verbs"
+      ],
+      "outcomes": [
+        "Make the verb agree with the subject in number, person and gender",
+        "Use the correct tense in sentences",
+        "Build sentences with subject, object and predicate in the right relationship",
+        "Value correct sentence rules in writing"
+      ],
+      "textbookRef": "pp. 72-74",
+      "guideRef": "Competency 6.0, level 6.5 (8 periods); TG lesson guidance PDF p. 45; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 25
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 25
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-tank-heritage",
+      "title_en": "Kala Wewa: tanks and the culture around them",
+      "title_si": "කලා වැවට පින් දීලා පලයල්ලා",
+      "term": 2,
+      "unit": "11. කලා වැවට පින් දීලා පලයල්ලා",
+      "prerequisiteIds": [
+        "si6-reading-aloud"
+      ],
+      "outcomes": [
+        "Gather facts about irrigation tanks from a reading (Brohier, translated)",
+        "Explain the cultural customs and beliefs linked to the tank",
+        "Use this knowledge in study and creative work",
+        "Value the irrigation heritage of Sri Lanka"
+      ],
+      "textbookRef": "pp. 75-78",
+      "guideRef": "Competency 9.0, level 9.1 (5 periods); TG lesson guidance PDF p. 50; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-topic-essays",
+      "title_en": "Writing essays on a topic",
+      "title_si": "මාතෘකානුකූල රචනා ලිවීම",
+      "term": 2,
+      "unit": "11. කලා වැවට පින් දීලා පලයල්ලා - මාතෘකානුකූල රචනා ලිවීම",
+      "prerequisiteIds": [
+        "si6-sentence-building"
+      ],
+      "outcomes": [
+        "Choose a topic and gather points for it",
+        "Plan an essay with an introduction, body and conclusion",
+        "Organise points logically and write in suitable language",
+        "Check spelling, word division and punctuation"
+      ],
+      "textbookRef": "pp. 79-80",
+      "guideRef": "Competency 8.0, level 8.1 (4 periods); TG lesson guidance PDF p. 48; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 25
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 5
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-silent-reading",
+      "title_en": "Silent reading: The Walking Leaf (Martin Wickramasinghe)",
+      "title_si": "ඇවිදින කොළයා",
+      "term": 2,
+      "unit": "12. ඇවිදින කොළයා",
+      "prerequisiteIds": [
+        "si6-reading-aloud"
+      ],
+      "outcomes": [
+        "Read silently and understand a popular-science story",
+        "Explain the technical words in the text",
+        "Present the information gathered from reading",
+        "Value the habit of reading widely"
+      ],
+      "textbookRef": "pp. 81-84",
+      "guideRef": "Competency 2.0, level 2.3 (5 periods); TG lesson guidance PDF p. 36; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-punctuation",
+      "title_en": "Punctuation marks",
+      "title_si": "විරාම ලක්ෂණ",
+      "term": 2,
+      "unit": "12. ඇවිදින කොළයා - විරාම ලක්ෂණ",
+      "prerequisiteIds": [
+        "si6-sentence-building"
+      ],
+      "outcomes": [
+        "Name the full stop, comma, question mark, exclamation mark and single/double quotation marks",
+        "Use punctuation correctly so that writing is clear",
+        "Use full stops to mark abbreviations"
+      ],
+      "textbookRef": "pp. 85-88",
+      "guideRef": "Competency 4.0, level 4.1 (5 periods); TG lesson guidance PDF p. 39; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-traditional-food",
+      "title_en": "Traditional food of old Sri Lanka (from Robert Knox)",
+      "title_si": "අග්ගළා කංඩෝං පුතායි",
+      "term": 2,
+      "unit": "13. අග්ගළා කංඩෝං පුතායි",
+      "prerequisiteIds": [
+        "si6-silent-reading"
+      ],
+      "outcomes": [
+        "Describe food and food-preparation knowledge of Kandyan-era Sri Lanka",
+        "Name old food types and the customs linked to them",
+        "Recognise and use language expressions related to food"
+      ],
+      "textbookRef": "pp. 89-93",
+      "guideRef": "Competency 10.0, level 10.2 (5 periods); TG lesson guidance PDF p. 55; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-folk-poems",
+      "title_en": "Folk poems (cart-driver's songs)",
+      "title_si": "සසඳ සසඳ හඳපානේ අපි යනවා",
+      "term": 2,
+      "unit": "14. සසඳ සසඳ හඳපානේ අපි යනවා",
+      "prerequisiteIds": [
+        "si6-poem-appreciation"
+      ],
+      "outcomes": [
+        "Explain what folk poetry is and how it differs from learned poetry",
+        "Describe the life experiences behind the folk poems",
+        "Explain the culture reflected in the poems",
+        "Value folk poetry as part of Sinhala literature"
+      ],
+      "textbookRef": "pp. 94-96",
+      "guideRef": "Competency 11.0, level 11.2 (6 periods); TG lesson guidance PDF p. 57; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-classical-poetry",
+      "title_en": "Classical poetry: Kavyashekharaya and Guttila Kavyaya",
+      "title_si": "සදා මෙලෙස පුර දෙරණේ",
+      "term": 3,
+      "unit": "15. ‘සදා මෙලෙස පුර දෙරණේ’",
+      "prerequisiteIds": [
+        "si6-folk-poems"
+      ],
+      "outcomes": [
+        "Place the poems in the Kotte period of Sinhala poetry",
+        "Explain the human experiences described in the verses",
+        "Find comparisons (similes) and descriptions in the verses",
+        "Explain the meaning of key words from the verses"
+      ],
+      "textbookRef": "pp. 97-100",
+      "guideRef": "Competency 11.0, level 11.1 (4 periods, shared with Unit 19); TG lesson guidance PDF p. 56; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-proverbs",
+      "title_en": "Proverbs and the stories behind them",
+      "title_si": "මරණ තුනක් ඇති මිනිසෙක් පැණි කෑ ය",
+      "term": 3,
+      "unit": "16. මරණ තුනක් ඇති මිනිසෙක් පැණි කෑ ය",
+      "prerequisiteIds": [
+        "si6-folk-tale-listening",
+        "si6-vocabulary-adjectives"
+      ],
+      "outcomes": [
+        "Explain what a proverb (prastava pirula) is",
+        "Retell the story behind a proverb",
+        "Use proverbs suitably in speech and writing"
+      ],
+      "textbookRef": "pp. 101-106",
+      "guideRef": "Competency 5.0, level 5.2 (4 periods); TG lesson guidance PDF p. 42; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 5
+        }
+      ]
+    },
+    {
+      "id": "si6-writer-biography",
+      "title_en": "A writer's childhood: K. Jayatilake (autobiography)",
+      "title_si": "පුංචි පැළේ ගස වෙනා",
+      "term": 3,
+      "unit": "17. පුංචි පැළේ ගස වෙනා",
+      "prerequisiteIds": [
+        "si6-silent-reading"
+      ],
+      "outcomes": [
+        "Present facts about the writer's life from the reading",
+        "Identify the skills and qualities that made him a writer",
+        "Name lessons that can be learned from his life",
+        "Explain what an autobiography is"
+      ],
+      "textbookRef": "pp. 107-113",
+      "guideRef": "Competency 10.0, level 10.1 (5 periods); TG lesson guidance PDF p. 54; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-patriotic-song",
+      "title_en": "Patriotic song: Vasanavan (W. A. Abeysinghe)",
+      "title_si": "වාසනාවන්",
+      "term": 3,
+      "unit": "18. වාසනාවන්",
+      "prerequisiteIds": [
+        "si6-poem-appreciation"
+      ],
+      "outcomes": [
+        "Explain the ideas in a patriotic song in simple words",
+        "Name the natural resources and beauty of the country described",
+        "Comment on the poetic features of the song",
+        "Enjoy and value patriotic literature"
+      ],
+      "textbookRef": "pp. 114-115",
+      "guideRef": "Competency 9.0, level 9.3 (4 periods); TG lesson guidance PDF p. 52; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 5
+        }
+      ]
+    },
+    {
+      "id": "si6-folk-tale-reading",
+      "title_en": "Folk tale: the watchman scolded by Rasin Deiyo",
+      "title_si": "රාසිං දෙයියන්ට බැණ වැදුණ මුරකරුවා",
+      "term": 3,
+      "unit": "19. රාසිං දෙයියන්ට බැණ වැදුණ මුරකරුවා",
+      "prerequisiteIds": [
+        "si6-folk-tale-listening",
+        "si6-classical-poetry"
+      ],
+      "outcomes": [
+        "Identify the human experiences in a folk tale",
+        "Explain the life lessons the story brings out",
+        "Collect other folk tales from the community"
+      ],
+      "textbookRef": "pp. 116-120",
+      "guideRef": "Competency 11.0, level 11.1 (4 periods, shared with Unit 15); TG lesson guidance PDF p. 56; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-creative-fiction",
+      "title_en": "Writing creative stories",
+      "title_si": "නිර්මාණාත්මක ප්‍රබන්ධ රචනා",
+      "term": 3,
+      "unit": "19. රාසිං දෙයියන්ට බැණ වැදුණ මුරකරුවා - නිර්මාණාත්මක ප්‍රබන්ධ රචනා",
+      "prerequisiteIds": [
+        "si6-topic-essays",
+        "si6-folk-tale-reading"
+      ],
+      "outcomes": [
+        "Pick situations and events that make a good story",
+        "Build characters and events that follow logically",
+        "Write a short, engaging story of one's own"
+      ],
+      "textbookRef": "p. 121",
+      "guideRef": "Competency 12.0, level 12.2 (4 periods); TG lesson guidance PDF p. 59; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 25
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 5
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-radio-listening",
+      "title_en": "Listening for information: a radio programme on a solar eclipse",
+      "title_si": "සූරිය උදා වී යළි සැඟවුණාදෝ",
+      "term": 3,
+      "unit": "20. සූරිය උදා වී යළි සැඟවුණාදෝ",
+      "prerequisiteIds": [
+        "si6-silent-reading"
+      ],
+      "outcomes": [
+        "Listen attentively to a radio programme and note key facts",
+        "Recall and present the information heard",
+        "Separate scientific facts from folk beliefs about an eclipse",
+        "Use the gathered information in suitable situations"
+      ],
+      "textbookRef": "pp. 122-132",
+      "guideRef": "Competency 1.0, level 1.4 (5 periods); TG lesson guidance PDF p. 32; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-wall-news-magazines",
+      "title_en": "Wall newspaper and magazine articles",
+      "title_si": "බිත්ති පුවත්පත් ලිපි හා සඟරා ලිපි",
+      "term": 3,
+      "unit": "20. සූරිය උදා වී යළි සැඟවුණාදෝ - බිත්ති පුවත්පත් ලිපි, සඟරා ලිපි",
+      "prerequisiteIds": [
+        "si6-topic-essays",
+        "si6-punctuation"
+      ],
+      "outcomes": [
+        "Describe the special features of wall-newspaper and magazine writing",
+        "Write a clear, attractive article for a class wall newspaper or magazine",
+        "Present ideas so that they catch the reader's interest"
+      ],
+      "textbookRef": "pp. 133-136",
+      "guideRef": "Competency 8.0, level 8.2 (4 periods); TG lesson guidance PDF p. 49; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 15
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 5
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "si6-history-story-dialogue",
+      "title_en": "Enemy and friend: a historical story and writing dialogue",
+      "title_si": "සතුරු - මිතුරුව",
+      "term": 3,
+      "unit": "21. සතුරු - මිතුරුව",
+      "prerequisiteIds": [
+        "si6-creative-fiction"
+      ],
+      "outcomes": [
+        "Read a historical story from Kumaratunga Munidasa's Prabandhopadeshaya and explain its message",
+        "Identify the basic features of written dialogue",
+        "Choose a suitable incident and write a dialogue between characters",
+        "Use language that suits a play script"
+      ],
+      "textbookRef": "pp. 137-143",
+      "guideRef": "Competency 12.0, level 12.3 (4 periods); also 11.1; TG lesson guidance PDF p. 56, 60; syllabus grid TG PDF pp. 16-27",
+      "steps": [
+        {
+          "kind": "lesson",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "practice",
+          "estimatedMinutes": 20
+        },
+        {
+          "kind": "quiz",
+          "estimatedMinutes": 10
+        },
+        {
+          "kind": "revision",
+          "estimatedMinutes": 10
+        }
+      ]
+    }
+  ]
+}

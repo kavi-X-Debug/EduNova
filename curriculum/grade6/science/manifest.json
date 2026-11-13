@@ -1,0 +1,79 @@
+[
+  {
+    "kind": "textbook",
+    "title": "Science, Grade 6 (English medium, single volume, 11 chapters)",
+    "url": "http://www.edupub.gov.lk/Administrator/English/6/science%20G-6%20%20E/science%20G-6%20E.pdf",
+    "file": "sources/science-g6-en-textbook.pdf",
+    "bytes": 16555739,
+    "sha256": "563a03ed6dd504d55307a40c78a6bb0b991714768b6689489c2f09405380e05b",
+    "edition": "EPD, first print 2014, sixth print 2019 (foreword dated 2019-04-10); ISBN 978-955-25-0079-4; written for the NIE syllabus in force from 2015",
+    "medium": "English",
+    "notes": "Only Grade 6 Science book listed by edupub.gov.lk (BooksDownload -> English -> Grade 6 -> 'Science - New Syllabus', bookId 1242). One PDF, 189 PDF pages; printed pages 1-175 plus front matter. Printed page N is at PDF page N+14. This is the pre-reform (2015 syllabus) book; the 2026 Grade 6 reform was deferred to 2027 and this book was reprinted for 2026."
+  },
+  {
+    "kind": "teachers_guide",
+    "title": "Science Grade Six Teachers' Guide (includes the Grade 6 syllabus)",
+    "url": "https://e-thaksalawa.moe.gov.lk/lcms/pluginfile.php/44688/mod_resource/content/2/EG6tim_Sci.pdf",
+    "file": "sources/EG6tim_Sci.pdf",
+    "bytes": 794431,
+    "sha256": "7b9969330101baec7e9578fb1bdb4b154531dcd1437d60c70cb2f327b751b7b2",
+    "edition": "NIE, First Edition 2015",
+    "medium": "English",
+    "notes": "Published by the NIE Department of Science; hosted on the Ministry of Education's e-thaksalawa LMS (moe.gov.lk), course 'Science - Grade - 06', resource 'Teacher's Instruction Manual (New Syllabus)' (view.php?id=42000). nie.lk itself was not usable: www.nie.lk returned Cloudflare 503 and nie.lk guessed paths returned 404. 53 pages: syllabus pp. xiii-xxii, learning-teaching guidance pp. 1-20, exemplar school-based assessment tools pp. 21-26, recommended practicals pp. 27-28, term-wise teaching sequence p. 29."
+  },
+  {
+    "kind": "syllabus",
+    "title": "Science Grade 6 Syllabus (2015), bundled inside the Teachers' Guide",
+    "url": "https://e-thaksalawa.moe.gov.lk/lcms/pluginfile.php/44688/mod_resource/content/2/EG6tim_Sci.pdf",
+    "file": "sources/EG6tim_Sci.pdf",
+    "bytes": 794431,
+    "sha256": "7b9969330101baec7e9578fb1bdb4b154531dcd1437d60c70cb2f327b751b7b2",
+    "edition": "NIE 2015 rationalised syllabus",
+    "medium": "English",
+    "notes": "Same file as the teachers' guide (Teachers' Guide pp. xiii-xxii). No separate syllabus PDF was found on an official site."
+  },
+  {
+    "kind": "textbook",
+    "title": "Vidyava (Science), Grade 6, Sinhala medium - link only",
+    "url": "http://www.edupub.gov.lk/Administrator/Sinhala/6/science%20g6%20S/science%20g-6%20S.pdf",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "EPD, same 2015-syllabus series (edupub bookId 1659)",
+    "medium": "Sinhala",
+    "notes": "Recorded only, not downloaded, as the brief requires."
+  },
+  {
+    "kind": "textbook",
+    "title": "Vinganam (Science), Grade 6, Tamil medium - link only",
+    "url": "http://www.edupub.gov.lk/Administrator/Tamil/6/science%20G%206/science%20G-6.pdf",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "EPD, same 2015-syllabus series (edupub bookId 1794)",
+    "medium": "Tamil",
+    "notes": "Recorded only, not downloaded, as the brief requires."
+  },
+  {
+    "kind": "other",
+    "title": "e-thaksalawa Science Grade 6 course (chapter-wise textbook PDFs, activity sheets)",
+    "url": "https://e-thaksalawa.moe.gov.lk/lcms/course/view.php?id=290",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "Same 2015-syllabus content",
+    "medium": "English",
+    "notes": "Official MoE LMS. Has per-lesson textbook files and activity or task sheets that could feed practice items later. Not downloaded."
+  },
+  {
+    "kind": "other",
+    "title": "Reformed Grade 6 Science learning modules (2026 reform) - not obtained",
+    "url": "https://channelnie.nie.ac.lk/modules/",
+    "file": null,
+    "bytes": null,
+    "sha256": null,
+    "edition": "Reform modules (first printed 2025, according to secondary reports)",
+    "medium": "English",
+    "notes": "Gap. Press reports (Jan to Sep 2026) say the Grade 6 reform was deferred to 2027 and the old Grade 6 textbooks were reprinted for 2026. NIE's module page is on nie.ac.lk, which is outside the allowed domain list, and it returned HTTP 522 anyway. Copies seen in search results were on unofficial mirrors only (pastpapers.wiki), so nothing was downloaded. From those listings, the first-term science module appears to contain 'Things Around Us' and 'Wonders of the Living World'; this is unverified."
+  }
+]

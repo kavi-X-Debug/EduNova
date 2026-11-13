@@ -3,3 +3,6 @@ dist
 *.local
 *.tsbuildinfo
 .claude/worktrees
+
+# Downloaded curriculum PDFs (large, re-downloadable; see each manifest.json)
+curriculum/**/sources/
