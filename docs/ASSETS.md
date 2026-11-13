@@ -45,3 +45,5 @@ Rendered by `BadgeImage` (`src/components/ui/BadgeImage.tsx`) on Badges, Home "M
 
 ## Games (`/student/games`)
 No new raster art was added. Game thumbnails are a token-coloured SVG (`GameThumb`) with the existing subject icon on top. A game may set `thumbnail.image` (e.g. `public/games/<id>.png`, a NEW subfolder; none exist yet) and it is only used if it loads. New badges `first-game`, `game-five`, `new-subject`, `every-subject` have no Flow PNG yet (the vector medal `BadgeArt` shows; add `public/badges/<id>.png` to override). Sounds are generated with Web Audio (no audio files), off by default.
+
+English games: no new raster art. The Pick the Little Word picture is an inline token-coloured SVG (`english/PrepositionScene.tsx`: floor, box, table, ball; decorative, with an `aria-label` that gives the sentence). English game thumbnails use the token-coloured `GameThumb` plus the existing English subject icon; no `public/games/` image was added.
