@@ -36,6 +36,9 @@ export interface DragDropZoneProps {
 
 interface Drag { id: string; x: number; y: number; startX: number; startY: number; moved: boolean }
 const THRESHOLD = 8;
+/** Auto-scroll while dragging: within EDGE px of the top/bottom of the window, up to SCROLL_MAX px per pointer move. */
+const EDGE = 72;
+const SCROLL_MAX = 28;
 
 /**
  * Drag and drop with big, forgiving zones AND a tap alternative:
@@ -99,6 +102,12 @@ export function DragDropZone({ items, zones, placements, onPlace, disabled, labe
     const moved = drag.moved || Math.hypot(e.clientX - drag.startX, e.clientY - drag.startY) > THRESHOLD;
     setDrag({ ...drag, x: e.clientX, y: e.clientY, moved });
     setOver(moved ? zoneAt(e.clientX, e.clientY) : null);
+    if (moved) {
+      // chips use touch-action: none, so the page cannot scroll under a finger: scroll while dragging near the top or bottom edge
+      const vh = window.innerHeight;
+      if (e.clientY > vh - EDGE) window.scrollBy(0, Math.ceil((SCROLL_MAX * (e.clientY - (vh - EDGE))) / EDGE));
+      else if (e.clientY < EDGE) window.scrollBy(0, -Math.ceil((SCROLL_MAX * (EDGE - e.clientY)) / EDGE));
+    }
   };
   const onPointerUp = (e: ReactPointerEvent<HTMLButtonElement>) => {
     if (!drag) return;

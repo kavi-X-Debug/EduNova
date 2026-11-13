@@ -25,7 +25,7 @@ export function RoundFeedback({ session }: { session: Pick<GameSession<unknown>,
         {status === 'right' && (
           <div className="flex items-center gap-4 rounded-xl border-2 border-success-700 bg-success-50 p-4 motion-ok:animate-fx-pop-in">
             <Mascot mood="cheer" size="sm" />
-            <p className="text-xl font-bold text-success-700">{t(`games.feedback.right.${index % 3}`)}</p>
+            <p className="min-w-0 break-words text-xl font-bold text-success-700">{t(`games.feedback.right.${index % 3}`)}</p>
           </div>
         )}
         {status === 'wrong' && (
