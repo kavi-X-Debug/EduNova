@@ -25,15 +25,15 @@ export function RoundFeedback({ session }: { session: Pick<GameSession<unknown>,
         {status === 'right' && (
           <div className="flex items-center gap-4 rounded-xl border-2 border-success-700 bg-success-50 p-4 motion-ok:animate-fx-pop-in">
             <Mascot mood="cheer" size="sm" />
-            <p className="text-xl font-bold text-success-700">{t(`games.feedback.right.${index % 3}`)}</p>
+            <p className="min-w-0 break-words text-xl font-bold text-success-700">{t(`games.feedback.right.${index % 3}`)}</p>
           </div>
         )}
         {status === 'wrong' && (
           <div className="flex items-start gap-4 rounded-xl border-2 border-warning-700 bg-warning-50 p-4 motion-ok:animate-fx-pop-in">
             <Mascot mood="happy" size="sm" />
-            <div>
-              <p className="text-xl font-bold text-warning-700">{t('games.feedback.wrong')}</p>
-              {explanation && <p className="mt-1 text-lg text-ink">{explanation}</p>}
+            <div className="min-w-0">
+              <p className="break-words text-xl font-bold text-warning-700">{t('games.feedback.wrong')}</p>
+              {explanation && <p className="mt-1 break-words text-lg text-ink">{explanation}</p>}
             </div>
           </div>
         )}

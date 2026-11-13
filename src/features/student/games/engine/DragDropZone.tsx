@@ -47,29 +47,22 @@ const THRESHOLD = 8;
 export function DragDropZone({ items, zones, placements, onPlace, disabled, label }: DragDropZoneProps) {
   const t = useT();
   const [selected, setSelected] = useState<string | null>(null);
-  const [drag, setDrag] = useState<Drag | null>(null);
+  const [drag, setDragState] = useState<Drag | null>(null);
+  // Mirror of `drag` that is updated synchronously, so a fast flick (move + release inside one frame) is still read as a drag.
+  const dragRef = useRef<Drag | null>(null);
+  const setDrag = (d: Drag | null) => {
+    dragRef.current = d;
+    setDragState(d);
+  };
   const [over, setOver] = useState<string | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const justDragged = useRef(false);
   const focusAfter = useRef<string | null>(null);
+  const pointer = useRef({ x: 0, y: 0 });
 
   const itemById = (id: string) => items.find((i) => i.id === id);
   const inZone = (zoneId: string) => items.filter((i) => placements[i.id] === zoneId);
   const tray = items.filter((i) => !placements[i.id]);
-
-  // While a chip is being dragged near the top or bottom edge of the screen, scroll the page so zones that start
-  // off-screen (small phones) can still be reached by dragging. The tap alternative always works too.
-  const pointerY = useRef(0);
-  const dragging = Boolean(drag?.moved);
-  useEffect(() => {
-    if (!dragging) return;
-    const id = window.setInterval(() => {
-      const y = pointerY.current;
-      if (y > window.innerHeight - 80) window.scrollBy(0, 16);
-      else if (y < 80) window.scrollBy(0, -16);
-    }, 16);
-    return () => window.clearInterval(id);
-  }, [dragging]);
 
   useEffect(() => {
     if (!focusAfter.current) return;
@@ -77,6 +70,26 @@ export function DragDropZone({ items, zones, placements, onPlace, disabled, labe
     focusAfter.current = null;
     el?.focus();
   });
+
+  // While a chip is being dragged near the top or bottom edge of the screen, scroll the page so far-away places can be reached.
+  const dragging = Boolean(drag?.moved);
+  useEffect(() => {
+    if (!dragging) return;
+    let raf = 0;
+    const EDGE = 80;
+    const tick = () => {
+      const { x, y } = pointer.current;
+      const dy = y < EDGE ? -Math.ceil((EDGE - y) / 5) : y > window.innerHeight - EDGE ? Math.ceil((y - (window.innerHeight - EDGE)) / 5) : 0;
+      if (dy) {
+        window.scrollBy(0, dy);
+        const el = document.elementFromPoint(x, y)?.closest<HTMLElement>('[data-zone]');
+        setOver(el?.dataset.zone ?? null);
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [dragging]);
 
   const place = (itemId: string, zoneId: string | null) => {
     const item = itemById(itemId);
@@ -109,13 +122,15 @@ export function DragDropZone({ items, zones, placements, onPlace, disabled, labe
     setDrag({ id, x: e.clientX, y: e.clientY, startX: e.clientX, startY: e.clientY, moved: false });
   };
   const onPointerMove = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    const drag = dragRef.current;
     if (!drag) return;
-    pointerY.current = e.clientY;
+    pointer.current = { x: e.clientX, y: e.clientY };
     const moved = drag.moved || Math.hypot(e.clientX - drag.startX, e.clientY - drag.startY) > THRESHOLD;
     setDrag({ ...drag, x: e.clientX, y: e.clientY, moved });
     setOver(moved ? zoneAt(e.clientX, e.clientY) : null);
   };
   const onPointerUp = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    const drag = dragRef.current;
     if (!drag) return;
     const wasDrag = drag.moved;
     const id = drag.id;
