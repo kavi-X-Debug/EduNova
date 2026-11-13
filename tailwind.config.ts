@@ -93,6 +93,36 @@ const gxAnimation = {
   'gx-hop': 'gx-hop 600ms cubic-bezier(0, 0, 0.2, 1) 1',
 };
 // ---- end Game motion ----
+// ---- Sinhala games art motion (gx-sinhala-*). Same rules as gx-*: transform/opacity only, finite, gated with `motion-ok:`. ----
+const gxSinhalaKeyframes = {
+  'gx-sinhala-snap': { '0%': { opacity: '0.6', transform: 'translateY(-10px) scale(1.06)' }, '60%': { opacity: '1', transform: 'translateY(2px) scale(0.98)' }, '100%': { opacity: '1', transform: 'translateY(0) scale(1)' } },
+  'gx-sinhala-bounce': { '0%': { opacity: '0.5', transform: 'translateY(-12px)' }, '55%': { opacity: '1', transform: 'translateY(3px)' }, '80%': { transform: 'translateY(-2px)' }, '100%': { transform: 'translateY(0)' } },
+  'gx-sinhala-underline': { from: { transform: 'scaleX(0)' }, to: { transform: 'scaleX(1)' } },
+  'gx-sinhala-write': { '0%': { opacity: '0', transform: 'translateX(-70px) rotate(-8deg)' }, '30%': { opacity: '1' }, '100%': { opacity: '1', transform: 'translateX(0) rotate(0deg)' } },
+  'gx-sinhala-tap': { '0%,100%': { transform: 'translateY(0) rotate(-12deg)' }, '40%': { transform: 'translateY(8px) rotate(-4deg)' } },
+  'gx-sinhala-join-l': { from: { transform: 'translateX(-14px)' }, to: { transform: 'translateX(0)' } },
+  'gx-sinhala-join-r': { from: { transform: 'translateX(14px)' }, to: { transform: 'translateX(0)' } },
+  'gx-sinhala-sweep': { '0%': { transform: 'translateX(0) rotate(-8deg)' }, '50%': { transform: 'translateX(96px) rotate(8deg)' }, '100%': { transform: 'translateX(0) rotate(-8deg)' } },
+  'gx-sinhala-rub': { '0%,100%': { transform: 'translateX(-10px) rotate(-6deg)' }, '50%': { transform: 'translateX(10px) rotate(6deg)' } },
+  'gx-sinhala-waddle': { '0%,100%': { transform: 'rotate(0deg) translateY(0)' }, '25%': { transform: 'rotate(-4deg) translateY(-2px)' }, '75%': { transform: 'rotate(4deg) translateY(-2px)' } },
+  'gx-sinhala-flag': { '0%,100%': { transform: 'rotate(0deg)' }, '30%': { transform: 'rotate(10deg)' }, '70%': { transform: 'rotate(-6deg)' } },
+  'gx-sinhala-page': { '0%': { opacity: '0.4', transform: 'scaleX(0.35) rotate(-6deg)' }, '100%': { opacity: '1', transform: 'scaleX(1) rotate(0deg)' } },
+};
+const gxSinhalaAnimation = {
+  'gx-sinhala-snap': 'gx-sinhala-snap 380ms cubic-bezier(0, 0, 0.2, 1) 1',
+  'gx-sinhala-bounce': 'gx-sinhala-bounce 520ms cubic-bezier(0, 0, 0.2, 1) 1',
+  'gx-sinhala-underline': 'gx-sinhala-underline 700ms cubic-bezier(0.2, 0, 0, 1) 250ms 1 backwards',
+  'gx-sinhala-write': 'gx-sinhala-write 900ms ease-out 1 backwards',
+  'gx-sinhala-tap': 'gx-sinhala-tap 700ms ease-in-out 3',
+  'gx-sinhala-join-l': 'gx-sinhala-join-l 500ms cubic-bezier(0, 0, 0.2, 1) 1 backwards',
+  'gx-sinhala-join-r': 'gx-sinhala-join-r 500ms cubic-bezier(0, 0, 0.2, 1) 1 backwards',
+  'gx-sinhala-sweep': 'gx-sinhala-sweep 3200ms ease-in-out 2',
+  'gx-sinhala-rub': 'gx-sinhala-rub 600ms ease-in-out 3',
+  'gx-sinhala-waddle': 'gx-sinhala-waddle 1200ms ease-in-out 2',
+  'gx-sinhala-flag': 'gx-sinhala-flag 1600ms ease-in-out 3',
+  'gx-sinhala-page': 'gx-sinhala-page 450ms cubic-bezier(0, 0, 0.2, 1) 1',
+};
+// ---- end Sinhala games art motion ----
 
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
@@ -149,6 +179,7 @@ export default {
         'badge-pop': { '0%': { opacity: '0', transform: 'scale(0.6)' }, '60%': { opacity: '1', transform: 'scale(1.08)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
         ...fxKeyframes,
         ...gxKeyframes,
+        ...gxSinhalaKeyframes,
       },
       animation: {
         'fade-in': 'fade-in 200ms cubic-bezier(0, 0, 0.2, 1) backwards',
@@ -163,6 +194,7 @@ export default {
         'badge-pop': 'badge-pop 600ms cubic-bezier(0, 0, 0.2, 1) backwards',
         ...fxAnimation,
         ...gxAnimation,
+        ...gxSinhalaAnimation,
       },
       fontFamily: {
         sans: ['Inter', 'Noto Sans Sinhala', 'Noto Sans Tamil', 'system-ui', 'sans-serif'],

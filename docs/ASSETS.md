@@ -70,3 +70,17 @@ Made with Google Flow (AI-generated). **Check Flow's terms of use before any pub
 - `take-a-break.webp`: the Pause dialog.
 
 `public/avatars/` (PNG, 256 x 256, transparent, about 27 KB each, 5 files): `cat.png`, `dog.png`, `rabbit.png`, `turtle.png`, `bird.png`. The only picture choices on the student Me page (radio group); `ProfileAvatar` shows them wherever a preset animal avatar is shown, with the chosen colour as a thin rim. Fallback: the lucide icon of the same preset id. Older preset ids (fish, rocket, ...) keep their icon.
+
+## Sinhala games: Flow sprites in play (`gx-sinhala-*`)
+
+Small `<Sprite name="..." size={n} />` (`games/engine/Sprite.tsx`): a decorative `<img>` of `/game-sprites/<name>.png` (alt="", aria-hidden, lazy, async decode, not draggable); if the file is missing it is not drawn. Keyframes: one block `gx-sinhala-*` in `tailwind.config.ts`, always behind `motion-ok:`. Sinhala stays live text (nothing baked into images).
+
+| Game | Sprites | What moves |
+|---|---|---|
+| word-builder | puzzle-piece, pencil, picture sprites (tree, sun, mountain, star, cat, bell, grass) | tiles are CSS wooden blocks with the live letters; one puzzle piece per slot snaps in as the slot is filled; on a right answer the word gets an underline that draws itself and a pencil writes in; wrong = the piece row nudges |
+| match-word-picture | picture sprites, card-pair | a partner card sits dashed with "?"; on a right match both cards slide together and the card-pair sprite pops |
+| sentence-order | pencil | CSS coloured blocks (no ribbon sprite: coloured strip), blocks bounce into place, pencil taps the finished sentence on a right answer |
+| fix-the-spelling | magnifier, eraser, check, pencil | magnifier sweeps over the picture (slow, twice); wrong pick gets an eraser swipe, the right option a check pop |
+| reading-race | tortoise, storybook, finish-flag | a calm path above the story: the tortoise takes one step per finished page and waddles on a right answer; flag waves at the end; the storybook turns a page when the read-along moves line |
+
+`SinhalaPicture` (`sinhala/pictures.tsx`) now uses a sprite for words that have one (tree, sun, mountain, star, cat, bell, grass) and falls back to the drawn picture if the sprite fails.

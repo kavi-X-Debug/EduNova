@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Check } from 'lucide-react';
-import { BigActionButton } from '@/components/ui';
+import { BigActionButton, cn } from '@/components/ui';
 import { useGt as useT } from '@/features/student/games/useGt';
 import type { GameComponentProps } from '@/types';
 import { DragDropZone, RoundFeedback, useGameSession, type GameSession } from '../engine';
+import { Sprite } from '../engine/Sprite';
 import { SinhalaPicture } from './pictures';
 import { isWordBuilt, makeWordBuilderRound, ROUNDS_PER_PLAY, type WordBuilderRound } from './wordBuilder.generator';
 
@@ -19,13 +20,14 @@ function RoundView({ session }: { session: GameSession<WordBuilderRound> }) {
     text: tile.text,
     lang: 'si',
     label: (
-      <span lang="si" className="text-2xl">
+      <span lang="si" className="-mx-2 -my-0.5 block rounded-lg border-2 border-b-4 border-accent-600 bg-accent-500/20 px-3 py-1 text-2xl text-ink shadow-card motion-ok:animate-gx-sinhala-snap">
         {tile.text}
       </span>
     ),
   }));
   const placedTexts = zones.map((z) => round.tiles.find((tile) => placements[tile.id] === z.id)?.text);
   const full = placedTexts.every((x) => x !== undefined);
+  const filled = placedTexts.filter((x) => x !== undefined).length;
   const explain = t('games.sinhala.wordBuilder.explain', { word: round.word, pieces: round.answer.join(' · ') });
 
   return (
@@ -35,11 +37,38 @@ function RoundView({ session }: { session: GameSession<WordBuilderRound> }) {
         <div className="w-28 shrink-0 rounded-xl border-2 border-brand-100 bg-surface p-2 sm:w-36">
           <SinhalaPicture id={round.picture} label={t(`games.sinhala.pic.${round.picture}`)} />
         </div>
-        {!asking && (
-          <p lang="si" className="text-3xl font-bold text-ink">
-            {round.word}
-          </p>
-        )}
+        <div className="flex min-w-0 flex-col gap-2">
+          <div className="min-h-16">
+            {!asking && (
+              <div className="relative inline-block pb-2 pr-12">
+                <p lang="si" className="text-3xl font-bold text-ink">
+                  {round.word}
+                </p>
+                {status === 'right' && (
+                  <>
+                    <span aria-hidden className="absolute bottom-0 left-0 right-12 h-1 origin-left rounded-full bg-brand-600 motion-ok:animate-gx-sinhala-underline" />
+                    <span aria-hidden className="absolute -bottom-3 right-0 motion-ok:animate-gx-sinhala-write">
+                      <Sprite name="pencil" size={44} />
+                    </span>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+          {/* One puzzle piece per slot: a piece clicks in (soft snap) as its slot is filled. Decorative; the slots below say it in words. */}
+          <div aria-hidden className={cn('flex gap-1', status === 'wrong' && 'motion-ok:animate-gx-nudge-x')}>
+            {zones.map((z, i) => (
+              <span key={z.id} className={cn('block h-9 w-9 transition-opacity duration-base', i < filled ? 'opacity-100' : 'opacity-30 grayscale')}>
+                {i < filled && (
+                  <span className="block motion-ok:animate-gx-sinhala-snap">
+                    <Sprite name="puzzle-piece" size={36} />
+                  </span>
+                )}
+                {i >= filled && <Sprite name="puzzle-piece" size={36} />}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
       <DragDropZone
         label={t('games.sinhala.wordBuilder.activity')}
