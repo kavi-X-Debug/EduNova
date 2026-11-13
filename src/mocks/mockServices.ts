@@ -7,7 +7,7 @@ import { makeMastery } from '@/lib/mastery';
 import { INTERVALS } from './learning';
 import { DAY } from './rng';
 import { clone, orEmpty, simulate } from './config';
-import { CONCEPTS } from './concepts';
+import { CONCEPTS, MVP_GRADE, SUBJECTS } from './concepts';
 import { CURRICULUM, QUESTIONS, TUTOR_FALLBACK, TUTOR_TOPICS, isCorrect } from './content';
 import { buildExamReports, buildMastery, buildPath, buildQuests, buildRevisionQueue, conceptsForGrade } from './learning';
 import { ALL_USERS, CLASS_DEFS, TEACHERS, buildAuditEvents, buildClassSummary, buildStudentRows, demoUserFor, findUser } from './people';
@@ -26,11 +26,15 @@ const curriculum = clone(CURRICULUM);
 const audit = buildAuditEvents();
 
 function gradeOf(userId: string): number {
-  return findUser(userId)?.grade ?? 8;
+  return findUser(userId)?.grade ?? MVP_GRADE;
+}
+/** Classmates share a teaching pace, so mastery and path are seeded by class. */
+function cohortOf(userId: string): string {
+  return findUser(userId)?.classIds?.[0] ?? userId;
 }
 function masteryOf(userId: string): Mastery[] {
   let m = masteryStore.get(userId);
-  if (!m) masteryStore.set(userId, (m = buildMastery(userId, gradeOf(userId))));
+  if (!m) masteryStore.set(userId, (m = buildMastery(userId, cohortOf(userId))));
   return m;
 }
 function memo<T>(store: Map<string, T>, userId: string, make: () => T): T {
@@ -75,8 +79,15 @@ export const mockStudentService: StudentService = {
 
   getDiagnosticQuestions: (userId) =>
     simulate(() => {
-      const ids = new Set(conceptsForGrade(gradeOf(userId)).map((c) => c.id));
-      return clone(QUESTIONS.filter((q) => ids.has(q.conceptId)).sort((a, b) => a.difficulty - b.difficulty).slice(0, 10));
+      const subjectOf = new Map(conceptsForGrade(gradeOf(userId)).map((c) => [c.id, c.subject]));
+      // Easiest first within each subject, then one per subject in turn (max 10).
+      const queues = SUBJECTS.map((s) =>
+        QUESTIONS.filter((q) => subjectOf.get(q.conceptId) === s).sort((a, b) => a.difficulty - b.difficulty),
+      );
+      const picked: typeof QUESTIONS = [];
+      for (let round = 0; picked.length < 10 && queues.some((q) => q.length > round); round++)
+        for (const q of queues) if (q[round] && picked.length < 10) picked.push(q[round]);
+      return clone(picked);
     }),
 
   submitQuiz: (attempt) =>
@@ -98,7 +109,7 @@ export const mockStudentService: StudentService = {
     }),
 
   getLearningPath: (userId) =>
-    simulate(() => clone(orEmpty(memo(pathStore, userId, () => buildPath(userId, masteryOf(userId)))))),
+    simulate(() => clone(orEmpty(memo(pathStore, userId, () => buildPath(userId, cohortOf(userId)))))),
 
   askTutor: (_userId, text) =>
     simulate(() => {
@@ -146,7 +157,7 @@ export const mockStudentService: StudentService = {
 
   completePathStep: (userId, stepId) =>
     simulate(() => {
-      const steps = memo(pathStore, userId, () => buildPath(userId, masteryOf(userId)));
+      const steps = memo(pathStore, userId, () => buildPath(userId, cohortOf(userId)));
       const step = steps.find((s) => s.id === stepId);
       if (!step) throw new Error(`Path step not found: ${stepId}`);
       if (step.status === 'locked') throw new Error(`Path step is locked: ${stepId}`);

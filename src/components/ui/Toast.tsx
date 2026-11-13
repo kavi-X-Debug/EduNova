@@ -7,6 +7,7 @@ import { cn } from './cn';
 
 interface Item extends ToastOptions {
   id: number;
+  leaving?: boolean;
 }
 
 const tones: Record<ToastTone, string> = {
@@ -33,7 +34,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     const tid = timers.current.get(id);
     if (tid !== undefined) window.clearTimeout(tid);
     timers.current.delete(id);
-    setItems((xs) => xs.filter((x) => x.id !== id));
+    // Fade out first, then remove.
+    setItems((xs) => xs.map((x) => (x.id === id ? { ...x, leaving: true } : x)));
+    window.setTimeout(() => setItems((xs) => xs.filter((x) => x.id !== id)), 160);
   }, []);
   const show = useCallback(
     (opts: ToastOptions) => {
@@ -51,7 +54,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {children}
       <div aria-live="polite" role="status" className="pointer-events-none fixed bottom-20 right-4 z-50 flex w-[calc(100%-2rem)] max-w-sm flex-col gap-2 md:bottom-4">
         {items.map((it) => (
-          <div key={it.id} className={cn('pointer-events-auto flex items-start gap-2 rounded-md border-l-4 p-3 shadow-raised', tones[it.tone ?? 'info'])}>
+          <div key={it.id} aria-hidden={it.leaving || undefined} className={cn('flex items-start gap-2 rounded-md border-l-4 p-3 shadow-raised', it.leaving ? 'pointer-events-none animate-fade-out' : 'pointer-events-auto animate-slide-up', tones[it.tone ?? 'info'])}>
             <p className="flex-1 text-sm font-semibold">{it.message}</p>
             <IconButton label={t('ui.common.dismiss')} icon={<X className="h-4 w-4" />} onClick={() => dismiss(it.id)} />
           </div>

@@ -1,6 +1,6 @@
 /**
  * Display preferences kept on this device only (localStorage). They are applied as attributes on <html>:
- *   data-reduce-motion="true"  -> animations/transitions are cut (see styles/index.css and usePrefersReducedMotion)
+ *   data-motion="reduced"      -> animations/transitions are cut (global rule in styles/index.css; usePrefersReducedMotion)
  *   data-large-text="true"     -> root font size is increased (everything is rem based)
  */
 import { create } from 'zustand';
@@ -14,7 +14,8 @@ interface A11yPrefsState extends AccessibilityPrefs {
 export function applyA11yPrefs(p: AccessibilityPrefs): void {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
-  root.dataset.reduceMotion = String(p.reduceMotion);
+  if (p.reduceMotion) root.dataset.motion = 'reduced';
+  else if (root.dataset.motion === 'reduced') delete root.dataset.motion;
   root.dataset.largeText = String(p.largeText);
 }
 

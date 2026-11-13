@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import type { ReadinessBand } from '@/types';
 import { cn } from './cn';
 
@@ -31,11 +31,17 @@ export function MasteryRing({ band, value, label, size = 64, children, className
   const stroke = 6;
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
+  // Draw from empty to the band's arc after mount.
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const id = window.requestAnimationFrame(() => setReady(true));
+    return () => window.cancelAnimationFrame(id);
+  }, []);
   return (
     <div role="img" aria-label={label} className={cn('relative inline-flex items-center justify-center', className)} style={{ width: size, height: size }}>
       <svg width={size} height={size} aria-hidden className="-rotate-90">
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} className="stroke-surface-sunken" />
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - v)} className="stroke-brand-500 transition-all motion-reduce:transition-none" />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - (ready ? v : 0))} className="stroke-brand-500 transition-[stroke-dashoffset] duration-slow ease-standard motion-reduce:transition-none" />
       </svg>
       <span aria-hidden className="absolute text-xs font-semibold text-ink">{children}</span>
     </div>

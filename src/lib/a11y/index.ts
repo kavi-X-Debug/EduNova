@@ -72,8 +72,8 @@ export function useFocusTrap<T extends HTMLElement>(
   }, [active, ref, initialFocus]);
 }
 
-/** True when the person turned on "reduce motion" in their profile (html[data-reduce-motion="true"]). */
-const profileReducesMotion = (): boolean => typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true';
+/** True when the person turned on "reduce motion" in their profile (html[data-motion="reduced"]). */
+const profileReducesMotion = (): boolean => typeof document !== 'undefined' && document.documentElement.dataset.motion === 'reduced';
 
 /** Respects the OS "reduce motion" setting and the profile preference; updates live. */
 export function usePrefersReducedMotion(): boolean {
@@ -86,7 +86,7 @@ export function usePrefersReducedMotion(): boolean {
     const mq = typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
     mq?.addEventListener('change', onChange);
     const mo = new MutationObserver(onChange);
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduce-motion'] });
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-motion'] });
     return () => {
       mq?.removeEventListener('change', onChange);
       mo.disconnect();

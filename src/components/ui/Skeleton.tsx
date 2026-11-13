@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { cn } from './cn';
 
 export function Skeleton({ className }: { className?: string }) {
-  return <div aria-hidden className={cn('animate-pulse rounded-md bg-surface-sunken motion-reduce:animate-none', className)} />;
+  return <div aria-hidden className={cn('relative overflow-hidden rounded-md bg-surface-sunken after:absolute after:inset-0 after:animate-shimmer after:bg-gradient-to-r after:from-transparent after:via-surface/70 after:to-transparent motion-reduce:after:hidden', className)} />;
 }
 
 export interface LoadingStateProps {

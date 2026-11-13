@@ -26,8 +26,14 @@ export interface LayoutProps {
   sidebarFooter?: ReactNode;
 }
 
+// Active indicator: a bar at the left edge that scales in (transform only). `before:` bar is decorative.
 const linkBase =
-  'flex min-h-[44px] items-center gap-3 rounded-md px-3 text-sm font-semibold outline-none transition-colors motion-reduce:transition-none focus-visible:shadow-focus';
+  'relative flex min-h-[44px] items-center gap-3 rounded-md px-3 text-sm font-semibold outline-none transition-colors duration-fast ease-standard before:absolute before:inset-y-2 before:left-0 before:w-1 before:origin-center before:scale-y-0 before:rounded-full before:bg-brand-600 before:transition-transform before:duration-base before:ease-standard focus-visible:shadow-focus active:bg-brand-100';
+const linkActive = 'bg-brand-50 text-brand-700 before:scale-y-100';
+
+// Bottom nav item: a top bar scales in for the active item.
+const bottomBase =
+  'relative flex min-h-[56px] flex-col items-center justify-center gap-0.5 px-1 text-xs font-semibold outline-none transition-colors duration-fast ease-standard before:absolute before:inset-x-4 before:top-0 before:h-0.5 before:origin-center before:scale-x-0 before:rounded-full before:bg-brand-600 before:transition-transform before:duration-base before:ease-standard focus-visible:shadow-focus active:bg-brand-50';
 
 export function AppShell({ navItems, brandKey = 'app.name', headerSlot, sidebarFooter }: LayoutProps) {
   const { t } = useTranslation();
@@ -48,7 +54,7 @@ export function AppShell({ navItems, brandKey = 'app.name', headerSlot, sidebarF
           <ul className="flex flex-col gap-1">
             {navItems.map(({ to, labelKey, icon: Icon, end }) => (
               <li key={to}>
-                <NavLink to={to} end={end} className={({ isActive }) => cn(linkBase, isActive ? 'bg-brand-50 text-brand-700' : 'text-ink-soft hover:bg-surface-sunken hover:text-ink')}>
+                <NavLink to={to} end={end} className={({ isActive }) => cn(linkBase, isActive ? linkActive : 'text-ink-soft hover:bg-surface-sunken hover:text-ink')}>
                   {Icon && <Icon aria-hidden className="h-5 w-5" />}
                   {t(labelKey)}
                 </NavLink>
@@ -65,7 +71,10 @@ export function AppShell({ navItems, brandKey = 'app.name', headerSlot, sidebarF
           <div className="ml-auto flex items-center gap-2">{headerSlot}</div>
         </header>
         <main id="main-content" tabIndex={-1} className="mx-auto max-w-6xl px-4 pb-28 pt-6 outline-none md:px-8 md:pb-10">
-          <Outlet />
+          {/* Keyed by path so each route change replays a short fade/slide. */}
+          <div key={pathname} className="animate-slide-up">
+            <Outlet />
+          </div>
         </main>
       </div>
 
@@ -77,7 +86,7 @@ export function AppShell({ navItems, brandKey = 'app.name', headerSlot, sidebarF
                 to={to}
                 end={end}
                 className={({ isActive }) =>
-                  cn('flex min-h-[56px] flex-col items-center justify-center gap-0.5 px-1 text-xs font-semibold outline-none focus-visible:shadow-focus', isActive ? 'text-brand-700' : 'text-ink-soft')
+                  cn(bottomBase, isActive ? 'text-brand-700 before:scale-x-100' : 'text-ink-soft hover:text-ink')
                 }
               >
                 {Icon && <Icon aria-hidden className="h-5 w-5" />}
@@ -93,7 +102,7 @@ export function AppShell({ navItems, brandKey = 'app.name', headerSlot, sidebarF
                 aria-haspopup="dialog"
                 aria-current={overflowActive ? 'page' : undefined}
                 onClick={() => setMoreOpen(true)}
-                className={cn('flex min-h-[56px] w-full flex-col items-center justify-center gap-0.5 px-1 text-xs font-semibold outline-none focus-visible:shadow-focus', overflowActive ? 'text-brand-700' : 'text-ink-soft')}
+                className={cn(bottomBase, 'w-full', overflowActive ? 'text-brand-700 before:scale-x-100' : 'text-ink-soft hover:text-ink')}
               >
                 <MoreHorizontal aria-hidden className="h-5 w-5" />
                 <span>{t('nav.menu.open')}</span>
@@ -107,7 +116,7 @@ export function AppShell({ navItems, brandKey = 'app.name', headerSlot, sidebarF
           <ul className="flex flex-col gap-1">
             {overflow.map(({ to, labelKey, icon: Icon, end }) => (
               <li key={to}>
-                <NavLink to={to} end={end} onClick={() => setMoreOpen(false)} className={({ isActive }) => cn(linkBase, isActive ? 'bg-brand-50 text-brand-700' : 'text-ink-soft hover:bg-surface-sunken hover:text-ink')}>
+                <NavLink to={to} end={end} onClick={() => setMoreOpen(false)} className={({ isActive }) => cn(linkBase, isActive ? linkActive : 'text-ink-soft hover:bg-surface-sunken hover:text-ink')}>
                   {Icon && <Icon aria-hidden className="h-5 w-5" />}
                   {t(labelKey)}
                 </NavLink>

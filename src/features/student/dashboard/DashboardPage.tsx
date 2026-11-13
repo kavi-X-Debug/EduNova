@@ -89,6 +89,7 @@ export default function DashboardPage() {
 
   const firstName = (user?.name ?? '').split(' ')[0];
   const next = path.data?.find((s) => s.status === 'in_progress') ?? path.data?.find((s) => s.status === 'next');
+  const nextSubject = next && mastery.data?.c.find((x) => x.id === next.conceptId)?.subject;
   const done = path.data?.filter((s) => s.status === 'done').length ?? 0;
   const dueCount = countReadyNow(revision.data ?? [], now);
   const activeQuest = quests.data?.find((q) => q.status === 'open');
@@ -98,7 +99,7 @@ export default function DashboardPage() {
     <div>
       <PageHeader title={t('student.dashboard.greeting', { name: firstName })} description={t('student.dashboard.subtitle')} />
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="stagger grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Block
           title={t('student.dashboard.nextStep.title')}
           state={path}
@@ -114,11 +115,12 @@ export default function DashboardPage() {
                 <AnimatedIllustration name="learning-path" alt={t('student.dashboard.nextStep.alt')} className="aspect-[4/3] h-auto w-full max-w-xs shrink-0 md:w-48" />
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2">
+                    {nextSubject && <Badge tone="neutral">{t(`subject.${nextSubject}`)}</Badge>}
                     <Badge tone="brand">{t(`student.path.step.${next.kind}`)}</Badge>
                     <span className="text-sm text-ink-soft">{t('student.path.estimate', { minutes: next.estimatedMinutes })}</span>
                   </div>
                   <p className="mt-2 text-xl font-semibold text-ink">{t(`concept.${next.conceptId}`)}</p>
-                  <p className="mt-3 text-sm text-ink-soft">{t('student.dashboard.progress.summary', { done, total: steps.length })}</p>
+                  <p className="mt-3 text-sm text-ink-soft">{t('student.path.progress.summary', { done, total: steps.length })}</p>
                   <ProgressBar className="mt-2" value={(done / steps.length) * 100} label={t('student.dashboard.progress.title')} />
                   <Link to="/student/path" className={cn(linkBtn(true), 'mt-4')}>
                     {t('student.dashboard.nextStep.start')}
@@ -161,7 +163,7 @@ export default function DashboardPage() {
           className="md:col-span-2 lg:col-span-2"
         >
           {() => (
-            <ul className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <ul className="stagger grid grid-cols-1 gap-4 lg:grid-cols-2">
               {bySubject.map((s) => (
                 <li key={s.subject} className="flex min-w-0 items-start gap-4 rounded-lg border border-line p-3">
                   {/* Decorative arc only; the band below carries the meaning (no numbers). */}

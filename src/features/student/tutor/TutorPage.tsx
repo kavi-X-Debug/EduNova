@@ -11,8 +11,8 @@ export const MAX_QUESTION_LENGTH = 500;
 
 const SUGGESTIONS = [
   tk('student.tutor.suggestion.fractions'),
-  tk('student.tutor.suggestion.equations'),
-  tk('student.tutor.suggestion.pythagoras'),
+  tk('student.tutor.suggestion.magnets'),
+  tk('student.tutor.suggestion.flowcharts'),
 ];
 
 function toSources(m: TutorMessage): SourceItem[] {
