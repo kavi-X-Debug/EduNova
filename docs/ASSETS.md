@@ -45,3 +45,11 @@ Rendered by `BadgeImage` (`src/components/ui/BadgeImage.tsx`) on Badges, Home "M
 
 ## Games (`/student/games`)
 No new raster art was added. Game thumbnails are a token-coloured SVG (`GameThumb`) with the existing subject icon on top. A game may set `thumbnail.image` (e.g. `public/games/<id>.png`, a NEW subfolder; none exist yet) and it is only used if it loads. New badges `first-game`, `game-five`, `new-subject`, `every-subject` have no Flow PNG yet (the vector medal `BadgeArt` shows; add `public/badges/<id>.png` to override). Sounds are generated with Web Audio (no audio files), off by default.
+
+### Science games art (code-drawn, no files)
+All pictures in `src/features/student/games/science/art.tsx` are code: token-coloured SVG (`fill-badge-*`, `stroke-ink-*`, no hex) and lucide icons. Nothing is loaded from `public/`, nothing can fail to load.
+- `MagnetPair`: two bar magnets, poles printed as the letters N and S (colour is never the only clue). Magnet Lab.
+- `CircuitSvg`: battery, switch, bulb and wire loop; missing parts are dashed gaps; the bulb glows (rays, not flashing) only after the answer. Electric Circuit Builder. Small battery only; the game shows a safety line.
+- `ShadowScene` (Light and Shadows) and `WaterScene` (Water Cycle Order): small decorative scenes (`aria-hidden`).
+- `Glyph`: one lucide icon per item (nail, drum, deer, ...), always shown with the item's name. Some are approximate (a deer uses the rabbit icon, an elephant a generic shape, most birds the same bird), so the written name is what carries the meaning. These are placeholders until real illustrations exist.
+- Game thumbnails stay the shared `GameThumb` SVG plus the Science subject icon; no `public/games/*.png` was added.
