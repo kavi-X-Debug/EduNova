@@ -1,40 +1,42 @@
+import { Circle, CircleCheck } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Badge, BadgeImage, ProgressBar, cn } from '@/components/ui';
-import { useLocale } from '@/i18n';
-import { formatDate } from '@/lib';
+import { BadgeImage, cn } from '@/components/ui';
 import type { BadgeProgress } from '@/types';
 
-/** One badge tile: artwork, name, what it is for, and either the earned date or progress toward it. */
+/**
+ * One badge on the shelf.
+ * Earned: bright artwork, its name and one short "you got this because..." sentence.
+ * Not yet earned: a soft silhouette with a friendly "How to get it" hint. No dates, no ranks, no shame.
+ */
 export function BadgeCard({ item }: { item: BadgeProgress }) {
   const { t } = useTranslation();
-  const { locale } = useLocale();
   const { badge, earned } = item;
   const title = t(badge.titleKey);
+  const showPips = !earned && item.target > 1 && item.target <= 7;
   return (
-    <li className={cn('flex gap-4 rounded-lg border p-4', earned ? 'border-line bg-surface shadow-card' : 'border-line bg-surface-muted')}>
-      <BadgeImage badgeId={badge.id} rarity={badge.rarity} locked={!earned} size="md" />
+    <li className={cn('flex items-center gap-4 rounded-xl border-2 p-4', earned ? 'border-accent-500 bg-warning-50 shadow-card' : 'border-line bg-surface-muted')}>
+      <BadgeImage badgeId={badge.id} rarity={badge.rarity} locked={!earned} size="lg" className={earned ? 'motion-ok:animate-fx-pop-in' : undefined} />
       <div className="min-w-0 flex-1">
-        <h3 className="text-base font-semibold text-ink">
+        <h3 className={cn('text-lg font-bold', earned ? 'text-ink' : 'text-ink-soft')}>
           {title}
           {!earned && <span className="sr-only"> ({t('rewards.locked.label')})</span>}
         </h3>
-        <p className="mt-1 text-sm text-ink-soft">
-          <span className="font-semibold">{t('rewards.howTo')}: </span>
-          {t(badge.descriptionKey)}
-        </p>
-        <div className="mt-2 flex flex-wrap items-center gap-2">
-          <Badge tone={earned ? 'success' : 'neutral'}>{t(`rewards.rarity.${badge.rarity}`)}</Badge>
-          <Badge>{t(`rewards.category.${badge.category}`)}</Badge>
-        </div>
-        {earned && item.earnedAt ? (
-          <p className="mt-2 text-xs text-ink-soft">{t('rewards.earned.on', { date: formatDate(item.earnedAt, locale) })}</p>
+        {earned ? (
+          <p className="mt-1 text-base text-ink">{t(`kidsplay.badge.${badge.id}.why`)}</p>
         ) : (
-          item.target > 1 && (
-            <div className="mt-2">
-              <p className="text-xs text-ink-soft">{t('rewards.progress', { done: item.progress, total: item.target })}</p>
-              <ProgressBar className="mt-1" value={(item.progress / item.target) * 100} label={title} />
-            </div>
-          )
+          <>
+            <p className="mt-1 text-base text-ink-soft">
+              <span className="block text-sm font-bold text-brand-700">{t('kidsplay.badges.how')}</span>
+              {t(`kidsplay.badge.${badge.id}.how`)}
+            </p>
+            {showPips && (
+              <div role="img" aria-label={t('kidsplay.badges.pips', { done: item.progress, total: item.target })} className="mt-2 flex flex-wrap gap-1">
+                {Array.from({ length: item.target }, (_, i) =>
+                  i < item.progress ? <CircleCheck key={i} aria-hidden className="h-6 w-6 text-success-700" /> : <Circle key={i} aria-hidden className="h-6 w-6 text-ink-faint" />,
+                )}
+              </div>
+            )}
+          </>
         )}
       </div>
     </li>

@@ -1,17 +1,26 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { Button, Input, Select } from '@/components/ui';
+import { ArrowRight, GraduationCap, ShieldCheck, Users } from 'lucide-react';
+import { BigActionButton, HelpBubble, MascotMessage } from '@/components/ui';
+import { Input } from '@/components/ui/Input';
+import { useT } from '@/i18n';
 import { announce } from '@/lib/a11y';
 import { useSessionStore } from '@/store';
 import type { Role } from '@/types';
+import { ChoiceCard } from './choices';
+import { kidControl, kidFieldWrap } from './kidStyles';
 import { destinationFor } from './destination';
 import { RedirectByRole } from './RedirectByRole';
 
-const ROLES: Role[] = ['student', 'teacher', 'admin'];
+const ROLES: { role: Role; icon: typeof GraduationCap }[] = [
+  { role: 'student', icon: GraduationCap },
+  { role: 'teacher', icon: Users },
+  { role: 'admin', icon: ShieldCheck },
+];
 
+/** A warm first screen: Nova says hello, "Who are you?", one email box and one big Continue. Demo only: no password is checked. */
 export default function LoginPage() {
-  const { t } = useTranslation();
+  const t = useT();
   const navigate = useNavigate();
   const user = useSessionStore((s) => s.user);
   const signIn = useSessionStore((s) => s.signIn);
@@ -30,7 +39,7 @@ export default function LoginPage() {
     e.preventDefault();
     setFormError(undefined);
     if (!/^\S+@\S+\.\S+$/.test(email.trim())) {
-      const msg = t(email.trim() ? 'errors.field.email' : 'errors.field.required');
+      const msg = t(email.trim() ? 'kidsplay.login.email.bad' : 'kidsplay.login.email.empty');
       setEmailError(msg);
       announce(msg, 'assertive');
       emailRef.current?.focus();
@@ -42,7 +51,7 @@ export default function LoginPage() {
       const u = await signIn(email, role);
       navigate(await destinationFor(u.role, u.id, from), { replace: true });
     } catch {
-      const msg = t('auth.login.error');
+      const msg = t('kidsplay.login.error');
       setFormError(msg);
       announce(msg, 'assertive');
     } finally {
@@ -52,23 +61,43 @@ export default function LoginPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-ink">{t('auth.login.title')}</h1>
-      <p className="mt-1 text-base text-ink-soft">{t('auth.login.subtitle')}</p>
-      <form onSubmit={onSubmit} noValidate className="mt-6 flex flex-col gap-4" aria-busy={busy}>
+      <div className="flex items-start justify-between gap-3">
+        <h1 className="text-2xl font-bold text-ink md:text-3xl">{t('kidsplay.login.title')}</h1>
+        <HelpBubble textKey="kidsplay.login.help" align="end" />
+      </div>
+      <MascotMessage mood="happy" size="md" className="mt-4">
+        {t('kidsplay.login.nova')}
+      </MascotMessage>
+
+      <form onSubmit={onSubmit} noValidate className="mt-6 flex flex-col gap-5" aria-busy={busy}>
         {formError && (
-          <p role="alert" className="rounded-md border border-danger-500 bg-danger-50 p-3 text-sm font-semibold text-danger-700">
-            {formError}
-          </p>
+          <MascotMessage mood="oops" size="sm">
+            <span role="alert">{formError}</span>
+          </MascotMessage>
         )}
-        <Select
-          label={t('auth.login.roleLabel')}
-          hint={t('auth.login.demoHint')}
-          value={role}
-          onChange={(e) => setRole(e.target.value as Role)}
-          options={ROLES.map((r) => ({ value: r, label: t(`common.role.${r}`) }))}
-        />
+
+        <fieldset>
+          <legend className="sr-only">{t('kidsplay.login.title')}</legend>
+          <div className="flex flex-col gap-3">
+            {ROLES.map(({ role: r, icon: Icon }) => (
+              <ChoiceCard
+                key={r}
+                type="radio"
+                name="role"
+                value={r}
+                checked={role === r}
+                onChange={() => setRole(r)}
+                picture={<Icon aria-hidden className="h-8 w-8" />}
+              >
+                {t(`common.role.${r}`)}
+              </ChoiceCard>
+            ))}
+          </div>
+          <p className="mt-2 text-base text-ink-soft">{t('auth.login.demoHint')}</p>
+        </fieldset>
+
         <Input
-          label={t('auth.login.email')}
+          label={t('kidsplay.login.email')}
           type="email"
           ref={emailRef}
           autoComplete="email"
@@ -76,6 +105,8 @@ export default function LoginPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           error={emailError}
+          className={kidControl}
+          wrapperClassName={kidFieldWrap}
         />
         <Input
           label={t('auth.login.password')}
@@ -83,10 +114,13 @@ export default function LoginPage() {
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          hint={t('kidsplay.login.password.hint')}
+          className={kidControl}
+          wrapperClassName={kidFieldWrap}
         />
-        <Button type="submit" size="lg" fullWidth loading={busy} loadingLabel={t('ui.common.loading')}>
-          {t('auth.login.submit')}
-        </Button>
+        <BigActionButton type="submit" icon={<ArrowRight />} fullWidth disabled={busy} aria-busy={busy || undefined}>
+          {t('kidsplay.continue')}
+        </BigActionButton>
       </form>
     </div>
   );

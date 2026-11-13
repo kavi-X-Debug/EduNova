@@ -1,82 +1,109 @@
-import { CheckCircle2, Circle, Sparkles } from 'lucide-react';
+import { Circle, CircleCheck, Compass, Mountain, Rocket, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Badge, Button, Card, DrawCheck, ProgressBar } from '@/components/ui';
+import { BigActionButton, Card, cn } from '@/components/ui';
 import type { Quest } from '@/types';
 
 export interface QuestCardProps {
   quest: Quest;
+  /** The adventure to try first: its button is the big primary one. */
+  featured?: boolean;
+  /** Picks the picture and colour (stable per adventure). */
+  index: number;
   pendingIds: ReadonlySet<string>;
   onComplete: (quest: Quest, missionId: string) => void;
 }
 
-export function QuestCard({ quest, pendingIds, onComplete }: QuestCardProps) {
+const THEMES = [
+  { icon: Rocket, tile: 'bg-brand-100 text-brand-700', top: 'border-t-brand-500' },
+  { icon: Mountain, tile: 'bg-success-50 text-success-700', top: 'border-t-success-500' },
+  { icon: Compass, tile: 'bg-warning-50 text-warning-700', top: 'border-t-accent-500' },
+];
+
+/**
+ * One adventure as a big colourful card: a picture, a row of stars (one per step, no percent),
+ * the steps with ONE clear "Do this" step and one big button.
+ */
+export function QuestCard({ quest, featured, index, pendingIds, onComplete }: QuestCardProps) {
   const { t } = useTranslation();
+  const theme = THEMES[index % THEMES.length];
+  const Icon = theme.icon;
   const title = t(quest.titleKey);
   const complete = quest.status === 'complete';
   const doneCount = quest.missions.filter((m) => m.done).length;
-  const percent = quest.missions.length ? (doneCount / quest.missions.length) * 100 : 0;
+  const current = complete ? undefined : quest.missions.find((m) => !m.done);
   const headingId = `quest-${quest.id}`;
 
   return (
-    <Card as="article" aria-labelledby={headingId} className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-start justify-between gap-2">
-        <h3 id={headingId} tabIndex={-1} className="text-lg font-semibold text-ink outline-none focus-visible:shadow-focus">
-          {title}
-        </h3>
-        <div className="flex flex-wrap gap-2">
-          <Badge tone="brand" icon={<Sparkles className="h-3 w-3" />}>
-            {t('student.quests.xp', { xp: quest.xp })}
-          </Badge>
-          <Badge tone={complete ? 'success' : 'neutral'} icon={complete ? <CheckCircle2 className="h-3 w-3" /> : <Circle className="h-3 w-3" />}>
-            {complete ? t('student.quests.status.complete') : t('student.quests.status.open')}
-          </Badge>
+    <Card as="article" aria-labelledby={headingId} interactive className={cn('flex flex-col gap-4 border-t-8', theme.top)}>
+      <div className="flex items-center gap-4">
+        <span aria-hidden className={cn('flex h-20 w-20 shrink-0 items-center justify-center rounded-xl', theme.tile)}>
+          <Icon aria-hidden className="fx-icon h-11 w-11" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <h3 id={headingId} tabIndex={-1} className="text-xl font-bold text-ink outline-none focus-visible:shadow-focus md:text-2xl">
+            {title}
+          </h3>
+          <p className="mt-1 flex items-center gap-1.5 text-base font-semibold text-ink-soft">
+            <Star aria-hidden className="h-5 w-5 shrink-0 fill-accent-500 text-accent-600" />
+            {t('kidsplay.adv.stars', { count: quest.xp })}
+          </p>
         </div>
       </div>
 
-      <ProgressBar
-        value={percent}
-        tone={complete ? 'success' : 'brand'}
-        label={t('student.quests.progress.label', { title })}
-        showValue
-      />
+      {/* Progress as stars: one star per step. */}
+      <div role="img" aria-label={t('kidsplay.adv.steps', { done: doneCount, total: quest.missions.length })} className="flex flex-wrap gap-1.5">
+        {quest.missions.map((m) => (
+          <Star
+            key={m.id}
+            aria-hidden
+            className={cn('h-9 w-9', m.done ? 'fill-accent-500 text-accent-600 motion-ok:animate-fx-pop-in' : 'text-ink-faint')}
+          />
+        ))}
+      </div>
 
-      {complete && <p className="text-sm font-medium text-success-700">{t('student.quests.complete')}</p>}
+      {complete && (
+        <p className="flex items-center gap-2 rounded-lg bg-success-50 p-3 text-lg font-bold text-success-700">
+          <CircleCheck aria-hidden className="h-7 w-7 shrink-0" />
+          {t('kidsplay.adv.finished')}
+        </p>
+      )}
 
-      <ul className="flex flex-col gap-3">
+      <ol className="flex flex-col gap-3">
         {quest.missions.map((m) => {
           const missionTitle = t(m.titleKey);
-          const pending = pendingIds.has(m.id);
+          const isCurrent = current?.id === m.id;
           return (
-            <li key={m.id} className="flex flex-col gap-2 rounded-md border border-line bg-surface-muted p-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex-1">
-                <p className="flex items-start gap-2 text-sm font-medium text-ink">
-                  {m.done ? (
-                    <DrawCheck className="mt-0.5 shrink-0 text-success-700" />
-                  ) : (
-                    <Circle aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-ink-faint" />
-                  )}
-                  <span>{missionTitle}</span>
-                </p>
-                <p className="mt-1 pl-6 text-xs text-ink-soft">
-                  {m.done ? t('student.quests.status.complete') : t('student.quests.mission.progress', { progress: m.progress, target: m.target })}
-                </p>
-              </div>
-              {!m.done && (
-                <Button
-                  variant="secondary"
-                  loading={pending}
-                  loadingLabel={t('a11y.loading')}
+            <li
+              key={m.id}
+              aria-current={isCurrent ? 'step' : undefined}
+              className={cn('flex flex-col gap-3 rounded-lg border-2 p-3', isCurrent ? 'border-brand-500 bg-brand-50' : 'border-line bg-surface-muted')}
+            >
+              <p className="flex items-start gap-3 text-lg text-ink">
+                {m.done ? <CircleCheck aria-hidden className="mt-0.5 h-6 w-6 shrink-0 text-success-700" /> : <Circle aria-hidden className="mt-0.5 h-6 w-6 shrink-0 text-ink-faint" />}
+                <span className={cn('min-w-0 flex-1', isCurrent ? 'font-bold' : m.done ? 'text-ink-soft' : 'font-semibold')}>
+                  {isCurrent && <span className="block text-sm font-bold text-brand-700">{t('kidsplay.adv.do')}</span>}
+                  {missionTitle}
+                  <span className="sr-only"> ({m.done ? t('kidsplay.adv.step.done') : t('kidsplay.adv.step.todo')})</span>
+                </span>
+              </p>
+              {isCurrent && (
+                <BigActionButton
+                  variant={featured ? 'primary' : 'secondary'}
+                  disabled={pendingIds.has(m.id)}
+                  aria-busy={pendingIds.has(m.id) || undefined}
+                  icon={<Star />}
+                  aria-label={t('kidsplay.adv.didIt.label', { title: missionTitle })}
                   onClick={() => onComplete(quest, m.id)}
-                  aria-label={t('student.quests.mission.markDoneLabel', { title: missionTitle })}
-                  className="w-full sm:w-auto"
+                  fullWidth
+                  className="md:w-auto md:self-start"
                 >
-                  {t('student.quests.mission.markDone')}
-                </Button>
+                  {t('kidsplay.adv.didIt')}
+                </BigActionButton>
               )}
             </li>
           );
         })}
-      </ul>
+      </ol>
     </Card>
   );
 }
