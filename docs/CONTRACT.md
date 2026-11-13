@@ -134,3 +134,6 @@ Spec `docs/GAMES-BRIEF.md`; how to add one `docs/GAMES-AUTHORING.md`.
 - Prefs: `useGamePrefsStore` (`src/store`): `sound` (default false, localStorage `edunova.games`); toggle in Me.
 - Registry: `src/features/student/games/registry.ts` aggregates `games/<subject>/index.ts`. Routes `/student/games`, `/student/games/:gameId`. Engine: `src/features/student/games/engine` (see GAMES-AUTHORING.md).
 - Tests: Vitest (`npm test`), generators and scoring are pure and unit-tested.
+
+## DragDropZone in a real game (verified by agent/games-sinhala)
+First shipped use: Sinhala `word-builder`, with one capacity-1 zone per letter position. Tested in Chrome (playwright-core): mouse drag onto a zone, tap a chip then "Put here", and keyboard (Tab to chip, Enter, Tab to the zone button, Enter) all work; a placed chip is tapped (or Enter) to go back to the tray; announcements come through `announce`. Only change: the zone's "Put here" button is `min-h-14` (56px) instead of `min-h-12`. Notes for authors: `disabled` dims every chip (also the placed ones) after answering; a zone with `capacity: 1` announces "full" and ignores a second drop; zones lay out in two columns from the `md` breakpoint, so number or letter slots read left-to-right then down.
