@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Check, LogOut } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
-  AVATAR_COLOURS, AVATAR_PRESETS, Banner, Button, Card, Checkbox, ErrorState, Input, LoadingState, PageHeader, ProfileAvatar, Select, cn, useToast,
+  AVATAR_COLOURS, AVATAR_PRESETS, CLASSIC_AVATAR_IDS, Banner, Button, Card, Checkbox, ErrorState, Input, LoadingState, PageHeader, ProfileAvatar, Select, cn, useToast,
 } from '@/components/ui';
 import { useLocale } from '@/i18n';
 import { useAsync } from '@/lib';
@@ -13,6 +13,7 @@ import type { StudentProfile } from '@/services';
 import { useA11yPrefsStore, useSessionStore } from '@/store';
 import { RewardsCard } from '@/features/student/badges/RewardsCard';
 import type { AvatarChoice, Locale, NotificationPrefs, User, UserProfile } from '@/types';
+import { KidsProfile } from './KidsProfile';
 
 const GRADES = [6, 7, 8, 9, 10, 11];
 const SUBJECTS = ['maths', 'science', 'sinhala', 'english', 'ict'];
@@ -31,11 +32,13 @@ export default function ProfilePage({ intro }: { intro?: ReactNode } = {}) {
 
   return (
     <div>
-      <PageHeader title={t('profile.title')} description={t('profile.subtitle')} />
-      {intro}
+      {/* Students get the child-friendly "Me" page; teachers and admins keep the full profile. */}
+      {!isStudent && <PageHeader title={t('profile.title')} description={t('profile.subtitle')} />}
+      {!isStudent && intro}
       {loading && !data && <LoadingState label={t('a11y.loading')} lines={5} />}
       {error && <ErrorState description={t('profile.error')} onRetry={reload} retryLabel={t('common.action.retry')} />}
-      {data && user && <ProfileSections user={user} profile={data.profile} student={data.student} />}
+      {data && user && isStudent && <KidsProfile user={user} profile={data.profile} student={data.student} intro={intro} />}
+      {data && user && !isStudent && <ProfileSections user={user} profile={data.profile} student={data.student} />}
     </div>
   );
 }
@@ -115,7 +118,7 @@ function DetailsCard({ user, profile, student }: { user: User; profile: UserProf
             <button type="button" aria-pressed={avatar.kind === 'initials'} aria-label={t('profile.avatar.initials')} title={t('profile.avatar.initials')} onClick={() => setAvatar({ ...avatar, kind: 'initials', presetId: undefined })} className={cn(choiceBtn, avatar.kind === 'initials' ? 'border-brand-600' : 'border-line')}>
               <ProfileAvatar name={name || user.email} avatar={{ kind: 'initials', colour: avatar.colour }} size="md" />
             </button>
-            {AVATAR_PRESETS.map((p) => (
+            {AVATAR_PRESETS.filter((p) => CLASSIC_AVATAR_IDS.includes(p.id)).map((p) => (
               <button key={p.id} type="button" aria-pressed={avatar.kind === 'preset' && avatar.presetId === p.id} aria-label={t(`profile.avatar.preset.${p.id}`)} title={t(`profile.avatar.preset.${p.id}`)} onClick={() => setAvatar({ ...avatar, kind: 'preset', presetId: p.id })} className={cn(choiceBtn, avatar.kind === 'preset' && avatar.presetId === p.id ? 'border-brand-600' : 'border-line')}>
                 <ProfileAvatar name={t(`profile.avatar.preset.${p.id}`)} avatar={{ kind: 'preset', presetId: p.id, colour: avatar.colour }} size="md" />
               </button>
@@ -172,7 +175,7 @@ function DetailsCard({ user, profile, student }: { user: User; profile: UserProf
 // ---------- Notification preferences ----------
 const NOTIFICATION_KEYS: (keyof NotificationPrefs)[] = ['reminders', 'weeklySummary', 'teacherMessages', 'productNews'];
 
-function NotificationsCard({ profile }: { profile: UserProfile }) {
+export function NotificationsCard({ profile }: { profile: UserProfile }) {
   const { t } = useTranslation();
   const toast = useToast();
   const [prefs, setPrefs] = useState<NotificationPrefs>(profile.notifications);
@@ -222,7 +225,7 @@ function AccessibilityCard() {
 }
 
 // ---------- Change password (MOCK) ----------
-function PasswordCard({ userId }: { userId: string }) {
+export function PasswordCard({ userId }: { userId: string }) {
   const { t } = useTranslation();
   const toast = useToast();
   const [current, setCurrent] = useState('');
@@ -277,7 +280,7 @@ function PasswordCard({ userId }: { userId: string }) {
 }
 
 // ---------- My data ----------
-function DataCard() {
+export function DataCard() {
   const { t } = useTranslation();
   return (
     <Card as="section" title={t('profile.data.title')} aria-label={t('profile.data.title')}>
@@ -287,7 +290,7 @@ function DataCard() {
   );
 }
 
-function SignOutCard() {
+export function SignOutCard() {
   const { t } = useTranslation();
   const signOut = useSessionStore((s) => s.signOut);
   const navigate = useNavigate();

@@ -1,75 +1,78 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { AlertTriangle, Bot, Check, Send, User as UserIcon } from 'lucide-react';
-import { Banner, Button, Card, ErrorState, PageHeader, SourceList, Textarea, cn, type SourceItem } from '@/components/ui';
-import { tk, useLocale, useT, type TKey } from '@/i18n';
+import { useEffect, useRef, useState, type ComponentType, type FormEvent } from 'react';
+import { Check, Magnet, Pizza, Send, Workflow } from 'lucide-react';
+import { BigActionButton, Button, HelpBubble, Mascot, MascotMessage, PageHeader, SpeechBubble, Textarea, cn } from '@/components/ui';
+import { tk, useLocale, type TKey } from '@/i18n';
 import { rewardsService, studentService } from '@/services';
 import { useSessionStore } from '@/store';
 import type { TutorMessage } from '@/types';
+import { kidFieldWrap } from '../onboarding/kidStyles';
+import { WhereFrom } from './WhereFrom';
 
 /** Upper bound on one question, so input is never unbounded. */
 export const MAX_QUESTION_LENGTH = 500;
 
-const SUGGESTIONS = [
-  tk('student.tutor.suggestion.fractions'),
-  tk('student.tutor.suggestion.magnets'),
-  tk('student.tutor.suggestion.flowcharts'),
+type IconType = ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
+const SUGGESTIONS: { key: TKey; icon: IconType }[] = [
+  { key: tk('student.tutor.suggestion.fractions'), icon: Pizza },
+  { key: tk('student.tutor.suggestion.magnets'), icon: Magnet },
+  { key: tk('student.tutor.suggestion.flowcharts'), icon: Workflow },
 ];
 
-function toSources(m: TutorMessage): SourceItem[] {
-  return m.sources.map((s, i) => ({ id: `${m.id}-${s.ref}-${i}`, title: s.title, lang: m.locale }));
+function StudentBubble({ message }: { message: TutorMessage }) {
+  const { t } = useLocale();
+  return (
+    <li className="flex justify-end motion-ok:animate-fx-bubble-right">
+      <article className="max-w-[90%] rounded-xl border-2 border-brand-100 bg-brand-50 px-4 py-3 md:max-w-[75%]">
+        <h2 className="text-sm font-semibold text-ink-soft">{t('kidsplay.ask.you')}</h2>
+        <p lang={message.locale} className="whitespace-pre-wrap break-words text-lg text-ink">{message.text}</p>
+      </article>
+    </li>
+  );
 }
 
-function MessageBubble({ message }: { message: TutorMessage }) {
-  const t = useT();
+function NovaBubble({ message }: { message: TutorMessage }) {
+  const { t } = useLocale();
   const userId = useSessionStore((s) => s.user?.id) ?? '';
-  const [checked, setChecked] = useState(false);
-  const markChecked = () => {
-    setChecked(true);
+  const [looked, setLooked] = useState(false);
+  const markLooked = () => {
+    setLooked(true);
     void rewardsService.recordEvent(userId, { type: 'sources_checked', messageId: message.id }).catch(() => undefined);
   };
-  const fromTutor = message.from === 'tutor';
-  const unsourced = fromTutor && message.sources.length === 0;
   return (
-    <li className={cn('flex gap-3', fromTutor ? 'justify-start motion-ok:animate-fx-bubble-left' : 'justify-end motion-ok:animate-fx-bubble-right')}>
-      {fromTutor && (
-        <span aria-hidden className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-700">
-          <Bot className="h-5 w-5" />
-        </span>
-      )}
-      <article
-        className={cn(
-          'flex max-w-[85%] flex-col gap-2 rounded-lg border p-3 md:max-w-[75%]',
-          !fromTutor ? 'border-brand-100 bg-brand-50' : unsourced ? 'border-warning-500 bg-warning-50' : 'border-line bg-surface',
-        )}
-      >
-        <h2 className="text-xs font-semibold text-ink-soft">{t(fromTutor ? 'student.tutor.from.tutor' : 'student.tutor.from.student')}</h2>
-        <p lang={message.locale} className="whitespace-pre-wrap break-words text-base text-ink">{message.text}</p>
-        {/* Every tutor answer shows its sources; an empty list renders the explicit "no sources" state. */}
-        {unsourced && (
-          <p className="flex items-start gap-2 rounded-md border border-warning-500 bg-surface p-2 text-sm font-semibold text-ink">
-            <AlertTriangle aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-warning-700" />
-            {t('student.tutor.unsourced.note' as TKey)}
-          </p>
-        )}
-        {fromTutor && <SourceList sources={toSources(message)} title={t('student.tutor.sources')} />}
-        {fromTutor && message.sources.length > 0 && (
-          <Button variant="secondary" disabled={checked} onClick={markChecked} leftIcon={checked ? <Check aria-hidden className="h-4 w-4" /> : undefined} className="self-start">
-            {t(checked ? 'student.tutor.sources.checked' : 'student.tutor.sources.check')}
+    <li className="flex items-start gap-2 motion-ok:animate-fx-bubble-left md:gap-3">
+      <Mascot mood="happy" size="sm" animate={false} />
+      <article className="min-w-0 flex-1">
+        <h2 className="sr-only">{t('kidsplay.ask.nova')}</h2>
+        <SpeechBubble tail="start" speakText={message.text} speakLocale={message.locale}>
+          <span lang={message.locale} className="block">
+            <span className="block text-base font-bold text-brand-700">{t('kidsplay.ask.lead')}</span>
+            <span className="mt-1 block whitespace-pre-wrap break-words font-normal">{message.text}</span>
+          </span>
+        </SpeechBubble>
+        {/* Sources ALWAYS show. No sources: "Ask your teacher to check this." */}
+        <WhereFrom message={message} />
+        {message.sources.length > 0 && (
+          <Button
+            variant={looked ? 'ghost' : 'secondary'}
+            size="xl"
+            disabled={looked}
+            onClick={markLooked}
+            leftIcon={<Check aria-hidden className="h-6 w-6" />}
+            className="mt-3"
+          >
+            {t(looked ? 'kidsplay.ask.looked.done' : 'kidsplay.ask.looked')}
           </Button>
         )}
       </article>
-      {!fromTutor && (
-        <span aria-hidden className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-sunken text-ink-soft">
-          <UserIcon className="h-5 w-5" />
-        </span>
-      )}
     </li>
   );
 }
 
 export default function TutorPage() {
   const { t, locale } = useLocale();
-  const userId = useSessionStore((s) => s.user?.id) ?? '';
+  const user = useSessionStore((s) => s.user);
+  const userId = user?.id ?? '';
+  const firstName = (user?.name ?? '').trim().split(/\s+/)[0] ?? '';
   const [messages, setMessages] = useState<TutorMessage[]>([]);
   const [draft, setDraft] = useState('');
   const [pending, setPending] = useState(false);
@@ -111,92 +114,106 @@ export default function TutorPage() {
   }
 
   const tooLong = draft.length >= MAX_QUESTION_LENGTH;
+  const fresh = messages.length === 0 && !pending && !failedText;
+  const hello = t('kidsplay.ask.hello', { name: firstName });
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col">
-      <PageHeader title={t('student.tutor.title')} description={t('student.tutor.subtitle')} />
-      <Banner tone="info" className="mb-4">
-        {t('student.tutor.disclaimer')}
-      </Banner>
+      <PageHeader title={t('kidsplay.ask.title')} description={t('kidsplay.ask.subtitle')} actions={<HelpBubble textKey="kidsplay.ask.help" align="end" />} />
 
-      <Card padded={false} className="flex flex-col">
-        <div
-          role="log"
-          aria-live="polite"
-          aria-relevant="additions"
-          aria-label={t('student.tutor.conversation')}
-          aria-busy={pending}
-          tabIndex={0}
-          className="max-h-[60vh] min-h-64 overflow-y-auto p-4 outline-none focus-visible:shadow-focus md:p-6"
-        >
-          {messages.length === 0 && !pending && !failedText ? (
-            <div className="flex flex-col items-start gap-3">
-              <p className="text-base text-ink-soft">{t('student.tutor.empty')}</p>
-              <h2 className="text-sm font-semibold text-ink">{t('student.tutor.suggestions.title')}</h2>
-              <ul className="flex flex-wrap gap-2">
-                {SUGGESTIONS.map((s) => {
-                  const label = t(s);
+      <div
+        role="log"
+        aria-live="polite"
+        aria-relevant="additions"
+        aria-label={t('kidsplay.ask.log')}
+        aria-busy={pending}
+        className="flex flex-col gap-4 pb-4"
+      >
+        {fresh ? (
+          <>
+            <MascotMessage mood="happy" size="lg" speakText={hello}>
+              {hello}
+            </MascotMessage>
+            <div>
+              <h2 className="mb-3 text-xl font-bold text-ink">{t('kidsplay.ask.try')}</h2>
+              <ul className="stagger grid gap-3 md:grid-cols-3">
+                {SUGGESTIONS.map(({ key, icon: Icon }) => {
+                  const label = t(key);
                   return (
-                    <li key={s}>
-                      <Button variant="secondary" onClick={() => void ask(label)}>
-                        {label}
-                      </Button>
+                    <li key={key}>
+                      <button
+                        type="button"
+                        onClick={() => void ask(label)}
+                        className="group/card flex min-h-[88px] w-full items-center gap-3 rounded-xl border-2 border-brand-100 bg-surface p-4 text-left shadow-card outline-none transition duration-base ease-standard hover:border-brand-500 hover:shadow-fx-glow focus-visible:shadow-focus motion-ok:hover:-translate-y-1"
+                      >
+                        <span aria-hidden className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
+                          <Icon aria-hidden className="fx-icon h-8 w-8" />
+                        </span>
+                        <span className="min-w-0 text-lg font-bold text-ink">{label}</span>
+                      </button>
                     </li>
                   );
                 })}
               </ul>
             </div>
-          ) : (
-            <ul className="flex flex-col gap-4">
-              {messages.map((m) => (
-                <MessageBubble key={m.id} message={m} />
-              ))}
-              {pending && (
-                <li role="status" className="flex items-center gap-2 text-sm text-ink-soft">
-                  <span aria-hidden className="flex gap-1">
-                    <span className="h-2 w-2 rounded-full bg-brand-500 motion-ok:animate-fx-typing" />
-                    <span className="h-2 w-2 rounded-full bg-brand-500 motion-ok:animate-fx-typing [animation-delay:180ms]" />
-                    <span className="h-2 w-2 rounded-full bg-brand-500 motion-ok:animate-fx-typing [animation-delay:360ms]" />
+          </>
+        ) : (
+          <ul className="flex flex-col gap-4">
+            {messages.map((m) => (m.from === 'student' ? <StudentBubble key={m.id} message={m} /> : <NovaBubble key={m.id} message={m} />))}
+            {pending && (
+              <li role="status" className="flex items-center gap-2 md:gap-3">
+                <Mascot mood="thinking" size="sm" />
+                <SpeechBubble tail="start">
+                  <span className="flex items-center gap-3">
+                    <span aria-hidden className="flex gap-1">
+                      <span className={cn('h-2.5 w-2.5 rounded-full bg-brand-500 motion-ok:animate-fx-typing')} />
+                      <span className="h-2.5 w-2.5 rounded-full bg-brand-500 motion-ok:animate-fx-typing [animation-delay:180ms]" />
+                      <span className="h-2.5 w-2.5 rounded-full bg-brand-500 motion-ok:animate-fx-typing [animation-delay:360ms]" />
+                    </span>
+                    {t('kidsplay.ask.thinking')}
                   </span>
-                  {t('student.tutor.thinking')}
-                </li>
-              )}
-            </ul>
-          )}
-          {failedText && (
-            <ErrorState
-              className="mt-4"
-              description={t('student.tutor.error')}
-              onRetry={() => void ask(failedText, true)}
-            />
-          )}
-          <div ref={endRef} />
-        </div>
-
-        <form onSubmit={onSubmit} className="flex flex-col gap-3 border-t border-line p-4 md:p-6">
-          <Textarea
-            label={t('student.tutor.input.label')}
-            placeholder={t('student.tutor.input.placeholder')}
-            value={draft}
-            maxLength={MAX_QUESTION_LENGTH}
-            rows={3}
-            onChange={(e) => setDraft(e.target.value.slice(0, MAX_QUESTION_LENGTH))}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-                e.preventDefault();
-                e.currentTarget.form?.requestSubmit();
-              }
-            }}
-            hint={t('student.tutor.input.counter', { count: draft.length, max: MAX_QUESTION_LENGTH })}
-            error={tooLong ? t('student.tutor.input.limit') : undefined}
-          />
-          <div className="flex justify-end">
-            <Button type="submit" disabled={pending || !draft.trim()} leftIcon={<Send aria-hidden className="h-4 w-4" />}>
-              {t('student.tutor.send')}
-            </Button>
+                </SpeechBubble>
+              </li>
+            )}
+          </ul>
+        )}
+        {failedText && (
+          <div role="alert" className="flex flex-col gap-3">
+            <MascotMessage mood="oops" size="md">
+              <span className="block text-xl font-bold">{t('kidsplay.ask.error.title')}</span>
+              <span className="mt-1 block font-normal text-ink-soft">{t('kidsplay.ask.error.body')}</span>
+            </MascotMessage>
+            <BigActionButton variant="secondary" onClick={() => void ask(failedText, true)} className="self-start">
+              {t('kidsplay.ask.again')}
+            </BigActionButton>
           </div>
-        </form>
-      </Card>
+        )}
+        <div ref={endRef} className="md:scroll-mb-72" />
+      </div>
+
+      <form onSubmit={onSubmit} className="flex md:sticky md:bottom-0 flex-col gap-3 rounded-xl border-2 border-brand-100 bg-surface p-3 shadow-raised md:p-4">
+        <Textarea
+          label={t('kidsplay.ask.input.label')}
+          placeholder={t('kidsplay.ask.input.placeholder')}
+          value={draft}
+          maxLength={MAX_QUESTION_LENGTH}
+          rows={2}
+          className="min-h-[72px] text-lg md:min-h-[88px]"
+          wrapperClassName={kidFieldWrap}
+          onChange={(e) => setDraft(e.target.value.slice(0, MAX_QUESTION_LENGTH))}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+              e.preventDefault();
+              e.currentTarget.form?.requestSubmit();
+            }
+          }}
+          error={tooLong ? t('kidsplay.ask.tooLong') : undefined}
+        />
+        <BigActionButton type="submit" icon={<Send />} disabled={pending || !draft.trim()} fullWidth className="md:w-auto md:self-end">
+          {t('kidsplay.ask.send')}
+        </BigActionButton>
+      </form>
+      <p className="mt-3 text-base text-ink-soft">{t('kidsplay.ask.careful')}</p>
     </div>
   );
 }

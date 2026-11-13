@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import { Trophy } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Lock, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { AnimatedIllustration, Banner, Button, Card, Checkbox, EmptyState, ErrorState, LoadingState, PageHeader, Stat } from '@/components/ui';
+import { BigActionButton, Card, HelpBubble, LoadingState, Mascot, MascotMessage, PageHeader, SpeechBubble } from '@/components/ui';
 import { useAsync } from '@/lib';
 import { announce } from '@/lib/a11y';
 import { studentService } from '@/services';
@@ -16,7 +16,10 @@ interface Celebration {
   xp: number;
 }
 
-/** The pressed button disappears once its mission is done, so hand focus to a stable heading (user-initiated, so not focus theft). */
+/**
+ * Adventures: big colourful cards, one clear step and one big button each.
+ * The pressed button disappears once its step is done, so focus moves to a stable heading (user-initiated, so not focus theft).
+ */
 export default function QuestsPage() {
   const { t } = useTranslation();
   const userId = useSessionStore((s) => s.user?.id) ?? 'guest';
@@ -50,18 +53,17 @@ export default function QuestsPage() {
       await studentService.completeMission(userId, missionId);
       if (finishesQuest) {
         const title = t(quest.titleKey);
-        const summary = t('student.quests.celebration.summary', { title, xp: quest.xp });
         setCelebration({ questId: quest.id, title, xp: quest.xp });
-        announce(summary);
+        announce(`${t('kidsplay.adv.cheer.title', { title })} ${t('kidsplay.adv.cheer.stars', { count: quest.xp })}`);
         moveFocusTo('quest-celebration');
       } else {
-        announce(t('student.quests.mission.savedAnnounce'));
+        announce(t('kidsplay.adv.saved'));
         moveFocusTo(`quest-${quest.id}`);
       }
       reload();
     } catch {
       setSaveFailed(true);
-      announce(t('student.quests.mission.error'), 'assertive');
+      announce(t('kidsplay.saveError'), 'assertive');
     } finally {
       setPendingIds((s) => {
         const next = new Set(s);
@@ -71,86 +73,84 @@ export default function QuestsPage() {
     }
   };
 
-  const quests = data ?? [];
-  const completed = quests.filter((q) => q.status === 'complete');
-  const totalXp = completed.reduce((sum, q) => sum + q.xp, 0);
+  // Adventures still open come first; finished ones sit at the bottom, calm and ticked.
+  const quests = useMemo(() => [...(data ?? [])].sort((a, b) => Number(a.status === 'complete') - Number(b.status === 'complete')), [data]);
+  const featuredId = quests.find((q) => q.status === 'open')?.id;
 
   return (
-    <div>
-      <PageHeader title={t('student.quests.title')} description={t('student.quests.subtitle')} />
+    <div className="mx-auto flex max-w-3xl flex-col gap-6">
+      <PageHeader
+        className="mb-0"
+        title={t('kids.play.adventures.title')}
+        description={t('kids.play.adventures.desc')}
+        actions={<HelpBubble textKey="kidsplay.adv.help" align="end" />}
+      />
 
-      <Banner tone="info" className="mb-6">
-        {t('student.quests.private')}
-      </Banner>
+      {loading && !hasData && <LoadingState label={t('a11y.loading')} lines={5} />}
+      {error && (
+        <div role="alert" className="flex flex-col gap-3">
+          <MascotMessage mood="oops" size="md">
+            {t('kidsplay.adv.error')}
+          </MascotMessage>
+          <BigActionButton variant="secondary" onClick={reload} className="self-start">
+            {t('kidsplay.ask.again')}
+          </BigActionButton>
+        </div>
+      )}
 
-      {loading && !hasData && <LoadingState lines={5} />}
-      {error && <ErrorState description={t('student.quests.error')} onRetry={reload} />}
-
-      {hasData && quests.length === 0 && <EmptyState icon={<Trophy className="h-8 w-8" />} title={t('student.quests.empty')} />}
+      {hasData && quests.length === 0 && (
+        <MascotMessage mood="sleepy" size="lg" speakText={t('kidsplay.adv.empty')}>
+          {t('kidsplay.adv.empty')}
+        </MascotMessage>
+      )}
 
       {hasData && quests.length > 0 && (
         <div className="flex flex-col gap-6" aria-busy={loading}>
-          {celebration && (
-            <Card as="section" aria-labelledby="quest-celebration" raised className="flex flex-col items-center gap-3 text-center">
+          {celebration ? (
+            <Card as="section" aria-labelledby="quest-celebration" raised className="flex flex-col items-start gap-4 border-success-500 bg-success-50">
+              <div className="flex flex-col items-start gap-3 md:flex-row md:items-center md:gap-4">
+                <Mascot mood="cheer" size="lg" animate={pref.showAnimation} />
+                <SpeechBubble speakText={t('kidsplay.adv.cheer.title', { title: celebration.title })} className="w-full md:w-auto md:flex-1">
+                  <span id="quest-celebration" tabIndex={-1} className="block text-xl font-bold outline-none focus-visible:shadow-focus">
+                    {t('kidsplay.adv.cheer.title', { title: celebration.title })}
+                  </span>
+                  <span className="mt-1 block font-normal text-ink-soft">{t('kidsplay.adv.cheer.stars', { count: celebration.xp })}</span>
+                </SpeechBubble>
+              </div>
               {pref.showAnimation && (
-                <AnimatedIllustration
-                  name="mastery-celebration"
-                  alt={t('student.quests.celebration.alt')}
-                  className="w-40 md:w-56"
-                />
+                <div aria-hidden className="flex gap-2">
+                  {[0, 1, 2].map((i) => (
+                    <Star key={i} className="h-10 w-10 fill-accent-500 text-accent-600 motion-ok:animate-fx-pop-in" style={{ animationDelay: `${i * 120}ms` }} />
+                  ))}
+                </div>
               )}
-              <h2 id="quest-celebration" tabIndex={-1} className="text-xl font-bold text-ink outline-none focus-visible:shadow-focus">
-                {t('student.quests.complete')}
-              </h2>
-              <p className="text-sm text-ink-soft">
-                {t('student.quests.celebration.summary', { title: celebration.title, xp: celebration.xp })}
-              </p>
-              <Button variant="secondary" onClick={() => setCelebration(null)}>
-                {t('a11y.close')}
-              </Button>
+              <BigActionButton onClick={() => setCelebration(null)}>{t('kidsplay.adv.cheer.ok')}</BigActionButton>
             </Card>
+          ) : (
+            <MascotMessage mood="happy" size="md" speakText={t('kidsplay.adv.hello')}>
+              {t('kidsplay.adv.hello')}
+            </MascotMessage>
           )}
 
-          {saveFailed && <Banner tone="danger">{t('student.quests.mission.error')}</Banner>}
-
-          <section aria-label={t('student.quests.map.title')} className="grid gap-4 md:grid-cols-[1fr_auto] md:items-center">
-            <Card className="flex items-center justify-center">
-              <AnimatedIllustration
-                name="quest-map"
-                alt={t('student.quests.map.alt')}
-                className="w-full max-w-md"
-              />
-            </Card>
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-1">
-              <Stat
-                label={t('student.quests.summary.label')}
-                value={t('student.quests.summary.value', { done: completed.length, total: quests.length })}
-              />
-              <Stat label={t('student.quests.summary.xp')} value={t('student.quests.xp', { xp: totalXp })} />
-            </div>
-          </section>
+          {saveFailed && (
+            <MascotMessage mood="oops" size="sm">
+              <span role="alert">{t('kidsplay.saveError')}</span>
+            </MascotMessage>
+          )}
 
           <section aria-labelledby="quest-list-heading" className="stagger flex flex-col gap-4">
-            <h2 id="quest-list-heading" className="text-xl font-semibold text-ink">
-              {t('student.quests.list.title')}
+            <h2 id="quest-list-heading" className="text-xl font-bold text-ink">
+              {t('kidsplay.adv.list')}
             </h2>
             {quests.map((q) => (
-              <QuestCard key={q.id} quest={q} pendingIds={pendingIds} onComplete={handleComplete} />
+              <QuestCard key={q.id} quest={q} index={(data ?? []).findIndex((x) => x.id === q.id)} featured={q.id === featuredId} pendingIds={pendingIds} onComplete={handleComplete} />
             ))}
           </section>
 
-          <Card>
-            <Checkbox
-              checked={pref.enabled}
-              onChange={(e) => pref.setEnabled(e.target.checked)}
-              label={t('student.quests.celebrate.toggle')}
-              hint={
-                pref.reduced
-                  ? t('student.quests.celebrate.reducedHint')
-                  : t('student.quests.celebrate.hint')
-              }
-            />
-          </Card>
+          <p className="flex items-center gap-2 text-base text-ink-soft">
+            <Lock aria-hidden className="h-5 w-5 shrink-0" />
+            {t('kidsplay.private')}
+          </p>
         </div>
       )}
     </div>

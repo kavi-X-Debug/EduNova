@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, BadgeImage, cn } from '@/components/ui';
+import { BigActionButton, BadgeImage, Button, Mascot, cn } from '@/components/ui';
 import { announce, usePrefersReducedMotion } from '@/lib/a11y';
 import { onRewardOutcome } from '@/services';
 import { useSessionStore } from '@/store';
@@ -61,30 +60,29 @@ export function RewardCelebrator() {
         shown || reduced ? 'opacity-100' : 'opacity-0',
       )}
     >
-      <h2 className="text-base font-bold text-ink">{badges.length > 0 ? t('rewards.celebrate.title', { count: badges.length }) : t('rewards.celebrate.levelTitle')}</h2>
+      <div className="flex items-center gap-3">
+        <Mascot mood="cheer" size="sm" />
+        <h2 className="text-xl font-bold text-ink">{badges.length > 0 ? t('rewards.celebrate.title', { count: badges.length }) : t('rewards.celebrate.levelTitle')}</h2>
+      </div>
       {badges.length > 0 && (
         <ul className="mt-3 flex flex-col gap-3">
           {badges.map(({ badge }) => (
             <li key={badge.id} className="flex items-center gap-3">
               <BadgeImage badgeId={badge.id} rarity={badge.rarity} size="lg" pop />
               <div>
-                <p className="font-semibold text-ink">{t(badge.titleKey)}</p>
-                <p className="text-sm text-ink-soft">{t(badge.descriptionKey)}</p>
+                <p className="text-lg font-bold text-ink">{t(badge.titleKey)}</p>
+                <p className="text-base text-ink-soft">{t(`kidsplay.badge.${badge.id}.why`)}</p>
               </div>
             </li>
           ))}
         </ul>
       )}
-      {level !== null && <p className="mt-3 text-sm font-semibold text-brand-700">{t('rewards.celebrate.level', { level })}</p>}
+      {level !== null && <p className="mt-3 text-lg font-semibold text-brand-700">{t('rewards.celebrate.level', { level })}</p>}
       <div className="mt-4 flex flex-wrap gap-2">
-        <Link
-          to="/student/badges"
-          onClick={dismiss}
-          className="inline-flex min-h-[44px] items-center rounded-md bg-brand-600 px-4 py-2 text-sm font-semibold text-surface outline-none hover:bg-brand-700 focus-visible:shadow-focus"
-        >
+        <BigActionButton to="/student/badges" onClick={dismiss}>
           {t('rewards.celebrate.view')}
-        </Link>
-        <Button variant="secondary" onClick={dismiss}>
+        </BigActionButton>
+        <Button variant="secondary" size="xl" onClick={dismiss}>
           {t('rewards.celebrate.dismiss')}
         </Button>
       </div>
