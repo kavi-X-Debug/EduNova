@@ -4,7 +4,7 @@ import { ChevronLeft } from 'lucide-react';
 import {
   Avatar, Card, EmptyState, ErrorState, LoadingState, PageHeader, ReadinessBand, Stat, TBody, Td, Th, THead, Table, Tr,
 } from '@/components/ui';
-import { formatRelative, useAsync } from '@/lib';
+import { classLabel, formatRelative, useAsync } from '@/lib';
 import { useLocale } from '@/i18n';
 import { rewardsService, studentService, teacherService } from '@/services';
 import { useSessionStore } from '@/store';
@@ -22,7 +22,7 @@ export default function StudentPage() {
   // Ownership: the student must belong to one of this teacher's classes before anything else is fetched.
   const { data, loading, error, reload } = useAsync(
     async () => {
-      const none = { student: undefined, className: undefined, mastery: [], concepts: [], badges: undefined };
+      const none = { student: undefined, cls: undefined, mastery: [], concepts: [], badges: undefined };
       // Ownership + not-found without swallowing transport errors: look only inside this teacher's own classes.
       const classes = await teacherService.listClasses(teacherId);
       const lists = await Promise.all(classes.map((c) => teacherService.listStudents(c.id)));
@@ -30,7 +30,7 @@ export default function StudentPage() {
       const mine = student ? classes.find((c) => c.id === student.classId) : undefined;
       if (!student || !mine) return none;
       const [mastery, concepts, badges] = await Promise.all([studentService.getMastery(id), studentService.listConcepts(), rewardsService.getBadgeCount(id)]);
-      return { student, className: mine.name, mastery, concepts, badges };
+      return { student, cls: mine, mastery, concepts, badges };
     },
     [id, teacherId],
   );
@@ -53,7 +53,7 @@ export default function StudentPage() {
 
   return (
     <div>
-      <PageHeader breadcrumb={back} title={student ? student.name : t('teacher.student.title')} description={data?.className} />
+      <PageHeader breadcrumb={back} title={student ? student.name : t('teacher.student.title')} description={data?.cls ? classLabel(data.cls, t) : undefined} />
       {loading && <LoadingState label={t('ui.common.loading')} lines={5} />}
       {error && <ErrorState description={t('teacher.error')} onRetry={reload} />}
       {!loading && !error && data && !student && <EmptyState title={t('teacher.student.notFound')} />}

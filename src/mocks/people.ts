@@ -26,9 +26,9 @@ const LAST = [
 const LOCALES: Locale[] = ['si', 'en', 'ta', 'si', 'en'];
 
 export const CLASS_DEFS = [
-  { id: 'class-6a', name: 'Grade 6A', grade: 6 },
-  { id: 'class-6b', name: 'Grade 6B', grade: 6 },
-  { id: 'class-6c', name: 'Grade 6C', grade: 6 },
+  { id: 'class-6a', name: 'Grade 6A', section: 'A', grade: 6 },
+  { id: 'class-6b', name: 'Grade 6B', section: 'B', grade: 6 },
+  { id: 'class-6c', name: 'Grade 6C', section: 'C', grade: 6 },
 ];
 
 export const TEACHERS: User[] = [
@@ -118,7 +118,7 @@ export function buildClassSummary(
     .sort((a, b) => a[1].s / a[1].n - b[1].s / b[1].n)
     .slice(0, 3)
     .map(([id]) => id);
-  return { id: def.id, name: def.name, grade: def.grade, studentCount: rows.length, bandCounts, weakConceptIds };
+  return { id: def.id, name: def.name, section: def.section, grade: def.grade, studentCount: rows.length, bandCounts, weakConceptIds };
 }
 
 // ---------- Audit ----------

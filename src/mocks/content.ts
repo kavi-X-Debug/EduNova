@@ -1,6 +1,6 @@
 import type { CurriculumDoc, Question } from '@/types';
 import { daysAgo, hashString } from './rng';
-import { MVP_GRADE, textbookSource } from './concepts';
+import { MVP_GRADE } from './concepts';
 import { G6_SOURCE_DOCS } from './grade6.generated';
 
 interface Q {
@@ -150,70 +150,7 @@ export const WELLBEING_EN: Record<string, string> = {
 };
 export const WELLBEING_KEYS = Object.keys(WELLBEING_EN);
 
-// ---------- Tutor knowledge ----------
-export interface TutorTopic {
-  match: RegExp;
-  text: string;
-  sources: { title: string; ref: string }[];
-}
-/** Sources cite the real Grade 6 textbook unit and pages (from curriculum/grade6/<subject>/path.json). */
-export const TUTOR_TOPICS: TutorTopic[] = [
-  {
-    match: /fraction|භාග|பின்ன/i,
-    text: 'Equivalent fractions name the same amount: multiply the top and bottom by the same number, so 1/2 = 2/4 = 3/6. To add fractions, first give them the same denominator, then add the numerators: 1/2 + 1/4 = 2/4 + 1/4 = 3/4.',
-    sources: [textbookSource('m6-fractions'), { title: 'EduNova worked examples: equivalent fractions', ref: 'lib:frac-equiv-01' }],
-  },
-  {
-    match: /decimal|දශම|தசம/i,
-    text: 'A decimal is another way to write tenths and hundredths. 3/10 is written 0.3 and 25/100 is written 0.25. The first place after the point is tenths, the second is hundredths.',
-    sources: [textbookSource('m6-decimals')],
-  },
-  {
-    match: /algebra|symbol|substitut|වීජ|இயற்கணித/i,
-    text: 'In algebra a letter stands for an unknown number. If x is the number of pens in a box, 3 boxes hold 3x pens. To substitute, replace the letter with its value: when x = 5, 3x = 15.',
-    sources: [textbookSource('m6-algebraic-symbols'), textbookSource('m6-algebraic-expressions')],
-  },
-  {
-    match: /angle|කෝණ|கோண/i,
-    text: 'An angle shows how much one line turns from another. A right angle is a quarter turn. Angles smaller than a right angle are acute; angles between a right angle and a straight line are obtuse.',
-    sources: [textbookSource('m6-angles')],
-  },
-  {
-    match: /magnet|චුම්බක|காந்த/i,
-    text: 'A magnet attracts things made of iron, nickel and cobalt. Every magnet has a north and a south pole: like poles push apart and unlike poles pull together.',
-    sources: [textbookSource('s6-magnets')],
-  },
-  {
-    match: /circuit|electric|conductor|විදුලි|විද්‍යුත්|மின்/i,
-    text: 'Electricity flows only around a complete circuit: a cell, wires, a switch and a bulb joined in a loop. Metals such as copper are conductors; rubber, plastic and glass are insulators.',
-    sources: [textbookSource('s6-electric-circuits')],
-  },
-  {
-    match: /tense|past|yesterday/i,
-    text: 'We use the past tense for actions that are finished. Many verbs add -ed (play to played), but some common verbs change form (go to went, see to saw, have to had).',
-    sources: [textbookSource('en6-was-it-yesterday')],
-  },
-  {
-    match: /verb|noun|ක්‍රියා|නාම/i,
-    text: 'A noun names a person, place or thing; a verb tells us what someone does. In Sinhala, nouns change for number (one or many) and verbs agree with the subject of the sentence.',
-    sources: [textbookSource('si6-nouns'), textbookSource('si6-verbs')],
-  },
-  {
-    match: /flowchart|algorithm|ඇල්ගොරිතම|படிமுறை/i,
-    text: 'An algorithm is a clear list of steps that solves a problem. A flowchart draws those steps: ovals for start and end, rectangles for actions, and diamonds for decisions.',
-    sources: [textbookSource('ict6-problem-solving-algorithms'), textbookSource('ict6-flowcharts')],
-  },
-  {
-    match: /internet|online|safe|password/i,
-    text: 'Stay safe online: never share your address, phone number or passwords, only use websites your teacher or parent trusts, and tell a trusted adult if something online worries you.',
-    sources: [textbookSource('ict6-online-safety')],
-  },
-];
-export const TUTOR_FALLBACK: TutorTopic = {
-  match: /./,
-  text: 'Good question. Let us break it into small steps: first write down what you already know, then what the question asks, then try one step at a time. Tell me which step feels unclear and I will explain it.',
-  sources: [{ title: 'EduNova study skills guide: breaking down problems', ref: 'lib:study-skills-01' }],
-};
+// Tutor knowledge lives in ./tutorContent.ts (answers and source titles are per-locale).
 
 // ---------- Curriculum ----------
 /** The official Grade 6 source documents behind the learning paths (titles from each manifest.json). */
@@ -221,6 +158,7 @@ const DOC_STATUS: CurriculumDoc['status'][] = ['published', 'published', 'in_rev
 export const CURRICULUM: CurriculumDoc[] = G6_SOURCE_DOCS.map((d, i) => ({
   id: d.id,
   title: d.title,
+  titleKey: `curriculum.doc.${d.id}`,
   subject: d.subject,
   grade: MVP_GRADE,
   status: d.kind === 'textbook' ? 'published' : DOC_STATUS[i % DOC_STATUS.length],

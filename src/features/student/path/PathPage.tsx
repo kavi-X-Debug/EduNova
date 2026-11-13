@@ -18,8 +18,10 @@ import {
   type BadgeTone,
 } from '@/components/ui';
 import { useT, type TKey } from '@/i18n';
-import { useAsync } from '@/lib';
+import { localiseRef, unitLabel, useAsync } from '@/lib';
 import { announce } from '@/lib/a11y';
+import { i18n } from '@/i18n';
+import type { Locale } from '@/types';
 import { studentService } from '@/services';
 import { useSessionStore } from '@/store';
 import type { Concept, LearningPathStep, Mastery } from '@/types';
@@ -156,7 +158,7 @@ export default function PathPage() {
 
   /** Small secondary line: term, textbook unit and page reference (source labels are not translated). */
   const conceptMeta = (c: Concept | undefined) =>
-    c ? [c.term ? t('student.path.term.n', { term: c.term }) : null, c.unit, c.textbookRef ? t('student.path.textbookRef', { ref: c.textbookRef }) : null].filter(Boolean) : [];
+    c ? [c.term ? t('student.path.term.n', { term: c.term }) : null, c.unit ? unitLabel(c.unit, t as never) : null, c.textbookRef ? t('student.path.textbookRef', { ref: localiseRef(c.textbookRef, i18n.language as Locale) }) : null].filter(Boolean) : [];
 
   // Group visible steps by concept (they arrive in teaching order).
   const groups: { concept: string; steps: LearningPathStep[] }[] = [];

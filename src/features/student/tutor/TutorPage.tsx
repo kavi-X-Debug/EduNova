@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { AlertTriangle, Bot, Check, Send, User as UserIcon } from 'lucide-react';
 import { Banner, Button, Card, ErrorState, PageHeader, SourceList, Textarea, cn, type SourceItem } from '@/components/ui';
-import { tk, useT, type TKey } from '@/i18n';
+import { tk, useLocale, useT, type TKey } from '@/i18n';
 import { rewardsService, studentService } from '@/services';
 import { useSessionStore } from '@/store';
 import type { TutorMessage } from '@/types';
@@ -16,7 +16,7 @@ const SUGGESTIONS = [
 ];
 
 function toSources(m: TutorMessage): SourceItem[] {
-  return m.sources.map((s, i) => ({ id: `${m.id}-${s.ref}-${i}`, title: s.title }));
+  return m.sources.map((s, i) => ({ id: `${m.id}-${s.ref}-${i}`, title: s.title, lang: m.locale }));
 }
 
 function MessageBubble({ message }: { message: TutorMessage }) {
@@ -43,7 +43,7 @@ function MessageBubble({ message }: { message: TutorMessage }) {
         )}
       >
         <h2 className="text-xs font-semibold text-ink-soft">{t(fromTutor ? 'student.tutor.from.tutor' : 'student.tutor.from.student')}</h2>
-        <p className="whitespace-pre-wrap break-words text-base text-ink">{message.text}</p>
+        <p lang={message.locale} className="whitespace-pre-wrap break-words text-base text-ink">{message.text}</p>
         {/* Every tutor answer shows its sources; an empty list renders the explicit "no sources" state. */}
         {unsourced && (
           <p className="flex items-start gap-2 rounded-md border border-warning-500 bg-surface p-2 text-sm font-semibold text-ink">
@@ -68,7 +68,7 @@ function MessageBubble({ message }: { message: TutorMessage }) {
 }
 
 export default function TutorPage() {
-  const t = useT();
+  const { t, locale } = useLocale();
   const userId = useSessionStore((s) => s.user?.id) ?? '';
   const [messages, setMessages] = useState<TutorMessage[]>([]);
   const [draft, setDraft] = useState('');
@@ -91,7 +91,7 @@ export default function TutorPage() {
       setMessages((prev) => [...prev, { id: `q-${Date.now()}`, from: 'student', text: question, sources: [] }]);
     }
     try {
-      const reply = await studentService.askTutor(userId, question);
+      const reply = await studentService.askTutor(userId, question, locale);
       if (requestId !== requestRef.current) return;
       setMessages((prev) => [...prev, { ...reply, from: 'tutor', sources: reply.sources ?? [] }]);
     } catch {

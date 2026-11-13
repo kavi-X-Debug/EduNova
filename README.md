@@ -126,7 +126,7 @@ Suggested mapping (adjust to your schema):
 | `studentService.getMastery`, `listConcepts` | `GET /students/:id/mastery`, `GET /concepts` | `concepts`, `mastery` tables |
 | `getDiagnosticQuestions`, `submitQuiz` | `GET /students/:id/diagnostic`, `POST /quiz-attempts` | `questions`, `quiz_attempts`; mark answers on the server |
 | `getLearningPath`, `getRevisionQueue`, `recordReview` | `GET /students/:id/path`, `.../revision`, `POST .../revision/:itemId/review` | `path_steps`, `revision_items` |
-| `askTutor` | `POST /tutor/messages` | LLM call server-side; **must return non-empty `sources`** |
+| `askTutor(userId, text, locale)` | `POST /tutor/messages` with `{ text, locale }` | LLM call server-side; **must return non-empty `sources`**, and the answer text and source titles **must be in `locale`** (en/si/ta): put the language in the system prompt and store source titles per locale |
 | `listExamReports` | `GET /students/:id/exam-reports` | store bands only, never a predicted mark |
 | `listQuests`, `completeMission` | `GET /students/:id/quests`, `POST /missions/:id/complete` | `quests`, `missions` |
 | `getProfile`, `saveProfile` | `GET/PUT /students/:id/profile` | `profiles` |
@@ -147,7 +147,7 @@ Things the front end cannot enforce, so the backend must:
 ## Known gaps
 
 - **Not compared with Figma**; colour tokens are placeholders. Fixing this means updating `tailwind.config.ts` (names stay).
-- **Sinhala/Tamil text unreviewed** by native speakers (wellbeing prompts and readiness-band labels matter most).
+- **Sinhala/Tamil text not verified by native speakers.** It was reviewed for consistency and structure only; open questions are listed in `docs/I18N-REVIEW.md` and terms in `docs/I18N-GLOSSARY.md`. Wellbeing prompts and readiness-band labels matter most.
 - Not tested: screen reader, 200% zoom, text contrast measured with a tool, Sinhala at 834/1440px.
 - The animation SVGs in `public/` hard-code hex colours (outside the token system).
 - Mock data lives in memory and resets on reload (quest progress, revision results, curriculum status changes). Only the signed-in user, language choice and onboarding profile are kept in the browser.

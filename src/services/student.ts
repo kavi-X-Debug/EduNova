@@ -6,7 +6,8 @@ export interface StudentService {
   getDiagnosticQuestions(userId: string): Promise<Question[]>;
   submitQuiz(attempt: QuizAttempt): Promise<QuizAttempt>;
   getLearningPath(userId: string): Promise<LearningPathStep[]>;
-  askTutor(userId: string, text: string): Promise<TutorMessage>;
+  /** `locale` is the UI language: the reply text AND source titles must be written in it (LLM: pass it in the system prompt). `sources` must be non-empty. */
+  askTutor(userId: string, text: string, locale: Locale): Promise<TutorMessage>;
   listExamReports(userId: string): Promise<ExamReport[]>;
   listQuests(userId: string): Promise<Quest[]>;
   completeMission(userId: string, missionId: string): Promise<Mission>;

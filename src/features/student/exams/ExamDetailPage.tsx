@@ -73,9 +73,10 @@ export default function ExamDetailPage() {
   // Weakest topics first so the student sees where to focus.
   const breakdown = [...report.conceptBreakdown].sort((a, b) => bandRank(a.band) - bandRank(b.band));
   const counts = BAND_ORDER.map((b) => ({ band: b, count: breakdown.filter((m) => m.band === b).length })).filter((c) => c.count > 0);
-  const summary = new Intl.ListFormat(locale, { style: 'narrow', type: 'unit' }).format(
-    counts.map((c) => t('student.exams.chart.bandCount' as TKey, { band: t(`student.exams.band.${c.band}`), count: c.count })),
-  );
+  // Plain separator: Intl.ListFormat is missing or English-only for si/ta in some runtimes.
+  const summary = counts
+    .map((c) => t('student.exams.chart.bandCount' as TKey, { band: t(`student.exams.band.${c.band}`), count: c.count }))
+    .join('; ');
 
   return (
     <div>

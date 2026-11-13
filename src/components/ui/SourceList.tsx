@@ -8,6 +8,8 @@ export interface SourceItem {
   /** e.g. page or section reference (already formatted). */
   detail?: string;
   href?: string;
+  /** language of `title` when it differs from the UI language (BCP 47) */
+  lang?: string;
 }
 
 export interface SourceListProps {
@@ -47,9 +49,9 @@ export function SourceList({ sources, title, className }: SourceListProps) {
               <span aria-hidden className="text-ink-faint">{i + 1}.</span>
               <span>
                 {safeHref(s.href) ? (
-                  <a href={safeHref(s.href)} rel="noopener noreferrer" className="font-semibold text-brand-700 underline outline-none focus-visible:shadow-focus">{s.title}</a>
+                  <a href={safeHref(s.href)} rel="noopener noreferrer" lang={s.lang} className="font-semibold text-brand-700 underline outline-none focus-visible:shadow-focus">{s.title}</a>
                 ) : (
-                  <span className="font-semibold text-ink">{s.title}</span>
+                  <span lang={s.lang} className="font-semibold text-ink">{s.title}</span>
                 )}
                 {s.detail && <span className="text-ink-soft"> · {s.detail}</span>}
               </span>

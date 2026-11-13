@@ -77,8 +77,8 @@ export function withRewards(base: StudentService, rewards: RewardsService): Stud
       return mission;
     },
 
-    askTutor: async (userId, text) => {
-      const reply = await base.askTutor(userId, text);
+    askTutor: async (userId, text, locale) => {
+      const reply = await base.askTutor(userId, text, locale);
       track(userId, async () => ({ type: 'tutor_asked' }));
       return reply;
     },
