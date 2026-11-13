@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BadgeArt, type BadgeArtSize } from './BadgeArt';
+import { CENTER, SPARKLE, SPARKS, TIERS } from './badgeTiers';
 import { cn } from './cn';
 
 export type BadgeImageSize = BadgeArtSize;
@@ -56,13 +57,46 @@ function Inner({ badgeId, rarity = 'common', size = 'md', locked, alt = '', pop,
   }, [badgeId]);
 
   if (url) {
-    return <img src={url} alt={alt} className={cn('shrink-0 object-contain', BOX[size], locked && 'opacity-40 grayscale', className)} />;
+    // Flow image with the same life as the vector medal: glow ring, twinkles, hover shine, one-time pop (earned only).
+    const tier = TIERS[locked ? 'locked' : rarity];
+    const alive = !locked;
+    return (
+      <span className={cn('group relative inline-flex shrink-0', BOX[size], alive && pop && 'motion-ok:animate-badge-pop', className)}>
+        {alive && (
+          <svg aria-hidden focusable="false" viewBox="0 0 100 100" className="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
+            <circle cx="50" cy="50" r="48" className={cn(CENTER, tier.glow, 'opacity-40 motion-ok:animate-badge-glow')} />
+          </svg>
+        )}
+        <img
+          src={url}
+          alt={alt}
+          width={128}
+          height={128}
+          decoding="async"
+          className={cn('relative h-full w-full object-contain', locked && 'opacity-40 grayscale')}
+        />
+        {alive && (
+          <>
+            <span aria-hidden className="pointer-events-none absolute inset-[8%] overflow-hidden rounded-full">
+              <span className="absolute inset-y-0 left-0 w-1/4 -translate-x-[130%] -skew-x-[18deg] bg-surface/45 motion-ok:group-focus-within:animate-fx-sheen motion-ok:group-hover:animate-fx-sheen" />
+            </span>
+            <svg aria-hidden focusable="false" viewBox="0 0 100 100" className="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
+              {SPARKS.map((p) => (
+                <g key={`${p.x}-${p.y}`} transform={`translate(${p.x} ${p.y}) scale(${p.s})`}>
+                  <path d={SPARKLE} className={cn(CENTER, tier.sparkle, 'opacity-70 motion-ok:animate-badge-twinkle')} style={{ animationDelay: p.delay }} />
+                </g>
+              ))}
+            </svg>
+          </>
+        )}
+      </span>
+    );
   }
   return <BadgeArt badgeId={badgeId} rarity={rarity} size={size} locked={locked} alt={alt} pop={pop} className={className} />;
 }
 
 /**
- * Badge artwork. A real image at /badges/<badgeId>.png (then .webp), for example one made in Google Flow, always wins;
+ * Badge artwork. A real image at /badges/<badgeId>.png (then .webp), for example one made in Google Flow, always wins (with glow, twinkles, hover shine and pop like the vector medal, earned badges only; locked ones are soft grey and still);
  * until one exists the built-in vector medal (BadgeArt) is shown, so the app looks finished without any files.
  * See docs/BADGES.md.
  */

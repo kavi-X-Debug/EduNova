@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { BigActionButton, ButtonLink, Card, GrowMeter, HelpBubble, MascotMessage, PageHeader } from '@/components/ui';
+import { SubjectIcon } from '../learnKit/SubjectIcon';
 import { useLocale, type TKey } from '@/i18n';
 import { bandRank, formatDate, useAsync } from '@/lib';
 import { studentService } from '@/services';
@@ -118,8 +119,11 @@ export default function ExamDetailPage() {
           </h2>
           <ul aria-label={t('student.exams.chart.caption')} className="flex flex-col divide-y divide-line">
             {breakdown.map((m) => (
-              <li key={m.conceptId} className="flex min-w-0 flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between">
-                <span className="min-w-0 break-words text-lg font-semibold text-ink">{conceptTitle(m.conceptId)}</span>
+              <li key={m.conceptId} className="group flex min-w-0 flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between">
+                <span className="flex min-w-0 items-center gap-3 text-lg font-semibold text-ink">
+                  <SubjectIcon subject={conceptById.get(m.conceptId)?.subject ?? ''} size="sm" />
+                  <span className="min-w-0 break-words">{conceptTitle(m.conceptId)}</span>
+                </span>
                 <GrowMeter band={m.band} size="sm" />
               </li>
             ))}

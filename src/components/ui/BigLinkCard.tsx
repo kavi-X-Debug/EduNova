@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode } from 'react';
+import { useState, type ComponentType, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { cn, focusRing } from './cn';
@@ -13,11 +13,14 @@ export interface BigLinkCardProps {
   description?: string;
   /** Optional small thing on the right, e.g. a "3 ready" badge. */
   aside?: ReactNode;
+  /** Optional artwork URL (e.g. /subjects/trail.png) shown instead of the icon; the icon is the fallback if it fails to load. */
+  image?: string;
   className?: string;
 }
 
 /** A whole-card link for hub pages: big icon tile, short title, one sentence, chevron. 80px+ tall. */
-export function BigLinkCard({ to, icon: Icon, title, description, aside, className }: BigLinkCardProps) {
+export function BigLinkCard({ to, icon: Icon, title, description, aside, image, className }: BigLinkCardProps) {
+  const [broken, setBroken] = useState(false);
   return (
     <Link
       to={to}
@@ -27,9 +30,23 @@ export function BigLinkCard({ to, icon: Icon, title, description, aside, classNa
         className,
       )}
     >
-      <span aria-hidden className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
-        <Icon aria-hidden className="fx-icon h-8 w-8" />
-      </span>
+      {image && !broken ? (
+        <img
+          src={image}
+          alt=""
+          aria-hidden
+          width={56}
+          height={56}
+          decoding="async"
+          draggable={false}
+          className="h-14 w-14 shrink-0 select-none rounded-lg object-contain motion-ok:animate-fx-pop-in motion-ok:group-hover/card:animate-fx-wiggle"
+          onError={() => setBroken(true)}
+        />
+      ) : (
+        <span aria-hidden className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
+          <Icon aria-hidden className="fx-icon h-8 w-8" />
+        </span>
+      )}
       <span className="min-w-0 flex-1">
         <span className="block text-xl font-bold text-ink">{title}</span>
         {description && <span className="mt-0.5 block text-base text-ink-soft">{description}</span>}

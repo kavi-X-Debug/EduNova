@@ -22,7 +22,7 @@ import { studentService } from '@/services';
 import { useSessionStore } from '@/store';
 import type { Concept, LearningPathStep, Locale, Mastery } from '@/types';
 import { DoneScreen, KidEmpty, KidError, KidLoading } from '../learnKit/KidState';
-import { subjectStyle } from '../learnKit/subjects';
+import { SubjectIcon } from '../learnKit/SubjectIcon';
 
 type Kind = LearningPathStep['kind'];
 
@@ -312,7 +312,6 @@ export default function PathPage() {
         </h2>
         <ul className="stagger flex flex-wrap gap-3">
           {subjects.map((s) => {
-            const { icon: Icon, tile } = subjectStyle(s);
             const on = s === subject;
             return (
               <li key={s}>
@@ -321,13 +320,11 @@ export default function PathPage() {
                   aria-pressed={on}
                   onClick={() => setSubjectChoice(s)}
                   className={cn(
-                    'flex min-h-[64px] items-center gap-3 rounded-xl border-2 px-4 py-2 text-left text-xl font-bold text-ink outline-none transition duration-base ease-standard focus-visible:shadow-focus motion-ok:active:scale-[0.98] motion-reduce:transition-none',
+                    'group flex min-h-[64px] items-center gap-3 rounded-xl border-2 px-4 py-2 text-left text-xl font-bold text-ink outline-none transition duration-base ease-standard focus-visible:shadow-focus motion-ok:active:scale-[0.98] motion-reduce:transition-none',
                     on ? 'border-brand-600 bg-brand-50 shadow-raised' : 'border-line bg-surface hover:border-line-strong hover:bg-surface-muted',
                   )}
                 >
-                  <span aria-hidden className={cn('flex h-10 w-10 items-center justify-center rounded-lg', tile)}>
-                    <Icon className="h-6 w-6" />
-                  </span>
+                  <SubjectIcon subject={s} size="sm" />
                   {t(`subject.${s}` as TKey)}
                 </button>
               </li>

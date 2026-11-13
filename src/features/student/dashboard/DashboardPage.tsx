@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { Award, CircleCheck, Circle, Play, RefreshCw, Rocket } from 'lucide-react';
 import {
@@ -12,7 +12,9 @@ import {
   Mascot,
   MascotMessage,
   cn,
+  preloadMascots,
 } from '@/components/ui';
+import { SubjectIcon } from '../learnKit/SubjectIcon';
 import { useTranslation } from 'react-i18next';
 import { useAsync } from '@/lib';
 import { rewardsService, studentService } from '@/services';
@@ -29,6 +31,13 @@ export default function DashboardPage() {
   const firstName = (user?.name ?? '').trim().split(/\s+/)[0] ?? '';
 
   const path = useAsync(() => studentService.getLearningPath(userId), [userId]);
+  const concepts = useAsync(() => studentService.listConcepts(), []);
+  const subjectOf = useMemo(() => {
+    const m = new Map((concepts.data ?? []).map((c) => [c.id, c.subject]));
+    return (conceptId: string) => m.get(conceptId) ?? '';
+  }, [concepts.data]);
+  // Warm the cache for all Nova poses so none pops in late on the pages this hub leads to.
+  useEffect(() => preloadMascots(), []);
   const [now] = useState(() => Date.now());
   const plan = useMemo(() => (path.data ? resolveTodaysPlan(userId, path.data) : undefined), [path.data, userId]);
 
@@ -42,7 +51,7 @@ export default function DashboardPage() {
         ) : !plan || (plan.steps.length === 0 && !path.data?.some((s) => s.status === 'done')) ? (
           <PlanEmpty />
         ) : (
-          <PlanBody plan={plan} firstName={firstName} />
+          <PlanBody plan={plan} firstName={firstName} subjectOf={subjectOf} />
         )}
       </Card>
 
@@ -54,7 +63,7 @@ export default function DashboardPage() {
   );
 }
 
-function PlanBody({ plan, firstName }: { plan: ReturnType<typeof resolveTodaysPlan>; firstName: string }) {
+function PlanBody({ plan, firstName, subjectOf }: { plan: ReturnType<typeof resolveTodaysPlan>; firstName: string; subjectOf: (conceptId: string) => string }) {
   const { t } = useTranslation();
   // No steps left in the plan but the child has finished things before: that is the "done" state too.
   const { steps, next, minutesLeft } = plan;
@@ -73,7 +82,7 @@ function PlanBody({ plan, firstName }: { plan: ReturnType<typeof resolveTodaysPl
         <HelpBubble textKey="kids.home.help" align="end" />
       </div>
 
-      <MascotMessage mood={allDone ? 'cheer' : 'happy'} size="lg" speakText={greeting}>
+      <MascotMessage mood={allDone ? 'cheer' : 'wave'} size="lg" speakText={greeting}>
         {greeting}
       </MascotMessage>
       {allDone && <p className="text-lg text-ink-soft">{t('kids.home.done.body')}</p>}
@@ -81,7 +90,7 @@ function PlanBody({ plan, firstName }: { plan: ReturnType<typeof resolveTodaysPl
       {steps.length > 0 && (
         <ol aria-label={t('kids.home.plan.list')} className="stagger flex flex-col gap-3">
           {steps.map((s) => (
-            <PlanRow key={s.id} step={s} />
+            <PlanRow key={s.id} step={s} subject={subjectOf(s.conceptId)} />
           ))}
         </ol>
       )}
@@ -106,13 +115,14 @@ function PlanBody({ plan, firstName }: { plan: ReturnType<typeof resolveTodaysPl
   );
 }
 
-function PlanRow({ step }: { step: LearningPathStep }) {
+function PlanRow({ step, subject }: { step: LearningPathStep; subject: string }) {
   const { t } = useTranslation();
   const done = step.status === 'done';
   const Icon = done ? CircleCheck : Circle;
   return (
-    <li className={cn('flex items-center gap-3 rounded-lg border bg-surface p-3 md:p-4', done ? 'border-success-500' : 'border-line')}>
+    <li className={cn('group flex items-center gap-3 rounded-lg border bg-surface p-3 md:p-4', done ? 'border-success-500' : 'border-line')}>
       <Icon aria-hidden className={cn('h-8 w-8 shrink-0', done ? 'text-success-700' : 'text-ink-faint')} />
+      {subject && <SubjectIcon subject={subject} size="sm" className={cn(done && 'opacity-70')} />}
       <span className="sr-only">{done ? t('kids.home.plan.done') : t('kids.home.plan.todo')}: </span>
       <span className={cn('min-w-0 flex-1 text-lg font-semibold', done ? 'text-ink-soft' : 'text-ink')}>
         {t(`kids.home.plan.step.${step.kind}`, { topic: t(`concept.${step.conceptId}`) })}
@@ -130,7 +140,7 @@ function PlanEmpty() {
       <h1 id="home-plan-title" className="text-2xl font-bold text-ink md:text-3xl">
         {t('kids.home.title')}
       </h1>
-      <MascotMessage mood="thinking" size="lg" speakText={t('kids.home.empty.body')}>
+      <MascotMessage mood="sleepy" size="lg" speakText={t('kids.home.empty.body')}>
         <span className="block text-xl font-bold">{t('kids.home.empty.title')}</span>
         <span className="mt-1 block font-normal text-ink-soft">{t('kids.home.empty.body')}</span>
       </MascotMessage>

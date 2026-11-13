@@ -65,7 +65,7 @@ export default function LoginPage() {
         <h1 className="text-2xl font-bold text-ink md:text-3xl">{t('kidsplay.login.title')}</h1>
         <HelpBubble textKey="kidsplay.login.help" align="end" />
       </div>
-      <MascotMessage mood="happy" size="md" className="mt-4">
+      <MascotMessage mood="wave" size="md" className="mt-4">
         {t('kidsplay.login.nova')}
       </MascotMessage>
 

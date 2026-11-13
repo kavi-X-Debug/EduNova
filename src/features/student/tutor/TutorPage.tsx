@@ -131,7 +131,7 @@ export default function TutorPage() {
       >
         {fresh ? (
           <>
-            <MascotMessage mood="happy" size="lg" speakText={hello}>
+            <MascotMessage mood="wave" size="lg" speakText={hello}>
               {hello}
             </MascotMessage>
             <div>

@@ -1,10 +1,9 @@
-import type { ComponentType, ReactNode } from 'react';
-import { BookOpen, Calculator, Check, FlaskConical, Languages, Laptop } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { Check } from 'lucide-react';
 import { LOCALE_NAMES, LOCALES, useT, type TKey } from '@/i18n';
 import { cn } from '@/components/ui';
 import type { Locale } from '@/types';
-
-type IconType = ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
+import { SubjectIcon } from '../learnKit/SubjectIcon';
 
 /** A big picture card that is a real radio or checkbox underneath (keyboard and screen reader friendly). */
 export function ChoiceCard({
@@ -14,6 +13,7 @@ export function ChoiceCard({
   checked,
   onChange,
   picture,
+  flush,
   children,
   className,
 }: {
@@ -23,11 +23,13 @@ export function ChoiceCard({
   checked: boolean;
   onChange: () => void;
   picture: ReactNode;
+  /** The picture brings its own coloured background (artwork), so no tile behind it. */
+  flush?: boolean;
   children: ReactNode;
   className?: string;
 }) {
   return (
-    <label className={cn('relative block cursor-pointer', className)}>
+    <label className={cn('group relative block cursor-pointer', className)}>
       <input type={type} name={name} value={value} checked={checked} onChange={onChange} className="peer sr-only" />
       <span
         className={cn(
@@ -36,7 +38,7 @@ export function ChoiceCard({
           'peer-checked:border-brand-600 peer-checked:bg-brand-50 peer-focus-visible:shadow-focus',
         )}
       >
-        <span aria-hidden className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-brand-100 text-brand-700 md:h-14 md:w-14">
+        <span aria-hidden className={cn('flex h-12 w-12 shrink-0 items-center justify-center rounded-lg md:h-14 md:w-14', !flush && 'bg-brand-100 text-brand-700')}>
           {picture}
         </span>
         <span className="min-w-0 flex-1 text-xl font-bold text-ink">{children}</span>
@@ -78,13 +80,6 @@ export function LanguageChoices({ value, onChange, legend, name = 'language', hi
 }
 
 const SUBJECT_IDS = ['maths', 'science', 'sinhala', 'english', 'ict'] as const;
-const SUBJECT_ICON: Record<(typeof SUBJECT_IDS)[number], IconType> = {
-  maths: Calculator,
-  science: FlaskConical,
-  sinhala: BookOpen,
-  english: Languages,
-  ict: Laptop,
-};
 
 /** Subjects as big icon cards (pick as many as you like). */
 export function SubjectChoices({
@@ -112,7 +107,6 @@ export function SubjectChoices({
       {hint && <p className="mb-3 mt-1 text-lg text-ink-soft">{hint}</p>}
       <div className={cn('mt-3 grid gap-3', wide && 'md:grid-cols-2')}>
         {SUBJECT_IDS.map((s) => {
-          const Icon = SUBJECT_ICON[s];
           const checked = value.includes(s);
           return (
             <ChoiceCard
@@ -122,7 +116,8 @@ export function SubjectChoices({
               value={s}
               checked={checked}
               onChange={() => onChange(checked ? value.filter((x) => x !== s) : [...value, s])}
-              picture={<Icon aria-hidden className="h-8 w-8" />}
+              flush
+              picture={<SubjectIcon subject={s} size="lg" />}
             >
               {t(`subject.${s}` as TKey)}
             </ChoiceCard>
