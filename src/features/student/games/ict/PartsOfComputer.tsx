@@ -6,7 +6,7 @@ import { announce } from '@/lib/a11y';
 import { useGt as useT } from '@/features/student/games/useGt';
 import type { GameComponentProps } from '@/types';
 import { RoundFeedback, playSound, useGameSession, type GameSession } from '../engine';
-import { DeviceIcon } from './ictArt';
+import { DeviceArt, PartsBanner } from './ictSprites';
 import { DEVICES, GROUPS, makePartsRound, ROUNDS_PER_PLAY, type PartsRound } from './partsOfComputer.generator';
 import { SortBoard } from './SortBoard';
 
@@ -64,10 +64,10 @@ function MatchView({ session, round }: { session: GameSession<PartsRound>; round
           className={cn(
             'flex min-h-16 w-full items-center gap-3 rounded-xl border-2 px-4 py-2 text-left text-lg font-bold transition duration-fast ease-standard',
             focusRing,
-            isDone ? 'border-success-700 bg-success-50 text-success-700' : isSel ? 'border-brand-600 bg-brand-100 text-brand-700 ring-2 ring-brand-500' : 'border-brand-100 bg-surface text-ink hover:border-brand-500',
+            isDone ? 'border-success-700 bg-success-50 text-success-700 ring-2 ring-success-500/40' : isSel ? 'border-brand-600 bg-brand-100 text-brand-700 ring-2 ring-brand-500' : 'border-brand-100 bg-surface text-ink hover:border-brand-500',
           )}
         >
-          {side === 'device' && <DeviceIcon id={id} className="h-12 w-12 shrink-0" />}
+          {side === 'device' && <DeviceArt id={id} className="h-12 w-12 shrink-0" hop={isDone} />}
           <span className="flex-1">{side === 'device' ? dev(id) : job(id)}</span>
           {isDone && (
             <>
@@ -82,6 +82,7 @@ function MatchView({ session, round }: { session: GameSession<PartsRound>; round
 
   return (
     <div className="flex flex-col gap-4">
+      <PartsBanner />
       <p className="text-xl font-bold text-ink">{t(`${P}.qMatch`)}</p>
       <div className="grid gap-5 md:grid-cols-2">
         <ul aria-label={t(`${P}.parts`)} className="flex flex-col gap-3">{round.devices.map((d) => card('device', d))}</ul>
@@ -101,15 +102,19 @@ function RoundView({ session }: { session: GameSession<PartsRound> }) {
       {round.mode === 'match' ? (
         <MatchView session={session} round={round} />
       ) : (
+        <>
+        <PartsBanner />
         <SortBoard
           session={session}
           label={t(`${P}.qSort`)}
-          items={round.devices.map((d) => ({ id: d, text: t(`${P}.dev.${d}`), label: <span className="flex items-center gap-2"><DeviceIcon id={d} className="h-9 w-9" />{t(`${P}.dev.${d}`)}</span> }))}
+          items={round.devices.map((d) => ({ id: d, text: t(`${P}.dev.${d}`), label: <span className="flex items-center gap-2"><DeviceArt id={d} className="h-9 w-9" />{t(`${P}.dev.${d}`)}</span> }))}
           zones={GROUPS.map((g) => ({ id: g, label: t(`${P}.group.${g}`) }))}
           answers={Object.fromEntries(round.devices.map((d) => [d, DEVICES[d]]))}
           checkLabel={t(`${P}.check`)}
           explain={(d, g) => t(`${P}.explainSort`, { device: t(`${P}.dev.${d}`), group: t(`${P}.group.${g}`) })}
+          zoneSprites={{ input: 'mouse', output: 'monitor', inside: 'laptop' }}
         />
+        </>
       )}
       <RoundFeedback session={session} />
     </div>

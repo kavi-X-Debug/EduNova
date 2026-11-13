@@ -4,6 +4,7 @@ import { useGt as useT } from '@/features/student/games/useGt';
 import type { GameComponentProps } from '@/types';
 import { BigChoiceButton, ChoiceGroup, RoundFeedback, useGameSession, type GameSession } from '../engine';
 import { BEHAVIOURS, makeSafeRound, ROUNDS_PER_PLAY, type SafeRound } from './safeOrUnsafe.generator';
+import { SafeStage } from './ictSprites';
 import { SortBoard } from './SortBoard';
 
 const P = 'games.ict.safeOrUnsafe';
@@ -15,6 +16,7 @@ function OneView({ session, round }: { session: GameSession<SafeRound>; round: E
   const why = t(`${P}.why.${round.item}`);
   return (
     <div className="flex flex-col gap-4">
+      <SafeStage status={session.status} safe={round.safe} />
       <p className="text-xl font-bold text-ink">{t(`${P}.qOne`)}</p>
       <p className="rounded-xl border-2 border-brand-600 bg-surface px-4 py-5 text-center text-2xl font-bold text-ink">{t(`${P}.item.${round.item}`)}</p>
       <ChoiceGroup label={t(`${P}.qOne`)} columns={1}>
@@ -45,6 +47,7 @@ function PasswordView({ session, round }: { session: GameSession<SafeRound>; rou
   const asking = session.status === 'asking';
   return (
     <div className="flex flex-col gap-4">
+      <SafeStage status={session.status} safe />
       <p className="text-xl font-bold text-ink">{t(`${P}.qPass`)}</p>
       <ChoiceGroup label={t(`${P}.qPass`)} columns={1}>
         {round.options.map((o) => (
@@ -85,6 +88,7 @@ function RoundView({ session }: { session: GameSession<SafeRound> }) {
           zones={zones}
           answers={Object.fromEntries(round.items.map((id) => [id, BEHAVIOURS[id] ? 'safe' : 'unsafe']))}
           checkLabel={t(`${P}.check`)}
+          zoneSprites={{ safe: 'shield-check', unsafe: 'warning-sign' }}
           explain={(id) => t(`${P}.why.${id}`)}
         />
       )}

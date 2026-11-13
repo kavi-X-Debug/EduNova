@@ -70,3 +70,6 @@ Made with Google Flow (AI-generated). **Check Flow's terms of use before any pub
 - `take-a-break.webp`: the Pause dialog.
 
 `public/avatars/` (PNG, 256 x 256, transparent, about 27 KB each, 5 files): `cat.png`, `dog.png`, `rabbit.png`, `turtle.png`, `bird.png`. The only picture choices on the student Me page (radio group); `ProfileAvatar` shows them wherever a preset animal avatar is shown, with the chosen colour as a thin rim. Fallback: the lucide icon of the same preset id. Older preset ids (fish, rocket, ...) keep their icon.
+
+### ICT game sprites (agent/gameart-ict)
+The six ICT games now use the Flow sprites in `public/game-sprites/` (transparent 256px PNGs, never edited): `robot`, `monitor`, `laptop`, `mouse`, `cheese`, `cursor`, `flow-diamond`, `shield-check`, `padlock`, `warning-sign`, `folder`, `doc-file`, `image-file`, `music-file`. There is no keyboard or video-file sprite, so the key caps and video files keep their SVG. All are decorative (`alt=""`, `aria-hidden`) through `engine/Sprite.tsx` (`<Sprite name size className eager />`; a missing file draws nothing, so a game never breaks). The ICT pieces live in `games/ict/ictSprites.tsx`; the sort bins get their pictures from `SortBoard` (`zoneSprites`).

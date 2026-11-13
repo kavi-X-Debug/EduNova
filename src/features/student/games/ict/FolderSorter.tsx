@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useGt as useT } from '@/features/student/games/useGt';
 import type { GameComponentProps } from '@/types';
 import { BigChoiceButton, ChoiceGroup, RoundFeedback, useGameSession, type GameSession } from '../engine';
-import { FileIcon, FolderIcon } from './ictArt';
+import { FileArt, FolderArt } from './ictSprites';
 import { makeFolderRound, ROUNDS_PER_PLAY, samePath, typeOfFile, type FolderRound, type PathStep } from './folderSorter.generator';
 import { SortBoard } from './SortBoard';
 
@@ -20,12 +20,12 @@ function PathView({ session, round }: { session: GameSession<FolderRound>; round
       <ul aria-label={t(`${P}.tree`)} className="flex flex-col gap-2 rounded-xl border-2 border-brand-100 bg-brand-50 p-4 text-lg text-ink">
         {round.tree.map((n) => (
           <li key={n.type}>
-            <p className="flex items-center gap-2 font-bold"><FolderIcon />{t(`${P}.folder.${n.type}`)}</p>
+            <p className="flex items-center gap-2 font-bold"><FolderArt />{t(`${P}.folder.${n.type}`)}</p>
             <ul className="ml-4 border-l-2 border-brand-100 pl-4">
               {n.subs.map((s) => (
                 <li key={s.sub} className="mt-1">
-                  <p className="flex items-center gap-2 font-bold"><FolderIcon className="h-6 w-6" />{t(`${P}.sub.${s.sub}`)}</p>
-                  <p className="ml-8 flex items-center gap-2" lang="en"><FileIcon type={typeOfFile(s.file)} />{s.file}</p>
+                  <p className="flex items-center gap-2 font-bold"><FolderArt className="h-6 w-6" />{t(`${P}.sub.${s.sub}`)}</p>
+                  <p className="ml-8 flex items-center gap-2" lang="en"><FileArt type={typeOfFile(s.file)} />{s.file}</p>
                 </li>
               ))}
             </ul>
@@ -63,10 +63,11 @@ function RoundView({ session }: { session: GameSession<FolderRound> }) {
         <SortBoard
           session={session}
           label={t(`${P}.qSort`)}
-          items={round.files.map((f) => ({ id: f, text: f, lang: 'en', label: <span className="flex items-center gap-2"><FileIcon type={typeOfFile(f)} />{f}</span> }))}
+          items={round.files.map((f) => ({ id: f, text: f, lang: 'en', label: <span className="flex items-center gap-2"><FileArt type={typeOfFile(f)} className="h-8 w-8" />{f}</span> }))}
           zones={round.folders.map((f) => ({ id: f, label: t(`${P}.folder.${f}`) }))}
           answers={Object.fromEntries(round.files.map((f) => [f, typeOfFile(f)]))}
           checkLabel={t(`${P}.check`)}
+          zoneSprites={Object.fromEntries(round.folders.map((f) => [f, 'folder']))}
           explain={(f, folder) => t(`${P}.explainSort`, { file: f, folder: t(`${P}.folder.${folder}`) })}
         />
       )}
