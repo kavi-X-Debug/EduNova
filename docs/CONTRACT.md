@@ -12,6 +12,12 @@ Defined only in `tailwind.config.ts` (colours, radius, shadows, font, screens 39
 ## Types and services
 Types: `src/types/index.ts`. Service interfaces: `src/services/*.ts`. Agent B implements mocks in `src/mocks/` and exports instances from `src/services/index.ts`. Features call services only; never import mocks directly.
 
+### Grade 6 curriculum data (MVP)
+- Source of truth: `curriculum/grade6/<subject>/path.json` (+ `manifest.json`), subjects `maths`, `science`, `sinhala`, `english`, `ict`. Run `npm run gen:grade6` after changing them; it validates prerequisites/step kinds/terms and writes `src/mocks/grade6.generated.ts` (do not edit by hand).
+- `Concept` has three optional reference fields, returned by `studentService.listConcepts()`: `term?: number` (1-3), `unit?: string` (textbook unit label as printed, not translated) and `textbookRef?: string` (e.g. "Part 1, pp. 112-134", not translated). UI shows them only as small secondary text; a real backend may omit them.
+- Concept titles are i18n keys `concept.<id>` in en/si/ta. `getLearningPath()` returns every Grade 6 concept's steps in teaching order (subject in SUBJECTS order, then term, then textbook order); step ids are `step-<conceptId>-<n>`. Per subject: finished concepts are `done`, the first unfinished step is `next`, the rest `locked`.
+- Admin curriculum docs (`listCurriculum()`) are the official documents obtained for the paths (`cur-<subject>-<n>`).
+
 ## Routes and layouts
 | Layout | Route | Owner |
 |---|---|---|

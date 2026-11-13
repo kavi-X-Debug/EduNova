@@ -46,7 +46,7 @@ export function Tabs({ items, label, defaultId, value, onChange, className }: Ta
 
   return (
     <div className={className}>
-      <div role="tablist" aria-label={label} className="flex gap-1 overflow-x-auto border-b border-line">
+      <div role="tablist" aria-label={label} className="flex gap-1 overflow-x-auto overflow-y-hidden border-b border-line">
         {items.map((it) => {
           const active = it.id === current;
           return (
