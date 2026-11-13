@@ -64,7 +64,7 @@ export function Tabs({ items, label, defaultId, value, onChange, className }: Ta
               disabled={it.disabled}
               onClick={() => select(it.id)}
               onKeyDown={(e) => onKey(e, it.id)}
-              className={cn('-mb-px whitespace-nowrap border-b-2 px-4 text-sm font-semibold disabled:opacity-50', touchTarget, focusRing, active ? 'border-brand-600 text-brand-700' : 'border-transparent text-ink-soft hover:text-ink')}
+              className={cn('-mb-px whitespace-nowrap border-b-2 px-4 text-sm font-semibold transition-colors duration-fast ease-standard disabled:opacity-50', touchTarget, focusRing, active ? 'border-brand-600 text-brand-700' : 'border-transparent text-ink-soft hover:border-line-strong hover:text-ink')}
             >
               {it.label}
             </button>
@@ -72,7 +72,7 @@ export function Tabs({ items, label, defaultId, value, onChange, className }: Ta
         })}
       </div>
       {items.map((it) => (
-        <div key={it.id} role="tabpanel" id={`${base}-panel-${it.id}`} aria-labelledby={`${base}-tab-${it.id}`} hidden={it.id !== current} tabIndex={0} className={cn('pt-4', focusRing)}>
+        <div key={it.id} role="tabpanel" id={`${base}-panel-${it.id}`} aria-labelledby={`${base}-tab-${it.id}`} hidden={it.id !== current} tabIndex={0} className={cn('pt-4 animate-fade-in', focusRing)}>
           {it.id === current && it.content}
         </div>
       ))}

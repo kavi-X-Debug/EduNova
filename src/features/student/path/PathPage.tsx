@@ -175,7 +175,7 @@ export default function PathPage() {
         {groups.length === 0 ? (
           <EmptyState title={t('student.path.term.empty')} />
         ) : (
-          <ol className="flex flex-col gap-4">
+          <ol className="stagger flex flex-col gap-4">
             {groups.map((g) => {
               const c = conceptById.get(g.concept);
               const headingId = `path-concept-${g.concept}`;

@@ -18,7 +18,7 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 
 export function Badge({ tone = 'neutral', icon, className, children, ...rest }: BadgeProps) {
   return (
-    <span className={cn('inline-flex items-center gap-1 rounded-sm border px-2 py-0.5 text-xs font-semibold', tones[tone], className)} {...rest}>
+    <span className={cn('inline-flex items-center gap-1 rounded-sm border transition-colors duration-fast ease-standard px-2 py-0.5 text-xs font-semibold', tones[tone], className)} {...rest}>
       {icon && <span aria-hidden className="inline-flex">{icon}</span>}
       {children}
     </span>
