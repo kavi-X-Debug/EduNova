@@ -1,56 +1,37 @@
-import { useMemo, useState } from 'react';
-import { BookOpen, CheckCircle2, Circle, ClipboardCheck, Lock, PenLine, PlayCircle, RotateCcw } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { ArrowLeft, ArrowRight, BookOpen, Check, ClipboardCheck, Info, Lock, PenLine, Play, RotateCcw, Sparkles } from 'lucide-react';
 import {
-  AnimatedIllustration,
-  Badge,
+  BigActionButton,
   Button,
+  ButtonLink,
   Card,
-  EmptyState,
-  ErrorState,
-  LoadingState,
+  GrowMeter,
+  HelpBubble,
+  MascotMessage,
   PageHeader,
   ProgressBar,
-  ReadinessBand,
-  Select,
-  Tabs,
+  SpeakButton,
   cn,
-  type BadgeTone,
 } from '@/components/ui';
-import { useT, type TKey } from '@/i18n';
+import { useTranslation } from 'react-i18next';
+import type { TKey } from '@/i18n';
 import { localiseRef, unitLabel, useAsync } from '@/lib';
 import { announce } from '@/lib/a11y';
 import { i18n } from '@/i18n';
-import type { Locale } from '@/types';
 import { studentService } from '@/services';
 import { useSessionStore } from '@/store';
-import type { Concept, LearningPathStep, Mastery } from '@/types';
+import type { Concept, LearningPathStep, Locale, Mastery } from '@/types';
+import { DoneScreen, KidEmpty, KidError, KidLoading } from '../learnKit/KidState';
+import { subjectStyle } from '../learnKit/subjects';
 
-type Status = LearningPathStep['status'];
 type Kind = LearningPathStep['kind'];
 
 const KIND_ICON: Record<Kind, ReactNode> = {
-  lesson: <BookOpen aria-hidden className="h-5 w-5" />,
-  practice: <PenLine aria-hidden className="h-5 w-5" />,
-  quiz: <ClipboardCheck aria-hidden className="h-5 w-5" />,
-  revision: <RotateCcw aria-hidden className="h-5 w-5" />,
+  lesson: <BookOpen aria-hidden className="h-7 w-7" />,
+  practice: <PenLine aria-hidden className="h-7 w-7" />,
+  quiz: <ClipboardCheck aria-hidden className="h-7 w-7" />,
+  revision: <RotateCcw aria-hidden className="h-7 w-7" />,
 };
-
-const STATUS_ICON: Record<Status, ReactNode> = {
-  locked: <Lock aria-hidden className="h-4 w-4" />,
-  next: <Circle aria-hidden className="h-4 w-4" />,
-  in_progress: <PlayCircle aria-hidden className="h-4 w-4" />,
-  done: <CheckCircle2 aria-hidden className="h-4 w-4" />,
-};
-
-const STATUS_TONE: Record<Status, BadgeTone> = {
-  locked: 'neutral',
-  next: 'brand',
-  in_progress: 'warning',
-  done: 'success',
-};
-
-const TERMS = ['1', '2', '3'];
 
 interface PathData {
   steps: LearningPathStep[];
@@ -60,16 +41,18 @@ interface PathData {
 
 const isCurrent = (s: LearningPathStep) => s.status === 'in_progress' || s.status === 'next';
 
+/** My learning trail: subjects as big buttons, a stepping-stone trail, one big Start. */
 export default function PathPage() {
-  const t = useT();
+  const { t } = useTranslation();
   const user = useSessionStore((s) => s.user);
   const userId = user?.id ?? '';
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [completingId, setCompletingId] = useState<string | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [doneId, setDoneId] = useState<string | null>(null);
+  const [completing, setCompleting] = useState(false);
   const [completeError, setCompleteError] = useState(false);
   const [subjectChoice, setSubjectChoice] = useState<string | null>(null);
-  /** Term filter per subject ('' = all terms). Unset means "the term of the current step". */
-  const [termBySubject, setTermBySubject] = useState<Record<string, string>>({});
+  const focusRef = useRef<HTMLHeadingElement>(null);
+  const firstRender = useRef(true);
 
   const { data, loading, error, reload } = useAsync<PathData>(async () => {
     const [steps, concepts, mastery] = await Promise.all([
@@ -80,37 +63,32 @@ export default function PathPage() {
     return { steps, concepts, mastery };
   }, [userId]);
 
-  /** Marks a step done through the service (which also records XP/badges); announces the result. */
-  const completeStep = async (stepId: string) => {
-    setCompletingId(stepId);
-    setCompleteError(false);
-    try {
-      await studentService.completePathStep(userId, stepId);
-      announce(t('student.path.complete.done'));
-      reload();
-    } catch {
-      setCompleteError(true);
-      announce(t('student.path.complete.error'), 'assertive');
-    } finally {
-      setCompletingId(null);
+  // Move focus to the new screen's heading when the child changes screen (their own action).
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
     }
-  };
+    focusRef.current?.focus({ preventScroll: false });
+  }, [activeId, doneId]);
 
   const conceptById = useMemo(() => new Map((data?.concepts ?? []).map((c) => [c.id, c])), [data]);
   const masteryById = useMemo(() => new Map((data?.mastery ?? []).map((m) => [m.conceptId, m])), [data]);
-
   const conceptTitle = (id: string): string => {
     const c = conceptById.get(id);
     return c ? t(c.titleKey as TKey) : id;
   };
+  const stepTitle = (s: LearningPathStep) => t(`kids.home.plan.step.${s.kind}` as TKey, { topic: conceptTitle(s.conceptId) });
 
-  const header = <PageHeader title={t('student.path.title')} description={t('student.path.subtitle')} />;
+  const header = (
+    <PageHeader title={t('student.path.title')} description={t('student.path.subtitle')} actions={<HelpBubble textKey="kidslearn.path.help" align="end" />} />
+  );
 
   if (loading && !data) {
     return (
-      <div aria-busy="true">
+      <div>
         {header}
-        <LoadingState lines={5} />
+        <KidLoading />
       </div>
     );
   }
@@ -118,7 +96,7 @@ export default function PathPage() {
     return (
       <div>
         {header}
-        <ErrorState description={t('student.path.error')} onRetry={reload} />
+        <KidError onRetry={reload} body={t('student.path.error')} />
       </div>
     );
   }
@@ -126,231 +104,368 @@ export default function PathPage() {
     return (
       <div>
         {header}
-        <EmptyState title={t('student.path.empty')} />
+        <KidEmpty
+          mood="thinking"
+          title={t('kidslearn.path.empty.title')}
+          body={t('student.path.empty')}
+          action={
+            <BigActionButton to="/student/diagnostic" icon={<Play />} className="self-start">
+              {t('kids.learn.warmup.title')}
+            </BigActionButton>
+          }
+        />
       </div>
     );
   }
 
   const { steps } = data;
   const subjectOf = (s: LearningPathStep) => conceptById.get(s.conceptId)?.subject ?? '';
-  const doneCount = steps.filter((s) => s.status === 'done').length;
   const current = steps.find((s) => s.status === 'in_progress') ?? steps.find((s) => s.status === 'next');
 
+  const completeStep = async (step: LearningPathStep) => {
+    setCompleting(true);
+    setCompleteError(false);
+    try {
+      await studentService.completePathStep(userId, step.id);
+      announce(t('student.path.complete.done'));
+      reload();
+      setDoneId(step.id);
+      setActiveId(null);
+    } catch {
+      setCompleteError(true);
+      announce(t('student.path.complete.error'), 'assertive');
+    } finally {
+      setCompleting(false);
+    }
+  };
+
+  const openStep = (s: LearningPathStep) => {
+    setCompleteError(false);
+    setDoneId(null);
+    setActiveId(s.id);
+    setSubjectChoice(subjectOf(s));
+  };
+  const backToTrail = () => {
+    setActiveId(null);
+    setDoneId(null);
+    setCompleteError(false);
+  };
+
+  /* ---------- A step: what to do, then "I finished this step" ---------- */
+  const active = steps.find((s) => s.id === activeId);
+  if (active) {
+    const body = t(`kidslearn.path.step.${active.kind}.body` as TKey);
+    return (
+      <div>
+        {header}
+        <Button variant="ghost" size="lg" onClick={backToTrail} leftIcon={<ArrowLeft aria-hidden className="h-5 w-5" />} className="mb-4">
+          {t('kidslearn.path.back')}
+        </Button>
+        <Card as="section" raised aria-labelledby="path-step-title" className="flex flex-col gap-6">
+          <MascotMessage mood="happy" size="lg">
+            <h2 id="path-step-title" ref={focusRef} tabIndex={-1} className="text-2xl font-bold text-ink outline-none">
+              {stepTitle(active)}
+            </h2>
+            <span className="mt-1 block font-normal text-ink-soft">{t('kids.home.plan.time', { count: active.estimatedMinutes })}</span>
+          </MascotMessage>
+          <div className="flex items-start gap-4 rounded-lg bg-surface-muted p-4">
+            <span aria-hidden className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-brand-100 text-brand-700">
+              {KIND_ICON[active.kind]}
+            </span>
+            <p className="min-w-0 flex-1 text-lg text-ink">{body}</p>
+            <SpeakButton text={body} size="sm" />
+          </div>
+          {completeError && (
+            <p role="alert" className="text-lg font-bold text-danger-700">
+              {t('student.path.complete.error')}
+            </p>
+          )}
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <Button size="xl" loading={completing} loadingLabel={t('a11y.loading')} onClick={() => void completeStep(active)} leftIcon={<Check aria-hidden className="h-6 w-6" />}>
+              {t('student.path.complete.action')}
+            </Button>
+            <ButtonLink to="/student/tutor" variant="secondary" size="lg">
+              {t('kidslearn.path.askNova')}
+            </ButtonLink>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
+  /* ---------- Done screen ---------- */
+  const finished = steps.find((s) => s.id === doneId);
+  if (finished) {
+    const idx = steps.indexOf(finished);
+    const next = steps.slice(idx + 1).find((s) => s.status !== 'done') ?? steps.find((s) => isCurrent(s) && s.id !== finished.id);
+    return (
+      <div>
+        {header}
+        <DoneScreen title={t('kidslearn.greatJob')} body={t('kidslearn.path.done.body', { title: stepTitle(finished) })} headingRef={focusRef}>
+          {next ? (
+            <>
+              <BigActionButton icon={<ArrowRight />} onClick={() => openStep(next)}>
+                {t('kidslearn.path.nextStep')}
+              </BigActionButton>
+              <Button variant="secondary" size="xl" onClick={backToTrail}>
+                {t('kidslearn.path.back')}
+              </Button>
+            </>
+          ) : (
+            <BigActionButton icon={<ArrowLeft />} onClick={backToTrail}>
+              {t('kidslearn.path.back')}
+            </BigActionButton>
+          )}
+        </DoneScreen>
+      </div>
+    );
+  }
+
+  /* ---------- The trail ---------- */
   // Subjects in the order the service lists them, keeping only those with steps.
-  const subjects = [...new Set([...data.concepts.map((c) => c.subject), ...steps.map(subjectOf)])].filter((s) =>
-    steps.some((x) => subjectOf(x) === s),
-  );
-  const subject = subjectChoice && subjects.includes(subjectChoice) ? subjectChoice : (current ? subjectOf(current) : subjects[0]);
+  const subjects = [...new Set([...data.concepts.map((c) => c.subject), ...steps.map(subjectOf)])].filter((s) => steps.some((x) => subjectOf(x) === s));
+  const subject = subjectChoice && subjects.includes(subjectChoice) ? subjectChoice : current ? subjectOf(current) : subjects[0];
   const subjectSteps = steps.filter((s) => subjectOf(s) === subject);
-  const subjectCurrent = subjectSteps.find(isCurrent);
-  const hasTerms = subjectSteps.some((s) => conceptById.get(s.conceptId)?.term);
-  const defaultTerm = subjectCurrent ? String(conceptById.get(subjectCurrent.conceptId)?.term ?? '') : '';
-  const term = hasTerms ? (termBySubject[subject] ?? defaultTerm) : '';
-  const visible = subjectSteps.filter((s) => !term || String(conceptById.get(s.conceptId)?.term ?? '') === term);
+  const subjectDone = subjectSteps.filter((s) => s.status === 'done').length;
 
-  const selected =
-    visible.find((s) => s.id === selectedId) ?? visible.find((s) => s.id === subjectCurrent?.id) ?? visible[0] ?? subjectSteps[0];
-  const selectedConcept = conceptById.get(selected.conceptId);
-  const selectedMastery = masteryById.get(selected.conceptId);
-  const prereqs = (selectedConcept?.prerequisiteIds ?? []).map((id) => conceptById.get(id)).filter((c): c is Concept => Boolean(c));
-
-  const kindLabel = (k: Kind) => t(`student.path.step.${k}`);
-
-  /** Small secondary line: term, textbook unit and page reference (source labels are not translated). */
-  const conceptMeta = (c: Concept | undefined) =>
-    c ? [c.term ? t('student.path.term.n', { term: c.term }) : null, c.unit ? unitLabel(c.unit, t as never) : null, c.textbookRef ? t('student.path.textbookRef', { ref: localiseRef(c.textbookRef, i18n.language as Locale) }) : null].filter(Boolean) : [];
-
-  // Group visible steps by concept (they arrive in teaching order).
+  // Group by topic (steps arrive in teaching order).
   const groups: { concept: string; steps: LearningPathStep[] }[] = [];
-  for (const s of visible) {
+  for (const s of subjectSteps) {
     const last = groups[groups.length - 1];
     if (last && last.concept === s.conceptId) last.steps.push(s);
     else groups.push({ concept: s.conceptId, steps: [s] });
   }
 
-  const subjectDone = subjectSteps.filter((s) => s.status === 'done').length;
+  const loc = i18n.language as Locale;
+  const moreInfo = (c: Concept | undefined): string[] => {
+    if (!c) return [];
+    const prereqs = c.prerequisiteIds.map((id) => conceptById.get(id)).filter((p): p is Concept => Boolean(p));
+    return [
+      c.term ? t('student.path.term.n', { term: c.term }) : '',
+      c.unit ? unitLabel(c.unit, t as never) : '',
+      c.textbookRef ? t('student.path.textbookRef', { ref: localiseRef(c.textbookRef, loc) }) : '',
+      prereqs.length ? `${t('student.path.detail.prereq')}: ${prereqs.map((p) => t(p.titleKey as TKey)).join(', ')}` : '',
+    ].filter(Boolean);
+  };
 
-  const panel = (
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-      <section aria-labelledby="path-steps-heading">
-        <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <h2 id="path-steps-heading" className="text-lg font-semibold text-ink">
-              {t('student.path.steps.title')}
-            </h2>
-            <p className="text-sm text-ink-soft">{t('student.path.progress.summary', { done: subjectDone, total: subjectSteps.length })}</p>
-          </div>
-          {hasTerms && (
-            <Select
-              label={t('student.path.term.label')}
-              value={term}
-              onChange={(e) => {
-                setTermBySubject((m) => ({ ...m, [subject]: e.target.value }));
-                setSelectedId(null);
-              }}
-              options={[{ value: '', label: t('student.path.term.all') }, ...TERMS.map((n) => ({ value: n, label: t('student.path.term.n', { term: n }) }))]}
-              wrapperClassName="w-44"
-            />
-          )}
-        </div>
-
-        {groups.length === 0 ? (
-          <EmptyState title={t('student.path.term.empty')} />
-        ) : (
-          <ol className="stagger flex flex-col gap-4">
-            {groups.map((g) => {
-              const c = conceptById.get(g.concept);
-              const headingId = `path-concept-${g.concept}`;
-              const meta = conceptMeta(c);
-              return (
-                <li key={g.concept} className="rounded-lg border border-line bg-surface p-3 shadow-card">
-                  <h3 id={headingId} className="text-base font-semibold text-ink">
-                    {conceptTitle(g.concept)}
-                  </h3>
-                  {meta.length > 0 && <p className="mb-2 text-xs text-ink-soft">{meta.join(' · ')}</p>}
-                  <ol className="relative flex flex-col gap-2 before:absolute before:bottom-8 before:left-[30px] before:top-8 before:w-0.5 before:origin-top before:bg-line-strong motion-ok:before:animate-fx-line-grow">
-                    {g.steps.map((step) => {
-                      const isSelected = step.id === selected.id;
-                      const index = subjectSteps.indexOf(step);
-                      return (
-                        <li key={step.id}>
-                          <button
-                            type="button"
-                            onClick={() => setSelectedId(step.id)}
-                            aria-pressed={isSelected}
-                            aria-current={step.id === current?.id ? 'step' : undefined}
-                            aria-controls="path-detail"
-                            aria-describedby={headingId}
-                            className={cn(
-                              'flex min-h-11 w-full items-center gap-3 rounded-md border p-3 text-left outline-none transition-colors focus-visible:shadow-focus motion-reduce:transition-none',
-                              isSelected ? 'border-brand-500 bg-brand-50' : 'border-line bg-surface hover:bg-surface-muted',
-                              step.status === 'locked' && !isSelected && 'bg-surface-muted',
-                            )}
-                          >
-                            <span
-                              aria-hidden
-                              className={cn(
-                                'relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-sm font-semibold',
-                                step.status === 'done' ? 'border-success-500 bg-success-50 text-success-700' : 'border-line-strong bg-surface text-ink-soft',
-                                // Unlock pop once, then a gentle bounce a few times on the next step.
-                                (step.status === 'next' || step.status === 'in_progress') && 'border-brand-500 text-brand-700 motion-ok:[animation:fx-unlock_420ms_cubic-bezier(0,0,0.2,1)_backwards,fx-nudge_2.4s_ease-in-out_1s_3]',
-                              )}
-                            >
-                              {index + 1}
-                            </span>
-                            <span className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
-                              <span className="text-ink-soft">{KIND_ICON[step.kind]}</span>
-                              <span className="font-semibold text-ink">{kindLabel(step.kind)}</span>
-                              <Badge tone={STATUS_TONE[step.status]} icon={STATUS_ICON[step.status]}>
-                                {t(`student.path.status.${step.status}`)}
-                              </Badge>
-                              <span className="text-sm text-ink-soft">{t('student.path.estimate', { minutes: step.estimatedMinutes })}</span>
-                            </span>
-                          </button>
-                        </li>
-                      );
-                    })}
-                  </ol>
-                </li>
-              );
-            })}
-          </ol>
-        )}
-      </section>
-
-      <section id="path-detail" aria-labelledby="path-detail-heading" className="lg:sticky lg:top-6 lg:self-start">
-        <Card as="div">
-          <h2 id="path-detail-heading" className="text-lg font-semibold text-ink">
-            {conceptTitle(selected.conceptId)}
-          </h2>
-          {conceptMeta(selectedConcept).length > 0 && (
-            <p className="mt-1 text-xs text-ink-soft">{conceptMeta(selectedConcept).join(' · ')}</p>
-          )}
-          <p className="mt-1 text-sm text-ink-soft">
-            <span className="me-3 inline-block">{kindLabel(selected.kind)}</span>
-            <span className="me-3 inline-block">{t(`student.path.status.${selected.status}`)}</span>
-            <span className="inline-block">{t('student.path.estimate', { minutes: selected.estimatedMinutes })}</span>
-          </p>
-
-          {selected.status === 'locked' && (
-            <p className="mt-3 rounded-md bg-surface-muted p-3 text-sm text-ink-soft">{t('student.path.locked.hint')}</p>
-          )}
-
-          {(selected.status === 'in_progress' || selected.status === 'next') && (
-            <div className="mt-4">
-              <Button loading={completingId === selected.id} loadingLabel={t('a11y.loading')} onClick={() => void completeStep(selected.id)}>
-                {t('student.path.complete.action')}
-              </Button>
-              {completeError && <p role="alert" className="mt-2 text-sm font-semibold text-danger-700">{t('student.path.complete.error')}</p>}
-            </div>
-          )}
-
-          {selectedMastery && (
-            <div className="mt-4">
-              <h3 className="mb-2 text-sm font-semibold text-ink">{t('student.path.detail.readiness')}</h3>
-              <ReadinessBand band={selectedMastery.band} />
-            </div>
-          )}
-
-          <div className="mt-4">
-            <h3 className="mb-2 text-sm font-semibold text-ink">{t('student.path.detail.prereq')}</h3>
-            {prereqs.length === 0 ? (
-              <p className="text-sm text-ink-soft">{t('student.path.detail.noPrereq')}</p>
-            ) : (
-              <ul className="flex flex-col gap-2">
-                {prereqs.map((p) => {
-                  const m = masteryById.get(p.id);
-                  return (
-                    <li key={p.id} className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-line p-2 text-sm">
-                      <span className="text-ink">{t(p.titleKey as TKey)}</span>
-                      {m && <ReadinessBand band={m.band} compact />}
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </div>
-        </Card>
-      </section>
-    </div>
+  const allDone = (g: { steps: LearningPathStep[] }) => g.steps.every((s) => s.status === 'done');
+  const allLocked = (g: { steps: LearningPathStep[] }) => g.steps.every((s) => s.status === 'locked');
+  const doneGroups = groups.filter(allDone);
+  const lockedGroups = groups.filter((g) => !allDone(g) && allLocked(g));
+  const openGroups = groups.filter((g) => !allDone(g) && !allLocked(g));
+  const doneRow = (g: { concept: string }) => (
+    <li key={g.concept} className="flex items-center gap-3 rounded-xl border border-success-500 bg-success-50 p-3">
+      <span aria-hidden className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-success-700 text-surface">
+        <Check className="h-6 w-6" />
+      </span>
+      <span className="min-w-0 flex-1 text-lg font-bold text-ink">{conceptTitle(g.concept)}</span>
+      <span className="text-base font-semibold text-success-700">{t('student.path.status.done')}</span>
+    </li>
+  );
+  const lockedRow = (g: { concept: string }) => (
+    <li key={g.concept} className="flex items-center gap-3 rounded-xl border border-line bg-surface-muted p-3">
+      <span aria-hidden className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-sunken text-ink-soft">
+        <Lock className="h-5 w-5" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-lg font-bold text-ink-soft">{conceptTitle(g.concept)}</span>
+        <span className="block text-base text-ink-soft">{t('student.path.locked.hint')}</span>
+      </span>
+    </li>
   );
 
   return (
-    <div>
+    <div className="flex flex-col gap-6">
       {header}
 
-      <div className="mb-6 grid gap-4 md:grid-cols-[1fr_minmax(0,18rem)] md:items-center">
-        <Card title={t('student.path.progress.title')}>
-          <p className="mb-3 text-sm text-ink-soft">
-            {t('student.path.progress.summary', { done: doneCount, total: steps.length })}
-          </p>
-          <ProgressBar
-            value={(doneCount / steps.length) * 100}
-            label={t('student.path.progress.title')}
-          />
-          {current && (
-            <p className="mt-4 text-sm text-ink">
-              {t('student.path.nextStep.summary' as TKey, { kind: kindLabel(current.kind), topic: conceptTitle(current.conceptId) })}
-            </p>
-          )}
-        </Card>
-        <AnimatedIllustration
-          name="learning-path"
-          float
-          alt={t('student.path.illustration.alt')}
-          className="mx-auto w-full max-w-xs"
-        />
-      </div>
+      <Card as="section" raised aria-labelledby="path-next-title" className="border-brand-100 bg-gradient-to-b from-brand-50 to-surface">
+        {current ? (
+          <div className="flex flex-col gap-5">
+            <MascotMessage mood="happy" size="lg" speakText={stepTitle(current)}>
+              <h2 id="path-next-title" className="text-xl font-bold text-ink">
+                {t('kidslearn.path.next')}
+              </h2>
+              <span className="mt-1 block text-2xl font-bold text-brand-700">{stepTitle(current)}</span>
+              <span className="mt-1 block font-normal text-ink-soft">{t('kids.home.plan.time', { count: current.estimatedMinutes })}</span>
+            </MascotMessage>
+            <BigActionButton icon={<Play />} fullWidth onClick={() => openStep(current)} className="md:w-auto md:self-start">
+              {current.status === 'in_progress' ? t('kids.home.continue') : t('kids.home.start')}
+            </BigActionButton>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-5">
+            <MascotMessage mood="cheer" size="lg" speakText={t('kidslearn.path.allDone')}>
+              <h2 id="path-next-title" className="text-xl font-bold text-ink">
+                {t('kidslearn.path.allDone')}
+              </h2>
+            </MascotMessage>
+            <BigActionButton to="/student/play" icon={<Sparkles />} fullWidth className="md:w-auto md:self-start">
+              {t('kids.home.done.play')}
+            </BigActionButton>
+          </div>
+        )}
+      </Card>
 
-      <Tabs
-        label={t('student.path.subjects.label')}
-        value={subject}
-        onChange={(id) => {
-          setSubjectChoice(id);
-          setSelectedId(null);
-        }}
-        items={subjects.map((s) => ({ id: s, label: t(`subject.${s}` as TKey), content: s === subject ? panel : null }))}
-      />
+      <section aria-labelledby="path-subjects-title" className="flex flex-col gap-3">
+        <h2 id="path-subjects-title" className="text-xl font-bold text-ink">
+          {t('kidslearn.path.pickSubject')}
+        </h2>
+        <ul className="stagger flex flex-wrap gap-3">
+          {subjects.map((s) => {
+            const { icon: Icon, tile } = subjectStyle(s);
+            const on = s === subject;
+            return (
+              <li key={s}>
+                <button
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() => setSubjectChoice(s)}
+                  className={cn(
+                    'flex min-h-[64px] items-center gap-3 rounded-xl border-2 px-4 py-2 text-left text-xl font-bold text-ink outline-none transition duration-base ease-standard focus-visible:shadow-focus motion-ok:active:scale-[0.98] motion-reduce:transition-none',
+                    on ? 'border-brand-600 bg-brand-50 shadow-raised' : 'border-line bg-surface hover:border-line-strong hover:bg-surface-muted',
+                  )}
+                >
+                  <span aria-hidden className={cn('flex h-10 w-10 items-center justify-center rounded-lg', tile)}>
+                    <Icon className="h-6 w-6" />
+                  </span>
+                  {t(`subject.${s}` as TKey)}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+
+      <section aria-labelledby="path-trail-title" className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
+          <h2 id="path-trail-title" className="text-xl font-bold text-ink">
+            {t(`subject.${subject}` as TKey)}
+          </h2>
+          <p className="text-lg text-ink-soft">{t('student.path.progress.summary', { done: subjectDone, total: subjectSteps.length })}</p>
+          <ProgressBar value={(subjectDone / Math.max(1, subjectSteps.length)) * 100} label={t('student.path.progress.title')} tone="success" className="max-w-md" />
+        </div>
+
+        <ol className="stagger flex flex-col gap-4">
+          {doneGroups.length > 0 && (
+            <li>
+              <details>
+                <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-md px-2 text-lg font-bold text-success-700 outline-none focus-visible:shadow-focus [&::-webkit-details-marker]:hidden">
+                  <Check aria-hidden className="h-5 w-5" />
+                  {t('kidslearn.path.finished', { count: doneGroups.length })}
+                </summary>
+                <ul className="mt-2 flex flex-col gap-2">{doneGroups.map((g) => doneRow(g))}</ul>
+              </details>
+            </li>
+          )}
+          {openGroups.map((g) => {
+            const title = conceptTitle(g.concept);
+            const c = conceptById.get(g.concept);
+            const info = moreInfo(c);
+            const m = masteryById.get(g.concept);
+            return (
+              <li key={g.concept}>
+                <Card as="section" aria-labelledby={`path-g-${g.concept}`} className="flex flex-col gap-4">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <h3 id={`path-g-${g.concept}`} className="min-w-0 flex-1 text-2xl font-bold text-ink">
+                      {title}
+                    </h3>
+                    {m && <GrowMeter band={m.band} size="sm" />}
+                  </div>
+                  {info.length > 0 && (
+                    <details className="group">
+                      <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-md px-2 text-base font-semibold text-brand-700 outline-none focus-visible:shadow-focus [&::-webkit-details-marker]:hidden">
+                        <Info aria-hidden className="h-5 w-5" />
+                        {t('kidslearn.path.more')}
+                      </summary>
+                      <ul className="mt-2 flex flex-col gap-1 ps-2 text-base text-ink-soft">
+                        {info.map((line) => (
+                          <li key={line}>{line}</li>
+                        ))}
+                      </ul>
+                    </details>
+                  )}
+                  <ol className="relative flex flex-col gap-3 before:absolute before:bottom-10 before:left-[38px] before:top-10 before:w-0 before:border-l-4 before:border-dashed before:border-line-strong">
+                    {g.steps.map((step, i) => (
+                      <Stone key={step.id} n={i + 1} step={step} onOpen={() => openStep(step)} />
+                    ))}
+                  </ol>
+                </Card>
+              </li>
+            );
+          })}
+          {lockedGroups.slice(0, 2).map((g) => lockedRow(g))}
+          {lockedGroups.length > 2 && (
+            <li>
+              <details>
+                <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-md px-2 text-lg font-bold text-brand-700 outline-none focus-visible:shadow-focus [&::-webkit-details-marker]:hidden">
+                  <Lock aria-hidden className="h-5 w-5" />
+                  {t('kidslearn.path.later', { count: lockedGroups.length - 2 })}
+                </summary>
+                <ul className="mt-2 flex flex-col gap-2">{lockedGroups.slice(2).map((g) => lockedRow(g))}</ul>
+              </details>
+            </li>
+          )}
+        </ol>
+      </section>
     </div>
+  );
+}
+
+/** One stepping stone: done = tick, current = big "You are here" (a button), locked = soft grey with a hint. */
+function Stone({ n, step, onOpen }: { n: number; step: LearningPathStep; onOpen: () => void }) {
+  const { t } = useTranslation();
+  const here = isCurrent(step);
+  const done = step.status === 'done';
+  const kind = t(`kidslearn.path.kind.${step.kind}` as TKey);
+  const meta = t('kids.home.plan.time', { count: step.estimatedMinutes });
+
+  const stone = (
+    <span aria-hidden className="relative z-10 flex h-20 w-20 shrink-0 items-center justify-center">
+      <span
+        className={cn(
+          'flex items-center justify-center rounded-full border-4 text-2xl font-bold',
+          done && 'h-16 w-16 border-success-700 bg-success-700 text-surface',
+          here && 'h-20 w-20 border-brand-100 bg-brand-600 text-surface shadow-raised ring-2 ring-brand-600 motion-ok:animate-fx-pop-in',
+          !done && !here && 'h-16 w-16 border-line-strong bg-surface-sunken text-ink-faint',
+        )}
+      >
+        {done ? <Check className="h-8 w-8" /> : here ? n : <Lock className="h-6 w-6" />}
+      </span>
+    </span>
+  );
+
+  if (here) {
+    return (
+      <li>
+        <button
+          type="button"
+          onClick={onOpen}
+          className="flex min-h-[88px] w-full items-center gap-3 rounded-xl border-2 border-brand-600 bg-brand-50 pe-4 text-left outline-none transition duration-base ease-standard hover:bg-brand-100 focus-visible:shadow-focus motion-ok:active:scale-[0.99] motion-reduce:transition-none"
+        >
+          {stone}
+          <span className="flex min-w-0 flex-1 flex-col gap-1">
+            <span className="inline-flex w-fit items-center rounded-full bg-accent-500 px-3 py-0.5 text-base font-bold text-ink">{t('kidslearn.path.here')}</span>
+            <span className="flex items-center gap-2 text-xl font-bold text-ink">
+              <span aria-hidden className="text-brand-700">{KIND_ICON[step.kind]}</span>
+              {kind}
+            </span>
+            <span className="text-base text-ink-soft">{meta}</span>
+          </span>
+          <ArrowRight aria-hidden className="h-6 w-6 shrink-0 text-brand-700" />
+        </button>
+      </li>
+    );
+  }
+  return (
+    <li className={cn('flex min-h-[72px] items-center gap-3 rounded-xl pe-4', !done && 'opacity-80')}>
+      {stone}
+      <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <span className={cn('flex items-center gap-2 text-xl font-bold', done ? 'text-ink' : 'text-ink-soft')}>
+          <span aria-hidden>{KIND_ICON[step.kind]}</span>
+          {kind}
+        </span>
+        <span className="text-base text-ink-soft">{done ? t('student.path.status.done') : t('student.path.locked.hint')}</span>
+      </span>
+    </li>
   );
 }
