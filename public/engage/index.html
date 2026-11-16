@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduNova Engagement Demo</title>
+<style>
+  :root {
+    --bg: #f5f7ff; --card: #ffffff; --ink: #1e1b4b; --muted: #64748b;
+    --brand: #6366f1; --brand-2: #0ea5e9; --ok: #16a34a; --warn: #f59e0b; --bad: #e11d48;
+    --radius: 18px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0f172a; --card: #1e293b; --ink: #e2e8f0; --muted: #94a3b8; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--ink); }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 1.6rem; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 720px) { .grid { grid-template-columns: 1fr 1fr; } .wide { grid-column: 1 / -1; } }
+  .card { background: var(--card); border-radius: var(--radius); padding: 18px; box-shadow: 0 6px 24px rgba(30,27,75,.08); position: relative; overflow: hidden; }
+  .card h2 { font-size: 1rem; margin: 0 0 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+
+  /* Top stats */
+  .stats { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+  .xp-bar { flex: 1 1 260px; }
+  .xp-track { height: 14px; background: #e0e7ff; border-radius: 99px; overflow: hidden; }
+  .xp-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--brand), var(--brand-2)); border-radius: 99px; transition: width .8s cubic-bezier(.2,.8,.2,1); }
+  .xp-text { font-size: .9rem; color: var(--muted); margin-top: 6px; }
+  .level { font-weight: 800; font-size: 1.4rem; }
+  .streak { display: flex; align-items: center; gap: 8px; font-weight: 700; }
+  .flame { width: 34px; height: 40px; transform-origin: 50% 100%; transition: transform .4s; }
+  .flame.lit .outer { fill: #f97316; }
+  .flame.lit .inner { fill: #facc15; }
+  .flame .outer, .flame .inner { transition: fill .4s; }
+  .flame.hot { animation: flicker .6s ease-in-out infinite alternate; }
+  @keyframes flicker { from { transform: scale(1) rotate(-2deg); } to { transform: scale(1.12) rotate(2deg); } }
+
+  /* Companion */
+  .companion-stage { display: flex; flex-direction: column; align-items: center; min-height: 230px; justify-content: center; }
+  .bubble { background: #eef2ff; color: var(--ink); border-radius: 14px; padding: 10px 14px; font-size: .95rem; max-width: 300px; text-align: center; min-height: 44px; margin-top: 8px; }
+  .mascot { width: 130px; height: 130px; cursor: pointer; }
+  .mascot .body { transform-origin: 50% 90%; animation: idle 3.2s ease-in-out infinite; }
+  .mascot .eyes { transform-origin: 50% 50%; transform-box: fill-box; animation: blink 4.5s infinite; }
+  .mascot.happy .body { animation: hop .7s ease-out 1; }
+  .mascot.sad .body { animation: wobble .8s ease-in-out 1; }
+  .mascot.think .body { animation: idle 1.4s ease-in-out infinite; }
+  .sparkle { position: absolute; width: 14px; height: 14px; pointer-events: none; opacity: 0; }
+  @keyframes idle { 0%,100% { transform: translateY(0) scaleY(1); } 50% { transform: translateY(-6px) scaleY(1.02); } }
+  @keyframes hop { 0% { transform: translateY(0); } 30% { transform: translateY(-22px) scale(1.05); } 60% { transform: translateY(0) scale(.97); } 100% { transform: translateY(0); } }
+  @keyframes wobble { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
+  @keyframes blink { 0%,94%,100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
+
+  /* Quiz */
+  .q { font-size: 1.05rem; font-weight: 600; margin: 0 0 12px; }
+  .opts { display: grid; gap: 10px; }
+  .opt { border: 2px solid #c7d2fe; background: #fff; color: var(--ink); padding: 12px 14px; border-radius: 12px; font-size: 1rem; cursor: pointer; text-align: left; transition: transform .15s, border-color .2s, background .2s; }
+  .opt:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--brand); }
+  .opt:disabled { cursor: default; opacity: .9; }
+  .opt.right { border-color: var(--ok); background: #dcfce7; animation: pop .4s ease-out; }
+  .opt.wrong { border-color: var(--bad); background: #ffe4e6; animation: shake .4s; }
+  .next { margin-top: 12px; }
+  button.primary { background: var(--brand); color: #fff; border: 0; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+  button.primary:disabled { opacity: .4; cursor: default; }
+  @keyframes pop { 0% { transform: scale(.95); } 50% { transform: scale(1.04); } 100% { transform: scale(1); } }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+  /* Mastery ring */
+  .ring-wrap { display: flex; align-items: center; gap: 16px; }
+  .ring-svg { width: 110px; height: 110px; transform: rotate(-90deg); }
+  .ring-bg { stroke: #e0e7ff; }
+  .ring-fg { stroke: var(--ok); stroke-linecap: round; transition: stroke-dashoffset .9s cubic-bezier(.2,.8,.2,1), stroke .4s; }
+  .ring-label { font-size: 1.6rem; font-weight: 800; }
+  .ring-caption { color: var(--muted); font-size: .9rem; }
+
+  /* Quest map */
+  .quest { position: relative; height: 140px; }
+  .quest-track { position: absolute; left: 30px; right: 30px; top: 60px; height: 8px; background: #e0e7ff; border-radius: 8px; }
+  .quest-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0; background: var(--warn); border-radius: 8px; transition: width .9s ease; }
+  .node { position: absolute; top: 40px; width: 48px; height: 48px; margin-left: -24px; border-radius: 50%; border: 3px solid #c7d2fe; background: #fff; color: var(--ink); font-weight: 700; cursor: pointer; transition: transform .2s, background .3s; }
+  .node:hover { transform: scale(1.08); }
+  .node.done { background: var(--ok); color: #fff; border-color: var(--ok); }
+  .node.current { border-color: var(--warn); box-shadow: 0 0 0 6px rgba(245,158,11,.25); animation: ping 1.6s infinite; }
+  .node.check::after { content: "✓"; }
+  .avatar { position: absolute; top: 14px; width: 40px; height: 40px; margin-left: -20px; font-size: 26px; transition: left .9s cubic-bezier(.3,.7,.3,1); animation: bob 1s ease-in-out infinite; }
+  .quest-caption { color: var(--muted); font-size: .9rem; margin-top: 6px; }
+  @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(245,158,11,.45); } 100% { box-shadow: 0 0 0 14px rgba(245,158,11,0); } }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
+  /* Badge toast */
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 140%); background: var(--ink); color: #fff; padding: 12px 18px; border-radius: 14px; font-weight: 600; transition: transform .5s cubic-bezier(.2,1.2,.3,1); z-index: 50; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+  .toast.show { transform: translate(-50%, 0); }
+
+  /* Confetti pieces */
+  .confetti { position: fixed; top: -20px; width: 10px; height: 14px; border-radius: 3px; pointer-events: none; z-index: 60; animation: fall linear forwards; }
+  @keyframes fall { to { transform: translate(var(--dx), 110vh) rotate(720deg); } }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+  .ghost { background: transparent; border: 2px solid var(--brand); color: var(--brand); padding: 8px 12px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+
+  /* Boost section */
+  .boost.nudge { animation: glow 1.6s ease-in-out infinite; }
+  @keyframes glow { 0%,100% { box-shadow: 0 6px 24px rgba(30,27,75,.08); } 50% { box-shadow: 0 0 0 6px rgba(99,102,241,.35); } }
+  .energy { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .energy button { flex: 1 1 90px; border: 2px solid #c7d2fe; background: #fff; border-radius: 14px; padding: 10px; font-size: 1rem; cursor: pointer; transition: transform .15s, border-color .2s; color: var(--ink); }
+  .energy button:hover { transform: translateY(-2px); border-color: var(--brand); }
+  .energy button.sel { border-color: var(--brand); background: #eef2ff; }
+  .boost-body { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .tiny-ring { width: 84px; height: 84px; transform: rotate(-90deg); flex: none; }
+  .tiny-ring .bg { stroke: #e0e7ff; }
+  .tiny-ring .fg { stroke: var(--brand); stroke-linecap: round; stroke-dasharray: 226; stroke-dashoffset: 226; }
+  .tiny-ring .fg.run { animation: countdown linear forwards; }
+  @keyframes countdown { from { stroke-dashoffset: 226; } to { stroke-dashoffset: 0; } }
+  .mission-text { flex: 1 1 200px; }
+  .mission-text strong { display: block; margin-bottom: 4px; }
+  .banner { width: 100%; border-radius: 14px; display: block; margin-bottom: 14px; aspect-ratio: 16 / 9; object-fit: cover; }
+  .banner.short { max-height: 220px; }
+  .calm-toggle { margin-top: 10px; font-size: .85rem; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+
+  /* Games */
+  .tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+  .tab { border: 2px solid var(--brand); background: transparent; color: var(--brand); padding: 8px 14px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+  .tab.on { background: var(--brand); color: #fff; }
+  .game { display: none; }
+  .game.on { display: block; }
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 420px; }
+  .mcard { aspect-ratio: 1; perspective: 600px; border: 0; background: none; padding: 0; cursor: pointer; }
+  .mcard .in { position: relative; width: 100%; height: 100%; transition: transform .45s; transform-style: preserve-3d; }
+  .mcard.flip .in, .mcard.matched .in { transform: rotateY(180deg); }
+  .mcard .face { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 12px; backface-visibility: hidden; font-weight: 800; font-size: 1.15rem; }
+  .mcard .front { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #fff; font-size: 1.6rem; }
+  .mcard .back { background: #fff; color: var(--ink); border: 2px solid #c7d2fe; transform: rotateY(180deg); }
+  .mcard.matched .back { background: #dcfce7; border-color: var(--ok); animation: pop .4s; }
+  .slots, .chips { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0; }
+  .slot { width: 64px; height: 56px; border: 2px dashed #c7d2fe; border-radius: 12px; display: grid; place-items: center; font-weight: 800; }
+  .slot.filled { border-style: solid; border-color: var(--ok); background: #dcfce7; animation: pop .35s; }
+  .chip { width: 64px; height: 56px; border-radius: 12px; border: 2px solid var(--brand); background: #fff; color: var(--ink); font-weight: 800; font-size: 1.05rem; cursor: pointer; transition: transform .15s; }
+  .chip:hover:not(:disabled) { transform: translateY(-3px); }
+  .chip:disabled { opacity: .25; cursor: default; }
+  .chip.bad { animation: shake .4s; border-color: var(--bad); }
+  .gmsg { min-height: 1.4em; color: var(--muted); margin-top: 6px; }
+  .pizza { width: 220px; height: 220px; display: block; margin: 6px 0; }
+  .pizza path { fill: #fde68a; stroke: #b45309; stroke-width: 3; cursor: pointer; transition: fill .25s, transform .25s; transform-origin: 110px 110px; }
+  .pizza path:hover { fill: #fcd34d; }
+  .pizza path.sel { fill: #ef4444; transform: scale(1.04); }
+  .pizza path:focus-visible { outline: 3px solid var(--brand); }
+  .nline { position: relative; height: 110px; margin: 10px 8px 0; }
+  .nline .bar { position: absolute; left: 0; right: 0; top: 66px; height: 6px; background: #c7d2fe; border-radius: 6px; }
+  .tick { position: absolute; top: 56px; width: 40px; margin-left: -20px; text-align: center; background: none; border: 0; padding: 0; cursor: pointer; color: var(--ink); font-weight: 700; }
+  .tick::before { content: ""; display: block; width: 4px; height: 26px; margin: 0 auto 4px; background: var(--brand); border-radius: 4px; }
+  .tick:hover::before { background: var(--brand-2); }
+  .tick.bad { animation: shake .4s; }
+  .tick.good::before { background: var(--ok); }
+  .frog { position: absolute; top: 14px; width: 40px; margin-left: -20px; font-size: 30px; text-align: center; transition: left .7s cubic-bezier(.3,.7,.3,1); animation: bob 1s ease-in-out infinite; }
+  body.calm *, body.calm *::before, body.calm *::after { animation: none !important; transition: none !important; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Keep going, Sahayaka!</h1>
+  <p class="sub">Small wins, a companion who celebrates with you, and quests that move forward as you learn. Try the quiz.</p>
+
+  <section class="card" style="margin-bottom:16px" aria-label="Welcome video">
+    <video class="banner" style="margin:0" controls muted playsinline preload="metadata" poster="../images/boost-mission-card.jpg" aria-label="Short video of a student solving a fractions problem with an AI companion">
+      <source src="../videos/student-learning-story.mp4" type="video/mp4">
+    </video>
+  </section>
+
+  <div class="grid">
+    <!-- Stats -->
+    <section class="card wide" aria-label="Your progress">
+      <div class="stats">
+        <div class="level" id="level">Level 1</div>
+        <div class="xp-bar">
+          <div class="xp-track" role="progressbar" aria-label="XP to next level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="xpTrack"><div class="xp-fill" id="xpFill"></div></div>
+          <div class="xp-text" id="xpText">0 / 100 XP</div>
+        </div>
+        <div class="streak" aria-live="polite">
+          <svg class="flame" id="flame" viewBox="0 0 34 40" aria-hidden="true">
+            <path class="outer" d="M17 2 C 22 12, 33 16, 31 28 C 29 37, 22 39, 17 39 C 10 39, 3 34, 3 26 C 3 18, 11 14, 13 6 C 15 10, 15 13, 17 15 Z" fill="#cbd5e1"/>
+            <path class="inner" d="M17 20 C 20 25, 25 27, 24 32 C 23 36, 20 37, 17 37 C 13 37, 10 34, 10 31 C 10 27, 15 25, 17 20 Z" fill="#e2e8f0"/>
+          </svg>
+          <span id="streakText">Streak: 0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Companion + quiz -->
+    <section class="card" aria-label="Companion and quiz">
+      <h2>Your companion</h2>
+      <div class="companion-stage">
+        <svg class="mascot" id="mascot" viewBox="0 0 140 140" role="button" tabindex="0" aria-label="Companion: tap to hear encouragement">
+          <g class="body">
+            <ellipse cx="70" cy="128" rx="34" ry="6" fill="#c7d2fe" opacity=".6"/>
+            <circle cx="70" cy="70" r="52" fill="#6366f1"/>
+            <circle cx="70" cy="70" r="52" fill="none" stroke="#a5b4fc" stroke-width="6" opacity=".5"/>
+            <g class="eyes">
+              <circle cx="52" cy="66" r="7" fill="#fff"/>
+              <circle cx="88" cy="66" r="7" fill="#fff"/>
+              <circle cx="53" cy="67" r="3" fill="#1e1b4b"/>
+              <circle cx="89" cy="67" r="3" fill="#1e1b4b"/>
+            </g>
+            <path id="mouth" d="M55 90 Q70 102 85 90" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+          </g>
+        </svg>
+        <div class="bubble" id="bubble" aria-live="polite">Hi! Answer a question and let's see what you know.</div>
+      </div>
+    </section>
+
+    <section class="card" aria-label="Quiz">
+      <h2>Quick check: Fractions</h2>
+      <p class="q" id="qText"></p>
+      <div class="opts" id="opts"></div>
+      <div class="next"><button class="primary" id="nextBtn" disabled>Next question</button></div>
+      <p class="quest-caption" id="hint" style="min-height:1.2em"></p>
+    </section>
+
+    <!-- Mastery -->
+    <section class="card" aria-label="Mastery">
+      <h2>Mastery: Fractions</h2>
+      <div class="ring-wrap">
+        <svg class="ring-svg" viewBox="0 0 110 110" aria-hidden="true">
+          <circle class="ring-bg" cx="55" cy="55" r="46" fill="none" stroke-width="10"/>
+          <circle class="ring-fg" id="ringFg" cx="55" cy="55" r="46" fill="none" stroke-width="10" stroke-dasharray="289" stroke-dashoffset="289"/>
+        </svg>
+        <div>
+          <div class="ring-label" id="ringLabel">0%</div>
+          <div class="ring-caption">Grows with every correct answer. Your Learning Twin updates too.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quest -->
+    <section class="card wide" aria-label="Quest map">
+      <h2>Fraction Explorer quest</h2>
+      <div class="quest" id="quest">
+        <div class="quest-track"><div class="quest-fill" id="questFill"></div></div>
+        <button class="node" id="n0" style="left:12%" aria-label="Mission 1: Equivalent fractions">1</button>
+        <button class="node" id="n1" style="left:37%" aria-label="Mission 2: Fraction operations">2</button>
+        <button class="node" id="n2" style="left:62%" aria-label="Mission 3: Mixed practice">3</button>
+        <button class="node" id="n3" style="left:88%" aria-label="Mission 4: Mastery check">★</button>
+        <div class="avatar" id="avatar" style="left:12%" aria-hidden="true">🧒</div>
+      </div>
+      <img class="banner short" src="../images/student-ai-celebrating.jpg" alt="A student and a small AI companion celebrating a level up with confetti" loading="lazy" style="margin-top:14px">
+      <div class="quest-caption" id="questCaption">Earn 1 quest step per 3 correct answers. Tap a mission to move there.</div>
+    </section>
+
+    <!-- Need a boost -->
+    <section class="card wide boost" id="boost" aria-label="Need a boost?">
+      <h2>Need a boost?</h2>
+      <video class="banner short" controls muted playsinline preload="none" poster="../images/boost-mission-card.jpg" aria-label="Video: a tired student gets a small mission from the AI companion, sits up and starts writing">
+        <source src="../videos/boost-mission.mp4" type="video/mp4">
+      </video>
+      <div class="energy" role="group" aria-label="How is your energy right now?">
+        <button data-e="low">😴 Low energy</button>
+        <button data-e="ok">🙂 Okay</button>
+        <button data-e="high">🚀 Ready!</button>
+      </div>
+      <div class="boost-body">
+        <svg class="tiny-ring" viewBox="0 0 84 84" aria-hidden="true">
+          <circle class="bg" cx="42" cy="42" r="36" fill="none" stroke-width="8"/>
+          <circle class="fg" id="tinyFg" cx="42" cy="42" r="36" fill="none" stroke-width="8"/>
+        </svg>
+        <div class="mission-text">
+          <strong id="missionTitle">Starting is the hardest part.</strong>
+          <span id="missionBody">Tell us how you feel and we'll shrink the next step to fit.</span>
+        </div>
+        <button class="primary" id="tinyBtn" disabled>Start tiny</button>
+      </div>
+      <label class="calm-toggle"><input type="checkbox" id="calm"> Reduce effects and animations</label>
+    </section>
+
+    <!-- Learning games -->
+    <section class="card wide" aria-label="Learning games">
+      <h2>Learning games</h2>
+      <video class="banner short" controls muted playsinline preload="none" poster="../images/learning-games-banner.jpg" aria-label="Video: the Learning Arcade world with a cheering AI companion">
+        <source src="../videos/learning-arcade-intro.mp4" type="video/mp4">
+      </video>
+      <div class="tabs" role="tablist">
+        <button class="tab on" data-g="memory" role="tab">Memory Match</button>
+        <button class="tab" data-g="order" role="tab">Order Up</button>
+        <button class="tab" data-g="pizza" role="tab">Pizza Slicer</button>
+        <button class="tab" data-g="hop" role="tab">Number Line Hop</button>
+      </div>
+
+      <div class="game on" id="g-memory">
+        <p class="sub" style="margin:0 0 10px">Match each fraction with its decimal.</p>
+        <div class="cards" id="cards"></div>
+        <div class="gmsg" id="memMsg"></div>
+        <button class="ghost" id="memReset" style="margin-top:8px">New game</button>
+      </div>
+
+      <div class="game" id="g-order">
+        <p class="sub" style="margin:0 0 10px">Tap the fractions from smallest to largest.</p>
+        <div class="slots" id="slots"></div>
+        <div class="chips" id="chips"></div>
+        <div class="gmsg" id="ordMsg"></div>
+        <button class="ghost" id="ordReset" style="margin-top:8px">New round</button>
+      </div>
+
+      <div class="game" id="g-pizza">
+        <p class="sub" style="margin:0 0 4px" id="pizzaPrompt">Shade the right number of slices.</p>
+        <svg class="pizza" id="pizza" viewBox="0 0 220 220" role="group" aria-label="Pizza"></svg>
+        <button class="primary" id="pizzaCheck">Check my pizza</button>
+        <div class="gmsg" id="pizzaMsg"></div>
+        <button class="ghost" id="pizzaReset" style="margin-top:8px">New pizza</button>
+      </div>
+
+      <div class="game" id="g-hop">
+        <p class="sub" style="margin:0 0 4px" id="hopPrompt">Hop the frog to the right spot.</p>
+        <div class="nline" id="nline">
+          <div class="bar"></div>
+          <div class="frog" id="frog" aria-hidden="true">🐸</div>
+        </div>
+        <div class="gmsg" id="hopMsg"></div>
+        <button class="ghost" id="hopReset" style="margin-top:8px">New hop</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="controls">
+    <button class="ghost" id="resetBtn">Reset demo</button>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const $ = (id) => document.getElementById(id);
+
+  const QUESTIONS = [
+    { q: "Which fraction is equal to 1/2?", opts: ["2/4", "1/3", "2/3"], a: 0,
+      hint: "Multiply the top and bottom by 2: 1×2 / 2×2 = 2/4." },
+    { q: "What is 1/4 + 1/4?", opts: ["2/8", "1/2", "1/8"], a: 1,
+      hint: "Same denominator: add the numerators. 1 + 1 = 2, so 2/4 = 1/2." },
+    { q: "Which is larger: 3/4 or 2/3?", opts: ["3/4", "2/3", "They are equal"], a: 0,
+      hint: "Use a common denominator of 12: 9/12 vs 8/12." },
+  ];
+
+  const state = { xp: 0, level: 1, streak: 0, correctTotal: 0, qIndex: 0, answered: false, questStep: 0, mastery: 0 };
+  const XP_PER_LEVEL = 100;
+
+  const saved = (() => { try { return JSON.parse(localStorage.getItem("engageDemo") || "null"); } catch { return null; } })();
+  if (saved) Object.assign(state, saved);
+
+  function save() { try { localStorage.setItem("engageDemo", JSON.stringify(state)); } catch {} }
+
+  // Mascot
+  const mascot = $("mascot"), bubble = $("bubble"), mouth = $("mouth");
+  function mood(kind, text) {
+    mascot.classList.remove("happy", "sad", "think");
+    void mascot.getBoundingClientRect();
+    if (kind) mascot.classList.add(kind);
+    if (kind === "happy") mouth.setAttribute("d", "M55 88 Q70 110 85 88");
+    else if (kind === "sad") mouth.setAttribute("d", "M57 98 Q70 86 83 98");
+    else mouth.setAttribute("d", "M55 90 Q70 102 85 90");
+    if (text) bubble.textContent = text;
+  }
+  const CHEER = ["You've got this!", "Nice thinking!", "One step at a time.", "Every mistake teaches something."];
+  mascot.addEventListener("click", () => { mood("happy", CHEER[Math.floor(Math.random() * CHEER.length)]); });
+  mascot.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); mascot.click(); } });
+
+  // Streak flame
+  function renderStreak() {
+    const flame = $("flame");
+    $("streakText").textContent = "Streak: " + state.streak;
+    flame.classList.toggle("lit", state.streak > 0);
+    flame.classList.toggle("hot", state.streak >= 3);
+  }
+
+  // XP and level
+  function renderXP() {
+    const pct = Math.round((state.xp / XP_PER_LEVEL) * 100);
+    $("xpFill").style.width = pct + "%";
+    $("xpTrack").setAttribute("aria-valuenow", String(pct));
+    $("xpText").textContent = state.xp + " / " + XP_PER_LEVEL + " XP";
+    $("level").textContent = "Level " + state.level;
+  }
+  function addXP(n) {
+    state.xp += n;
+    if (state.xp >= XP_PER_LEVEL) {
+      state.xp -= XP_PER_LEVEL;
+      state.level += 1;
+      toast("Level up! You reached Level " + state.level);
+      confetti(60);
+    }
+    renderXP();
+  }
+
+  // Mastery ring
+  const C = 2 * Math.PI * 46;
+  function renderMastery() {
+    const pct = Math.min(100, state.mastery);
+    $("ringFg").style.strokeDashoffset = String(C * (1 - pct / 100));
+    $("ringLabel").textContent = pct + "%";
+    $("ringFg").style.stroke = pct >= 100 ? "var(--ok)" : pct >= 50 ? "var(--warn)" : "var(--brand)";
+  }
+
+  // Quest map
+  const NODE_POS = [12, 37, 62, 88];
+  function renderQuest() {
+    const steps = state.questStep;
+    $("questFill").style.width = (NODE_POS[Math.min(steps, 3)] - 12) / (88 - 12) * 100 + "%";
+    [0, 1, 2, 3].forEach((i) => {
+      const n = $("n" + i);
+      n.classList.toggle("done", i < steps);
+      n.classList.toggle("check", i < steps);
+      n.classList.toggle("current", i === steps);
+      if (i < steps) n.textContent = "";
+      else n.textContent = i === 3 ? "★" : String(i + 1);
+    });
+    const left = NODE_POS[Math.min(steps, 3)] + "%";
+    $("avatar").style.left = left;
+    $("questCaption").textContent = steps >= 4
+      ? "Quest complete! Fraction Explorer finished."
+      : "Earn 1 quest step per 3 correct answers. Next: Mission " + (steps + 1) + ".";
+  }
+  function moveTo(i) {
+    if (i > state.questStep) return;
+    $("avatar").style.left = NODE_POS[i] + "%";
+  }
+  ["n0", "n1", "n2", "n3"].forEach((id, i) => $(id).addEventListener("click", () => moveTo(i)));
+
+  // Toast
+  let toastTimer;
+  function toast(msg) {
+    const t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
+  }
+
+  // Confetti
+  function confetti(count = 40) {
+    if (reduce) return;
+    const colors = ["#6366f1", "#f43f5e", "#f59e0b", "#10b981", "#0ea5e9", "#a855f7"];
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement("div");
+      el.className = "confetti";
+      el.style.left = Math.random() * 100 + "vw";
+      el.style.background = colors[i % colors.length];
+      el.style.setProperty("--dx", (Math.random() * 120 - 60) + "px");
+      el.style.animationDuration = (1.6 + Math.random() * 1.2) + "s";
+      el.style.animationDelay = (Math.random() * 0.3) + "s";
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 3200);
+    }
+  }
+
+  // Quiz
+  const optsEl = $("opts"), qEl = $("qText"), nextBtn = $("nextBtn");
+  function renderQuestion() {
+    const item = QUESTIONS[state.qIndex % QUESTIONS.length];
+    state.answered = false;
+    qEl.textContent = item.q;
+    optsEl.innerHTML = "";
+    item.opts.forEach((text, i) => {
+      const b = document.createElement("button");
+      b.className = "opt";
+      b.textContent = text;
+      b.addEventListener("click", () => answer(i, b));
+      optsEl.appendChild(b);
+    });
+    nextBtn.disabled = true;
+    $("hint").textContent = "";
+    mood(null, "Pick the answer you think is right.");
+  }
+
+  function answer(i, btn) {
+    if (state.answered) return;
+    state.answered = true;
+    const item = QUESTIONS[state.qIndex % QUESTIONS.length];
+    const buttons = [...optsEl.children];
+    buttons.forEach((b) => (b.disabled = true));
+    if (i === item.a) {
+      btn.classList.add("right");
+      state.streak += 1;
+      state.correctTotal += 1;
+      state.mastery = Math.min(100, state.mastery + 12);
+      addXP(20 + Math.min(state.streak, 5) * 2);
+      if (state.correctTotal % 3 === 0) {
+        state.questStep = Math.min(4, state.questStep + 1);
+        renderQuest();
+        toast("Quest step complete!");
+      }
+      mood("happy", state.streak >= 3 ? "🔥 " + state.streak + " in a row! Brilliant." : "Correct! Well done.");
+      confetti(state.streak >= 3 ? 40 : 18);
+      if (state.mastery >= 100) toast("Badge unlocked: Fractions Master");
+    } else {
+      btn.classList.add("wrong");
+      buttons[item.a].classList.add("right");
+      state.streak = 0;
+      state.mastery = Math.max(0, state.mastery - 4);
+      mood("sad", "Not quite. Let's look at it another way.");
+      $("hint").textContent = "Hint: " + item.hint;
+    }
+    renderStreak();
+    renderMastery();
+    nextBtn.disabled = false;
+    state.qIndex += 1;
+    save();
+  }
+  nextBtn.addEventListener("click", renderQuestion);
+
+  $("resetBtn").addEventListener("click", () => {
+    try { localStorage.removeItem("engageDemo"); } catch {}
+    Object.assign(state, { xp: 0, level: 1, streak: 0, correctTotal: 0, qIndex: 0, answered: false, questStep: 0, mastery: 0 });
+    renderAll();
+    renderQuestion();
+    mood(null, "Fresh start. Let's go!");
+  });
+
+  function renderAll() { renderXP(); renderStreak(); renderMastery(); renderQuest(); }
+
+  // ---------- Need a boost (re-engagement, no labels or shaming) ----------
+  const MISSIONS = {
+    low:  { t: "Tiny start: just 20 seconds.", b: "No pressure. Take a breath, then look at one question. That's all.", secs: 20, xp: 10 },
+    ok:   { t: "A 2-minute mission.", b: "Do one question and see how it feels. You can stop after.", secs: 30, xp: 15 },
+    high: { t: "Challenge: 3 in a row.", b: "Build a streak of 3 correct answers and light up the flame.", secs: 10, xp: 20 },
+  };
+  let curE = null, tinyTimer = null;
+  const tinyBtn = $("tinyBtn"), tinyFg = $("tinyFg");
+  document.querySelectorAll(".energy button").forEach((b) => b.addEventListener("click", () => {
+    document.querySelectorAll(".energy button").forEach((x) => x.classList.remove("sel"));
+    b.classList.add("sel");
+    curE = b.dataset.e;
+    const m = MISSIONS[curE];
+    $("missionTitle").textContent = m.t;
+    $("missionBody").textContent = m.b;
+    tinyBtn.disabled = false;
+    tinyBtn.textContent = "Start tiny";
+    mood("happy", curE === "low" ? "Thanks for telling me. Let's keep it small." : "Great, let's go!");
+  }));
+  tinyBtn.addEventListener("click", () => {
+    const m = MISSIONS[curE];
+    if (!m) return;
+    tinyBtn.disabled = true;
+    tinyFg.classList.remove("run");
+    void tinyFg.getBoundingClientRect();
+    tinyFg.style.animationDuration = m.secs + "s";
+    tinyFg.classList.add("run");
+    mood("think", "Focus on just one thing. I'm right here.");
+    $("qText").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+    clearTimeout(tinyTimer);
+    tinyTimer = setTimeout(() => {
+      addXP(m.xp);
+      toast("Starter bonus: +" + m.xp + " XP for beginning!");
+      mood("happy", "You started. That's the hard part. Keep going?");
+      confetti(24);
+      tinyBtn.disabled = false;
+      tinyBtn.textContent = "Go again";
+      save();
+    }, (reduce ? 1 : m.secs) * 1000);
+  });
+  $("calm").addEventListener("change", (e) => document.body.classList.toggle("calm", e.target.checked));
+
+  // Gentle idle nudge after 25s without interaction
+  let lastActive = Date.now(), nudged = false;
+  ["pointerdown", "keydown", "scroll"].forEach((ev) => window.addEventListener(ev, () => {
+    lastActive = Date.now();
+    if (nudged) { nudged = false; $("boost").classList.remove("nudge"); }
+  }, { passive: true }));
+  setInterval(() => {
+    if (!nudged && Date.now() - lastActive > 25000) {
+      nudged = true;
+      $("boost").classList.add("nudge");
+      mood("think", "Feeling stuck? Tell me your energy and we'll make the next step tiny.");
+    }
+  }, 5000);
+
+  // ---------- Games ----------
+  document.querySelectorAll(".tab").forEach((t) => t.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach((x) => x.classList.toggle("on", x === t));
+    document.querySelectorAll(".game").forEach((g) => g.classList.toggle("on", g.id === "g-" + t.dataset.g));
+  }));
+  const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+  // Memory Match
+  const PAIRS = [["1/2", "0.5"], ["1/4", "0.25"], ["3/4", "0.75"], ["1/5", "0.2"]];
+  let memOpen = [], memLock = false, memFound = 0;
+  function memNew() {
+    memOpen = []; memLock = false; memFound = 0;
+    $("memMsg").textContent = "Find the 4 pairs.";
+    const deck = shuffle(PAIRS.flatMap(([f, d], i) => [{ k: i, v: f }, { k: i, v: d }]));
+    const box = $("cards");
+    box.innerHTML = "";
+    deck.forEach((c) => {
+      const b = document.createElement("button");
+      b.className = "mcard";
+      b.setAttribute("aria-label", "Hidden card");
+      b.innerHTML = '<span class="in"><span class="face front">?</span><span class="face back">' + c.v + "</span></span>";
+      b.addEventListener("click", () => {
+        if (memLock || b.classList.contains("flip") || b.classList.contains("matched")) return;
+        b.classList.add("flip");
+        b.setAttribute("aria-label", "Card " + c.v);
+        memOpen.push({ b, c });
+        if (memOpen.length === 2) {
+          const [x, y] = memOpen;
+          if (x.c.k === y.c.k) {
+            x.b.classList.add("matched"); y.b.classList.add("matched");
+            memOpen = []; memFound += 1;
+            addXP(5); mood("happy", "Match!");
+            if (memFound === PAIRS.length) { $("memMsg").textContent = "All pairs found! +30 XP"; addXP(30); confetti(50); toast("Memory Match complete!"); save(); }
+          } else {
+            memLock = true;
+            setTimeout(() => { x.b.classList.remove("flip"); y.b.classList.remove("flip"); memOpen = []; memLock = false; }, reduce ? 200 : 800);
+          }
+        }
+      });
+      box.appendChild(b);
+    });
+  }
+  $("memReset").addEventListener("click", memNew);
+
+  // Order Up
+  const SETS = [["1/8", "1/4", "1/2", "3/4"], ["1/10", "1/5", "2/5", "9/10"], ["1/6", "1/3", "1/2", "5/6"]];
+  const val = (s) => { const [a, b] = s.split("/").map(Number); return a / b; };
+  let ordSorted = [], ordNext = 0;
+  function ordNew() {
+    const set = SETS[Math.floor(Math.random() * SETS.length)];
+    ordSorted = set.slice().sort((p, q) => val(p) - val(q));
+    ordNext = 0;
+    $("ordMsg").textContent = "Which is the smallest?";
+    $("slots").innerHTML = ordSorted.map(() => '<div class="slot"></div>').join("");
+    const chips = $("chips");
+    chips.innerHTML = "";
+    shuffle(set).forEach((s) => {
+      const c = document.createElement("button");
+      c.className = "chip";
+      c.textContent = s;
+      c.addEventListener("click", () => {
+        if (s === ordSorted[ordNext]) {
+          const slot = $("slots").children[ordNext];
+          slot.textContent = s; slot.classList.add("filled");
+          c.disabled = true; ordNext += 1;
+          if (ordNext === ordSorted.length) { $("ordMsg").textContent = "Perfect order! +20 XP"; addXP(20); confetti(40); mood("happy", "Sorted like a pro!"); save(); }
+          else $("ordMsg").textContent = "Nice! Which is next?";
+        } else {
+          c.classList.remove("bad"); void c.offsetWidth; c.classList.add("bad");
+          $("ordMsg").textContent = "Not quite. Think: which one is a smaller slice?";
+          mood("sad", "Hmm, try comparing them with a picture in your head.");
+        }
+      });
+      chips.appendChild(c);
+    });
+  }
+  $("ordReset").addEventListener("click", ordNew);
+
+  // Pizza Slicer
+  let pzN = 8, pzTarget = 3;
+  function pizzaNew() {
+    pzN = [4, 6, 8][Math.floor(Math.random() * 3)];
+    pzTarget = 1 + Math.floor(Math.random() * (pzN - 1));
+    $("pizzaPrompt").textContent = "Tap slices to shade " + pzTarget + "/" + pzN + " of the pizza.";
+    $("pizzaMsg").textContent = "";
+    const svg = $("pizza");
+    svg.innerHTML = "";
+    const NS = "http://www.w3.org/2000/svg";
+    for (let i = 0; i < pzN; i++) {
+      const a0 = (i / pzN) * 2 * Math.PI - Math.PI / 2, a1 = ((i + 1) / pzN) * 2 * Math.PI - Math.PI / 2;
+      const p = (a) => (110 + 100 * Math.cos(a)).toFixed(1) + " " + (110 + 100 * Math.sin(a)).toFixed(1);
+      const path = document.createElementNS(NS, "path");
+      path.setAttribute("d", "M110 110 L" + p(a0) + " A100 100 0 0 1 " + p(a1) + " Z");
+      path.setAttribute("tabindex", "0");
+      path.setAttribute("role", "button");
+      path.setAttribute("aria-label", "Slice " + (i + 1) + " of " + pzN);
+      path.setAttribute("aria-pressed", "false");
+      const toggle = () => { const on = path.classList.toggle("sel"); path.setAttribute("aria-pressed", String(on)); };
+      path.addEventListener("click", toggle);
+      path.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
+      svg.appendChild(path);
+    }
+  }
+  $("pizzaCheck").addEventListener("click", () => {
+    const n = $("pizza").querySelectorAll("path.sel").length;
+    if (n === pzTarget) {
+      $("pizzaMsg").textContent = "Yes! " + n + "/" + pzN + " shaded. +15 XP";
+      addXP(15); confetti(36); mood("happy", "Tasty maths!"); save();
+    } else {
+      $("pizzaMsg").textContent = "You shaded " + n + " of " + pzN + " slices. We need " + pzTarget + ". Try again!";
+      mood("sad", "Count the shaded slices out of the total.");
+    }
+  });
+  $("pizzaReset").addEventListener("click", pizzaNew);
+
+  // Number Line Hop
+  const HOPS = ["1/4", "1/2", "3/4", "1/4", "3/4"];
+  let hopTarget = "1/2";
+  const TICKS = ["0", "1/4", "1/2", "3/4", "1"];
+  function hopNew() {
+    hopTarget = HOPS[Math.floor(Math.random() * HOPS.length)];
+    $("hopPrompt").textContent = "Hop the frog to " + hopTarget + " on the number line.";
+    $("hopMsg").textContent = "";
+    const line = $("nline");
+    line.querySelectorAll(".tick").forEach((t) => t.remove());
+    $("frog").style.left = "0%";
+    TICKS.forEach((t, i) => {
+      const b = document.createElement("button");
+      b.className = "tick";
+      b.textContent = t;
+      b.style.left = i * 25 + "%";
+      b.addEventListener("click", () => {
+        if (t === hopTarget) {
+          $("frog").style.left = i * 25 + "%";
+          b.classList.add("good");
+          $("hopMsg").textContent = "Great hop! " + t + " is right. +15 XP";
+          addXP(15); confetti(30); mood("happy", "Boing! Perfect jump."); save();
+        } else {
+          b.classList.remove("bad"); void b.offsetWidth; b.classList.add("bad");
+          $("hopMsg").textContent = t + " is not it. Hint: 1/2 is halfway between 0 and 1.";
+          mood("sad", "Think of the line cut into 4 equal parts.");
+        }
+      });
+      line.appendChild(b);
+    });
+  }
+  $("hopReset").addEventListener("click", hopNew);
+
+  renderAll();
+  renderQuestion();
+  memNew();
+  ordNew();
+  pizzaNew();
+  hopNew();
+  save();
+})();
+</script>
+</body>
+</html>
